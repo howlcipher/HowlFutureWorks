@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="HowlFutureWorks is the version-controlled organizational operating system for the Howl ecosystem: AI workforce roles, policy, institutional memory, staffing, evidence and human-governed authority.">
+    <link rel="canonical" href="https://howlcipher.github.io/HowlFutureWorks/">
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="HowlFutureWorks">
+    <meta property="og:title" content="HowlFutureWorks | Autonomous Software Organization">
+    <meta property="og:description" content="HowlFutureWorks is the version-controlled organizational operating system for the Howl ecosystem: AI workforce roles, policy, institutional memory, staffing, evidence and human-governed authority.">
+    <meta property="og:url" content="https://howlcipher.github.io/HowlFutureWorks/">
+    <meta property="og:image" content="https://howlcipher.github.io/howl/social-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Howl Ecosystem Architecture and Interoperability Topology">
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HowlFutureWorks | Autonomous Software Organization">
+    <meta name="twitter:description" content="HowlFutureWorks is the version-controlled organizational operating system for the Howl ecosystem: AI workforce roles, policy, institutional memory, staffing, evidence and human-governed authority.">
+    <meta name="twitter:image" content="https://howlcipher.github.io/howl/social-preview.png">
+    <meta name="twitter:image:alt" content="Howl Ecosystem Architecture and Interoperability Topology">
+
+    <title>HowlFutureWorks | Autonomous Software Organization</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "HowlFutureWorks",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Linux, macOS, Windows",
+      "description": "Version-controlled organizational operating system for the Howl autonomous software organization: persistent positions, replaceable AI workers, policy, institutional memory, staffing lifecycle, and human-governed authority.",
+      "url": "https://howlcipher.github.io/HowlFutureWorks/",
+      "author": {
+        "@type": "Person",
+        "name": "William Elias",
+        "jobTitle": "Software, DevOps & Automation Engineer",
+        "url": "https://howlcipher.github.io/william_elias/"
+      }
+    }
+    </script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <!-- Ecosystem Slide-out Drawer Overlay -->
+    <div id="eco-drawer-overlay" class="eco-drawer-overlay" aria-hidden="true"></div>
+
+    <!-- Ecosystem Slide-out Drawer Panel -->
+    <aside id="eco-drawer" class="eco-drawer" aria-label="Howl Ecosystem Directory" aria-hidden="true">
+        <div class="drawer-header">
+            <div class="drawer-title">HOWL // ECOSYSTEM DIRECTORY</div>
+            <button id="eco-drawer-close" class="btn-drawer-close" type="button" aria-label="Close ecosystem directory">[✕ CLOSE]</button>
+        </div>
+        <div class="drawer-body">
+            <a href="https://howlcipher.github.io/howl/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWL // HUB</span>
+                    <span class="node-card-role">[PORTAL]</span>
+                </div>
+                <div class="node-card-desc">Central ecosystem portal, architectural blueprint, and cross-project governance map.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/HowlFutureWorks/" class="drawer-node-card active-hub">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLFUTUREWORKS</span>
+                    <span class="node-card-role" style="color: var(--color-blue);">[ORGANIZATION OS]</span>
+                </div>
+                <div class="node-card-desc">Version-controlled autonomous software organization: workforce, policy, institutional memory, governance and operating state.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlproof/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLPROOF</span>
+                    <span class="node-card-role" style="color: var(--color-red);">[RED-TEAM QA]</span>
+                </div>
+                <div class="node-card-desc">Independent adversarial evaluation, falsification, reproducible findings, and evidence for verdicts.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlcreate/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLCREATE</span>
+                    <span class="node-card-role" style="color: var(--color-amber);">[CREATIVE SEARCH]</span>
+                </div>
+                <div class="node-card-desc">Computational creativity, open-ended problem exploration, reframing, and concept lineage.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlrelay/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLRELAY</span>
+                    <span class="node-card-role" style="color: var(--color-cyan);">[CONTINUITY]</span>
+                </div>
+                <div class="node-card-desc">Persistent asynchronous work coordination, durable journals, and resumable execution handoffs.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlframe/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLFRAME</span>
+                    <span class="node-card-role" style="color: var(--color-magenta);">[VM &amp; COMPILER]</span>
+                </div>
+                <div class="node-card-desc">AI-native reasoning language, typed intermediate representation, and sandboxed bytecode VM.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlplane/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLPLANE</span>
+                    <span class="node-card-role" style="color: var(--color-blue);">[CONTROL PLANE]</span>
+                </div>
+                <div class="node-card-desc">Engineering control plane with deterministic routing, adversarial falsification, and human gates.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlnotes/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLNOTES</span>
+                    <span class="node-card-role" style="color: var(--color-cyan);">[KNOWLEDGE NOTEBOOK]</span>
+                </div>
+                <div class="node-card-desc">Engineering knowledge notebook &amp; full-stack dogfood consumer proving native persistent storage.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlchangeops/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLCHANGEOPS</span>
+                    <span class="node-card-role" style="color: var(--color-red);">[AUTHORITY GATE]</span>
+                </div>
+                <div class="node-card-desc">Governed release controller enforcing cryptographic human approvals and bounded Git mutations.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlboard/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLBOARD</span>
+                    <span class="node-card-role" style="color: var(--color-amber);">[EVALUATION SURFACE]</span>
+                </div>
+                <div class="node-card-desc">Observation console and full-stack deterministic task state machine application.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howlwriter/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLWRITER</span>
+                    <span class="node-card-role" style="color: var(--color-magenta);">[WRITING CONTROL]</span>
+                </div>
+                <div class="node-card-desc">Writing control system for voice preservation, deterministic style linting, humanization, and review.</div>
+            </a>
+
+            <a href="https://howlcipher.github.io/howldream/" class="drawer-node-card">
+                <div class="node-card-top">
+                    <span class="node-card-name">HOWLDREAM</span>
+                    <span class="node-card-role" style="color: var(--color-khaki);">[CONTROLLED DIVERGENCE]</span>
+                </div>
+                <div class="node-card-desc">Controlled divergent experiments, hallucination testing, failure analysis, and scoped verification.</div>
+            </a>
+        </div>
+        <div class="drawer-footer">
+            <span>● 12 ECOSYSTEM NODES</span>
+            <span>AUTH // HOWL 2026</span>
+        </div>
+    </aside>
+
+    <div class="layout-container">
+        <!-- Site Header -->
+        <header class="site-header">
+            <div class="header-top">
+                <div class="header-brand">
+                    <a href="https://howlcipher.github.io/HowlFutureWorks/" class="brand-sig">HOWL <span>//</span> HOWLFUTUREWORKS</a>
+                    <span class="subsystem-tag">SYS_ID: HFW-ORG-12</span>
+                </div>
+                <div class="header-actions">
+                    <button id="eco-menu-toggle" class="btn-eco-toggle" type="button" aria-expanded="false" aria-controls="eco-drawer" aria-label="Toggle Howl Ecosystem Directory">
+                        <span aria-hidden="true">☰</span> [ECOSYSTEM]
+                    </button>
+                    <button id="theme-toggle" class="btn-theme-toggle" type="button" aria-pressed="false">
+                        <span aria-hidden="true">☾</span> [DARK_MODE]
+                    </button>
+                    <a href="https://github.com/howlcipher/HowlFutureWorks" class="btn-tech btn-tech-primary" target="_blank" rel="noreferrer">
+                        [ VIEW ON GITHUB ]
+                    </a>
+                </div>
+            </div>
+
+            <!-- In-Page Section Navigation -->
+            <nav class="section-nav" aria-label="Page sections">
+                <span class="section-nav-label">READ_PATH:</span>
+                <a href="#overview">01_Overview</a>
+                <a href="#organization">02_Organization</a>
+                <a href="#workforce">03_Workforce</a>
+                <a href="#governance">04_Governance</a>
+                <a href="#knowledge">05_Knowledge</a>
+                <a href="#bootstrap">06_Bootstrap</a>
+            </nav>
+        </header>
+
+        <!-- Main Content Surface -->
+        <main id="main-content">
+            <!-- Hero Panel -->
+            <section class="hero-panel" aria-labelledby="main-title">
+                <div class="hero-banner">
+                    <span>ORG_VER // 0.4.1 (WORKFORCE &amp; GOVERNANCE SPEC)</span>
+                    <span>ARCHITECTURE: HUMAN-GOVERNED AUTONOMOUS ORGANIZATION</span>
+                </div>
+                <div class="hero-body">
+                    <div class="hero-header-block">
+                        <p class="hero-kicker">// autonomous software organization / version-controlled workforce &amp; policy</p>
+                        <h1 id="main-title" class="hero-title">HowlFutureWorks</h1>
+                        <p class="hero-lead">
+                            A human-governed autonomous software organization whose roles, workforce, policies, knowledge, evidence and operating procedures are represented as version-controlled desired state.
+                        </p>
+                    </div>
+
+                    <div class="axiom-card" role="region" aria-label="Governing Principle">
+                        <strong>ORGANIZATION AXIOM // MEMORY IS NOT AUTHORITY.</strong> Git defines desired organizational state. Live AI workers are deployed state. Durable knowledge is curated, evidence-backed and recoverable.
+                    </div>
+
+                    <p class="hero-lead" style="margin-top: 0.75rem; font-size: 0.9rem;">
+                        This complements the ecosystem-wide principle: <strong>INTENT IS NOT AUTHORITY.</strong>
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="https://github.com/howlcipher/HowlFutureWorks" class="btn-tech btn-tech-primary" target="_blank" rel="noreferrer">
+                            [ VIEW ON GITHUB ]
+                        </a>
+                        <a href="https://github.com/howlcipher/HowlFutureWorks/blob/main/CHARTER.md" class="btn-tech" target="_blank" rel="noreferrer">
+                            [ READ THE CHARTER ]
+                        </a>
+                        <a href="https://howlcipher.github.io/howl/" class="btn-tech">
+                            [ HOWL ECOSYSTEM ]
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 01 Overview -->
+            <section id="overview" class="tech-panel">
+                <div class="tech-header">
+                    <h2><span class="sec-id">SECTION // 01</span> Overview &amp; Systems of Truth</h2>
+                    <span class="subsystem-tag">HFW-MOD-OVERVIEW</span>
+                </div>
+                <div class="tech-body">
+                    <div class="grid-2col">
+                        <div>
+                            <h3>HowlFutureWorks</h3>
+                            <p>Defines organizational <strong>desired state</strong>: positions, AI workforce identities, staffing lifecycle, organizational policy, institutional knowledge, authority boundaries, organizational runbooks, schemas, continuity, and deployed-workforce reconciliation.</p>
+                        </div>
+                        <div>
+                            <h3>HowlPlane</h3>
+                            <p>Coordinates <strong>execution</strong>: tasks, provider routing, delegation, workflow state, execution, recovery/resume, and evidence flow.</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem;"><strong>HowlFutureWorks governs the organization. HowlPlane governs execution of work.</strong> It is not another HowlPlane.</p>
+
+                    <p style="margin-top: 1.5rem;">The organization's systems of truth, as declared in <code>organization.yaml</code> and <code>CHARTER.md</code>:</p>
+                    <div class="node-directory-grid">
+                        <div class="dir-card" style="border-top: 3px solid var(--color-blue);">
+                            <div class="dir-card-header"><span class="dir-card-title">Desired Organization</span></div>
+                            <p class="dir-card-desc">Git. <code>desired_state_source: git</code> — this repository is the canonical, version-controlled definition of positions, policy and roster.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-khaki);">
+                            <div class="dir-card-header"><span class="dir-card-title">Deployed Workforce</span></div>
+                            <p class="dir-card-desc">Live persistent AI members. Grok Bot instances reconciled against <code>workforce/roster.yaml</code>; bot memory is never the source of truth.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-cyan);">
+                            <div class="dir-card-header"><span class="dir-card-title">Work State</span></div>
+                            <p class="dir-card-desc">HowlBoard. Listed in <code>organization.yaml</code>'s <code>work_state_sources</code> as a source of work/execution state.</p>
+                            <div class="dir-card-links">
+                                <a href="https://howlcipher.github.io/howlboard/" class="btn-tech btn-tech-primary">[ LIVE SITE ]</a>
+                                <a href="https://github.com/howlcipher/howlboard" class="btn-tech" target="_blank" rel="noreferrer">[ GITHUB ]</a>
+                            </div>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-blue);">
+                            <div class="dir-card-header"><span class="dir-card-title">Execution State</span></div>
+                            <p class="dir-card-desc">HowlPlane. Also listed in <code>organization.yaml</code>'s <code>work_state_sources</code>; coordinates task routing and execution per CHARTER.md §9.</p>
+                            <div class="dir-card-links">
+                                <a href="https://howlcipher.github.io/howlplane/" class="btn-tech btn-tech-primary">[ LIVE SITE ]</a>
+                                <a href="https://github.com/howlcipher/howlplane" class="btn-tech" target="_blank" rel="noreferrer">[ GITHUB ]</a>
+                            </div>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-magenta);">
+                            <div class="dir-card-header"><span class="dir-card-title">Policy / Authority</span></div>
+                            <p class="dir-card-desc">HowlFrame. <code>policy_enforcement: HowlFrame</code> in <code>organization.yaml</code>.</p>
+                            <div class="dir-card-links">
+                                <a href="https://howlcipher.github.io/howlframe/" class="btn-tech btn-tech-primary">[ LIVE SITE ]</a>
+                                <a href="https://github.com/howlcipher/howlframe" class="btn-tech" target="_blank" rel="noreferrer">[ GITHUB ]</a>
+                            </div>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-red);">
+                            <div class="dir-card-header"><span class="dir-card-title">Change Control</span></div>
+                            <p class="dir-card-desc">HowlChangeOps. Referenced in CHARTER.md §9 as the ecosystem's release/change-control component; no direct runtime integration is implemented in this repository.</p>
+                            <div class="dir-card-links">
+                                <a href="https://howlcipher.github.io/howlchangeops/" class="btn-tech btn-tech-primary">[ LIVE SITE ]</a>
+                                <a href="https://github.com/howlcipher/howlchangeops" class="btn-tech" target="_blank" rel="noreferrer">[ GITHUB ]</a>
+                            </div>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-amber);">
+                            <div class="dir-card-header"><span class="dir-card-title">Verification</span></div>
+                            <p class="dir-card-desc">Assurance (internal position) / HowlProof / CI. This repository's own CI (<code>.github/workflows/validate.yml</code>) runs <code>orgctl.py validate</code> and the test suite on every push.</p>
+                            <div class="dir-card-links">
+                                <a href="https://howlcipher.github.io/howlproof/" class="btn-tech btn-tech-primary">[ LIVE SITE ]</a>
+                                <a href="https://github.com/howlcipher/howlproof" class="btn-tech" target="_blank" rel="noreferrer">[ GITHUB ]</a>
+                            </div>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-cyan);">
+                            <div class="dir-card-header"><span class="dir-card-title">Institutional Memory</span></div>
+                            <p class="dir-card-desc"><code>workforce/</code> + <code>knowledge/</code> + <code>adr/</code> + <code>runbooks/</code> — curated, evidence-backed and recoverable, not raw chat transcripts.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 02 Organization -->
+            <section id="organization" class="tech-panel">
+                <div class="tech-header">
+                    <h2><span class="sec-id">SECTION // 02</span> Organization</h2>
+                    <span class="subsystem-tag">HFW-MOD-ORGANIZATION</span>
+                </div>
+                <div class="tech-body">
+                    <p style="font-family: var(--font-mono); font-weight: 700; font-size: 1.05rem;">ROLE ≠ POSITION ≠ EMPLOYEE INSTANCE</p>
+                    <div class="grid-2col">
+                        <div>
+                            <h3>Role</h3>
+                            <p>Durable responsibility.</p>
+                        </div>
+                        <div>
+                            <h3>Position</h3>
+                            <p>Persistent organizational seat and configuration.</p>
+                        </div>
+                        <div>
+                            <h3>Employee</h3>
+                            <p>Replaceable worker instance occupying a position.</p>
+                        </div>
+                    </div>
+
+                    <div class="code-container" style="margin-top: 1.5rem;">
+                        <div class="code-header">
+                            <span class="code-title">[ORG // REPORTING TOPOLOGY]</span>
+                            <span class="subsystem-tag">HFW_TOPOLOGY</span>
+                        </div>
+                        <pre><code>                         HUMAN OWNER
+                              │
+              ┌───────────────┴───────────────┐
+              │                               │
+              ▼                               ▼
+ENGINEERING MANAGER / ORGANIZER      INDEPENDENT AUDITOR
+              │
+      ┌───────┼────────┬──────────┐
+      ▼       ▼        ▼          ▼
+   PRODUCT   R&amp;D    DEV LEAD   ASSURANCE</code></pre>
+                    </div>
+                    <p style="margin-top: 1rem;">The Independent Auditor reports directly to the Owner (<code>bots/manifest.yaml</code>: <code>staffing_authority: owner</code>, the same protected status as the Engineering Manager) — not to the Engineering Manager. This preserves audit independence: per CHARTER.md §8, "Audit should be read-only wherever practical and should report directly to the Owner rather than to the team being audited."</p>
+                </div>
+            </section>
+
+            <!-- 03 Founding Workforce -->
+            <section id="workforce" class="tech-panel">
+                <div class="tech-header">
+                    <h2><span class="sec-id">SECTION // 03</span> Founding Workforce</h2>
+                    <span class="subsystem-tag">HFW-MOD-WORKFORCE</span>
+                </div>
+                <div class="tech-body">
+                    <p>Six founding persistent positions, per <code>bots/manifest.yaml</code> and <code>CHARTER.md</code>'s "persistent roster strategy":</p>
+                    <div class="node-directory-grid">
+                        <div class="dir-card" style="border-top: 3px solid var(--color-blue);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">Engineering Manager / Organizer</span>
+                                <span class="chip chip-blue">REPORTS TO OWNER</span>
+                            </div>
+                            <p class="dir-card-desc">Coordinates organizational reconciliation, staffing, delegation, blockers and health.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-cyan);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">Product</span>
+                                <span class="chip chip-cyan">REPORTS TO ENGINEERING MANAGER</span>
+                            </div>
+                            <p class="dir-card-desc">Owns WHAT/WHY, problem evidence, priority and acceptance criteria.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-amber);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">R&amp;D</span>
+                                <span class="chip chip-amber">REPORTS TO ENGINEERING MANAGER</span>
+                            </div>
+                            <p class="dir-card-desc">Reduces uncertainty through controlled investigation and experiments.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-magenta);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">Dev Lead</span>
+                                <span class="chip chip-magenta">REPORTS TO ENGINEERING MANAGER</span>
+                            </div>
+                            <p class="dir-card-desc">Coordinates implementation and appropriate execution-provider routing.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-khaki);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">Assurance</span>
+                                <span class="chip chip-khaki">REPORTS TO ENGINEERING MANAGER</span>
+                            </div>
+                            <p class="dir-card-desc">Coordinates logically separate QA and Security verification.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-red);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">Independent Auditor</span>
+                                <span class="chip chip-red">REPORTS TO OWNER</span>
+                            </div>
+                            <p class="dir-card-desc">Independently reconstructs evidence, decisions and process compliance and reports to the Owner.</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1.5rem;">Execution models such as Claude, Codex, or other providers are <strong>not</strong> automatically persistent organization members. Positions are staffed by workforce-managed employee instances (<code>workforce/roster.yaml</code>) — a provider is a replaceable executor of a task, not an organizational identity.</p>
+                </div>
+            </section>
+
+            <!-- 04 Governance -->
+            <section id="governance" class="tech-panel">
+                <div class="tech-header">
+                    <h2><span class="sec-id">SECTION // 04</span> Governance &amp; Risk</h2>
+                    <span class="subsystem-tag">HFW-MOD-GOVERNANCE</span>
+                </div>
+                <div class="tech-body">
+                    <p>Risk tiers, per <code>policies/risk-tiers.yaml</code> and <code>RISK.md</code>. Risk is attached to the action, not the Bot title.</p>
+                    <div class="node-directory-grid">
+                        <div class="dir-card" style="border-top: 3px solid var(--color-cyan);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">R0 // Observe</span>
+                                <span class="chip chip-cyan">AUTO</span>
+                            </div>
+                            <p class="dir-card-desc">Read-only research, inventory, status, reporting.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-blue);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">R1 // Sandbox</span>
+                                <span class="chip chip-blue">AUTO</span>
+                            </div>
+                            <p class="dir-card-desc">Isolated worktree changes, disposable experiments, generated files.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-khaki);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">R2 // Development</span>
+                                <span class="chip chip-khaki">AUTO</span>
+                            </div>
+                            <p class="dir-card-desc">Branches, pull requests, tests, development CI, issue updates.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-amber);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">R3 // Shared / Release</span>
+                                <span class="chip chip-amber">APPROVAL REQUIRED</span>
+                            </div>
+                            <p class="dir-card-desc">Merge, staging/shared mutation, publication, external communications, release promotion.</p>
+                        </div>
+                        <div class="dir-card" style="border-top: 3px solid var(--color-red);">
+                            <div class="dir-card-header">
+                                <span class="dir-card-title">R4 // Critical</span>
+                                <span class="chip chip-red">APPROVAL REQUIRED</span>
+                            </div>
+                            <p class="dir-card-desc">Production, destructive bulk action, privilege change, secret operations, irreversible data, security-control change, financial or legal commitment.</p>
+                        </div>
+                    </div>
+
+                    <p style="margin-top: 1.5rem; font-family: var(--font-mono); font-weight: 700;">Invariants:</p>
+                    <div class="grid-2col">
+                        <div>
+                            <h3>NO SELF-ESCALATION</h3>
+                            <p>"No agent may self-escalate privileges" (<code>AGENTS.md</code>).</p>
+                        </div>
+                        <div>
+                            <h3>ROLE NAME ≠ SECURITY PRINCIPAL</h3>
+                            <p>"Role names are not security principals" (<code>AGENTS.md</code>); enforcement comes from HowlFrame, scoped accounts and repository permissions, not titles.</p>
+                        </div>
+                        <div>
+                            <h3>HIGH-RISK ACTIONS FAIL CLOSED</h3>
+                            <p>"High-risk actions fail closed when required policy/approval/audit is unavailable" (<code>AGENTS.md</code>); <code>policies/approvals.yaml</code>: <code>fail_closed_if_required_approval_unavailable: true</code>.</p>
+                        </div>
+                        <div>
+                            <h3>APPROVAL BINDS TO THE ACTUAL ACTION</h3>
+                            <p>"High-impact approvals bind to the exact action/target/parameters and expire" (<code>AGENTS.md</code>); <code>policies/approvals.yaml</code> requires a new approval when the action materially changes.</p>
+                        </div>
+                        <div>
+                            <h3>SECRETS DO NOT BELONG IN BOT MEMORY</h3>
+                            <p><code>policies/memory.yaml</code>: <code>secrets_in_memory: forbidden</code>. "Never write secrets into prompts, Markdown, YAML, reports, evidence, or Git history" (<code>AGENTS.md</code>).</p>
+                        </div>
+                        <div>
+                            <h3>HUMAN OWNER RETAINS CRITICAL AUTHORITY</h3>
+                            <p>"Human Owner retains final strategic and critical authority" (<code>AGENTS.md</code>).</p>
+                        </div>
+                    </div>
+
+                    <div class="hero-actions" style="margin-top: 1.5rem;">
+                        <a href="https://github.com/howlcipher/HowlFutureWorks/blob/main/CHARTER.md" class="btn-tech" target="_blank" rel="noreferrer">[ CHARTER.md ]</a>
+                        <a href="https://github.com/howlcipher/HowlFutureWorks/blob/main/RISK.md" class="btn-tech" target="_blank" rel="noreferrer">[ RISK.md ]</a>
+                        <a href="https://github.com/howlcipher/HowlFutureWorks/blob/main/SECURITY.md" class="btn-tech" target="_blank" rel="noreferrer">[ SECURITY.md ]</a>
+                        <a href="https://github.com/howlcipher/HowlFutureWorks/tree/main/policies" class="btn-tech" target="_blank" rel="noreferrer">[ policies/ ]</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 05 Knowledge Continuity -->
+            <section id="knowledge" class="tech-panel">
+                <div class="tech-header">
+                    <h2><span class="sec-id">SECTION // 05</span> Knowledge Continuity</h2>
+                    <span class="subsystem-tag">HFW-MOD-KNOWLEDGE</span>
+                </div>
+                <div class="tech-body">
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="code-title">[HIERARCHY // PROMOTION LADDER]</span>
+                            <span class="subsystem-tag">HFW_MEMORY</span>
+                        </div>
+                        <pre><code>conversation
+     ↓
+task / context checkpoint
+     ↓
+employee continuity
+     ↓
+position knowledge
+     ↓
+company knowledge
+     ↓
+ADR / runbook / policy</code></pre>
+                    </div>
+
+                    <p style="margin-top: 1.5rem; font-family: var(--font-mono); font-weight: 700; font-size: 1.05rem;">WRITE ONCE, RETRIEVE MANY</p>
+                    <div class="grid-2col">
+                        <div><p>Conversations are disposable.</p></div>
+                        <div><p>Durable lessons are checkpointed before context loss.</p></div>
+                        <div><p>Evidence is referenced instead of copied.</p></div>
+                        <div><p>Knowledge is promoted upward.</p></div>
+                        <div><p>Lower-level duplicates are compacted.</p></div>
+                        <div><p>Raw chats are not institutional memory.</p></div>
+                        <div><p>Private reasoning / chain-of-thought is not persisted.</p></div>
+                    </div>
+
+                    <p style="margin-top: 1.5rem;">Current numeric budgets, per <code>policies/budgets.yaml</code> and <code>organization.yaml</code> (the website is descriptive, not authoritative — read those files for current values):</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Budget</th>
+                                    <th>Value</th>
+                                    <th>Source field</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Context checkpoint threshold</td>
+                                    <td>75%</td>
+                                    <td><code>policies/budgets.yaml</code>: <code>defaults.context_checkpoint_threshold_percent</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Checkpoint maximum</td>
+                                    <td>4,000 chars</td>
+                                    <td><code>policies/budgets.yaml</code>: <code>knowledge_artifacts.checkpoint_chars</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Handoff maximum</td>
+                                    <td>6,000 chars</td>
+                                    <td><code>policies/budgets.yaml</code>: <code>knowledge_artifacts.handoff_chars</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Position knowledge maximum</td>
+                                    <td>8,000 chars</td>
+                                    <td><code>policies/budgets.yaml</code>: <code>knowledge_artifacts.position_knowledge_file_chars</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Employee continuity maximum</td>
+                                    <td>24,000 chars</td>
+                                    <td><code>organization.yaml</code>: <code>employee_continuity_budget_chars</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 06 Bootstrap -->
+            <section id="bootstrap" class="tech-panel">
+                <div class="tech-header">
+                    <h2><span class="sec-id">SECTION // 06</span> Bootstrap</h2>
+                    <span class="subsystem-tag">HFW-MOD-BOOTSTRAP</span>
+                </div>
+                <div class="tech-body">
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="code-title">[FLOW // GIT TO VALIDATED ORGANIZATION]</span>
+                            <span class="subsystem-tag">HFW_BOOTSTRAP</span>
+                        </div>
+                        <pre><code>GIT DESIRED STATE
+       ↓
+ENGINEERING MANAGER / ORGANIZER
+       ↓
+LIVE WORKFORCE RECONCILIATION
+       ↓
+PRODUCT / R&amp;D / DEV LEAD / ASSURANCE / AUDITOR
+       ↓
+VALIDATED AUTONOMOUS ORGANIZATION</code></pre>
+                    </div>
+
+                    <div class="code-container" style="margin-top: 1.5rem;">
+                        <div class="code-header">
+                            <span class="code-title">[BASH // ORGCTL_INSPECTION]</span>
+                            <button class="btn-copy" type="button">[COPY]</button>
+                        </div>
+                        <pre><code>python tools/orgctl.py about
+python tools/orgctl.py validate
+python tools/orgctl.py org-status
+python tools/orgctl.py list-bots
+python tools/orgctl.py list-workforce
+python tools/orgctl.py render-all</code></pre>
+                    </div>
+
+                    <div class="code-container" style="margin-top: 1.5rem;">
+                        <div class="code-header">
+                            <span class="code-title">[BASH // KNOWLEDGE_CHECKPOINT_EXAMPLE]</span>
+                            <button class="btn-copy" type="button">[COPY]</button>
+                        </div>
+                        <pre><code>python tools/orgctl.py checkpoint bot-devlead-0001 \
+  --reason context_budget \
+  --stable "Preserve the durable result, not the conversation." \
+  --source-ref "adr/example.md"</code></pre>
+                    </div>
+                    <p style="margin-top: 1rem;">No secrets are ever written to a checkpoint — <code>orgctl.py checkpoint</code> always records <code>contains_raw_chain_of_thought: false</code> and rejects snapshots that exceed the checkpoint budget.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Site Footer -->
+        <footer class="site-footer">
+            <div class="footer-telemetry">
+                <div class="status-indicator">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    <span>SYS_STATUS: ACTIVE // HOWLFUTUREWORKS-ORGANIZATION-OS</span>
+                </div>
+                <div>ORGANIZATION AXIOM // MEMORY IS NOT AUTHORITY. // HOWL 2026</div>
+            </div>
+            <div class="footer-links">
+                <nav class="footer-nav" aria-label="Ecosystem Links">
+                    <a href="https://howlcipher.github.io/howl/">Howl Hub</a>
+                    <a href="https://howlcipher.github.io/HowlFutureWorks/">HowlFutureWorks</a>
+                    <a href="https://howlcipher.github.io/howlcreate/">HowlCreate</a>
+                    <a href="https://howlcipher.github.io/howldream/">HowlDream</a>
+                    <a href="https://howlcipher.github.io/howlplane/">HowlPlane</a>
+                    <a href="https://howlcipher.github.io/howlframe/">HowlFrame</a>
+                    <a href="https://howlcipher.github.io/howlproof/">HowlProof</a>
+                    <a href="https://howlcipher.github.io/howlchangeops/">HowlChangeOps</a>
+                    <a href="https://howlcipher.github.io/howlrelay/">HowlRelay</a>
+                    <a href="https://howlcipher.github.io/howlboard/">HowlBoard</a>
+                    <a href="https://howlcipher.github.io/howlnotes/">HowlNotes</a>
+                    <a href="https://howlcipher.github.io/howlwriter/">HowlWriter</a>
+                </nav>
+                <a href="#main-content">[ BACK TO TOP ]</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

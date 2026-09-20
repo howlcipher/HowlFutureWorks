@@ -4,6 +4,8 @@ Version-controlled operating system for **HowlFutureWorks**, the human-governed 
 
 The repository is **desired organizational state**. Live Grok Bots are a deployed representation of that state. Bot memory is never the source of truth.
 
+**Documentation:** https://howlcipher.github.io/HowlFutureWorks/
+
 ## Start here
 
 1. Read `organization.yaml` for canonical organization identity and repository naming.
