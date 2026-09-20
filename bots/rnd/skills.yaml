@@ -1,0 +1,5 @@
+bot_id: rnd
+skills:
+  - id: core-role
+    status: planned
+    source: bots/rnd/instructions.md

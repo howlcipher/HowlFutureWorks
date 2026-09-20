@@ -1,0 +1,29 @@
+version: 1
+principles:
+  evidence_based: true
+  personality_judgments_prohibited: true
+  model_self_assessment_is_not_sufficient_evidence: true
+  one_noncritical_failure_is_not_automatic_termination: true
+  security_or_policy_risk_may_trigger_immediate_suspension: true
+review_inputs:
+  - accepted_task_outcomes
+  - verifier_disagreement
+  - retry_and_failure_patterns
+  - cost_and_latency
+  - policy_behavior
+  - tool_and_role_fit
+  - handoff_quality
+  - role_specific_metrics
+outcomes:
+  - continue
+  - instruction_or_skill_change
+  - narrower_scope
+  - provider_or_model_change
+  - reassignment
+  - suspension
+  - replacement
+  - separation
+requirements:
+  evidence_refs_required_for_adverse_action: true
+  preserve_review_record_after_separation: true
+  distinguish_worker_failure_from_position_or_process_failure: true

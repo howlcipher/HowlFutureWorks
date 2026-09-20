@@ -1,0 +1,7 @@
+version: 1
+defaults:
+  max_retries_per_failure_class: 2
+  checkpoint_long_running_work: true
+  blind_retry: forbidden
+  cost_attribution_to_work_item: required
+  unexpected_usage_spike_action: circuit-breaker

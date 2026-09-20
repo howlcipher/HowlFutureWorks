@@ -1,0 +1,5 @@
+bot_id: dev-lead
+skills:
+  - id: core-role
+    status: planned
+    source: bots/dev-lead/instructions.md

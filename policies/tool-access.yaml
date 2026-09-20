@@ -1,0 +1,6 @@
+version: 1
+rules:
+  tool_access_follows_task_envelope: true
+  child_worker_may_exceed_parent_scope: false
+  direct_executor_cli_bypass_of_howlframe: forbidden
+  destructive_tools_require_explicit_policy: true

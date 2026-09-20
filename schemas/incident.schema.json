@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Incident",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id",
+    "summary",
+    "timeline",
+    "affected_systems",
+    "status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "timeline": {
+      "type": "array"
+    },
+    "affected_systems": {
+      "type": "array"
+    },
+    "containment": {
+      "type": "array"
+    },
+    "evidence": {
+      "type": "array"
+    },
+    "root_cause": {
+      "type": "string"
+    },
+    "corrective_actions": {
+      "type": "array"
+    },
+    "owners": {
+      "type": "array"
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

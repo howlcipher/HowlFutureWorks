@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Handoff",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "from",
+    "to",
+    "work_item_id",
+    "summary",
+    "next_action"
+  ],
+  "properties": {
+    "from": {
+      "type": "string"
+    },
+    "to": {
+      "type": "string"
+    },
+    "work_item_id": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "authoritative_pointers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_action": {
+      "type": "string"
+    },
+    "blockers": {
+      "type": "array"
+    },
+    "from_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "to_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

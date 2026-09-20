@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "employee_id": "bot-example-0001",
+  "display_name": "Example Worker #1",
+  "worker_type": "ai_bot",
+  "initial_position_id": "dev-lead",
+  "initial_logical_role": "dev-lead",
+  "hired_on": "2026-09-19",
+  "generation": 1,
+  "manager_ref_at_hire": "bot-engmgr-0001",
+  "provider_kind": "grok-bot",
+  "predecessor_employee_id": null,
+  "notes": "Example only."
+}

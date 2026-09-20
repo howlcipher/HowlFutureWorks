@@ -1,0 +1,62 @@
+version: 2
+desired_state: repository
+bots:
+- id: engineering-manager
+  name: Engineering Manager / Organizer
+  status: active
+  persistent: true
+  role: engineering-manager
+  risk_ceiling: R2
+  seat_limit: 1
+  workforce_managed: true
+  staffing_authority: owner
+- id: product
+  name: Product
+  status: active
+  persistent: true
+  role: product
+  risk_ceiling: R1
+  seat_limit: 1
+  workforce_managed: true
+  staffing_authority: engineering-manager
+- id: rnd
+  name: R&D
+  status: active
+  persistent: true
+  role: rnd
+  risk_ceiling: R1
+  seat_limit: 1
+  workforce_managed: true
+  staffing_authority: engineering-manager
+- id: dev-lead
+  name: Dev Lead
+  status: active
+  persistent: true
+  role: dev-lead
+  risk_ceiling: R2
+  seat_limit: 1
+  workforce_managed: true
+  staffing_authority: engineering-manager
+- id: assurance
+  name: Assurance
+  status: active
+  persistent: true
+  role: qa+security
+  risk_ceiling: R2
+  seat_limit: 1
+  workforce_managed: true
+  staffing_authority: engineering-manager
+- id: auditor
+  name: Independent Auditor
+  status: active
+  persistent: true
+  role: auditor
+  risk_ceiling: R0
+  seat_limit: 1
+  workforce_managed: true
+  staffing_authority: owner
+semantics:
+  entries_are: persistent_positions_not_employee_history
+  workforce_source: workforce/roster.yaml
+  seat_rule: active employee instances occupy positions; former employees remain in
+    workforce records

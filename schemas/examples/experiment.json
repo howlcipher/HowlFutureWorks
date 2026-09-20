@@ -1,0 +1,10 @@
+{
+  "id": "EXP-001",
+  "problem": "Example",
+  "hypothesis": "Example",
+  "success_criteria": [
+    "measurable"
+  ],
+  "risk_tier": "R1",
+  "status": "planned"
+}

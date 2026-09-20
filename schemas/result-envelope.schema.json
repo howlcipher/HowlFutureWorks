@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Result Envelope",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "task_id",
+    "status",
+    "executor",
+    "evidence"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "executor": {
+      "type": "object"
+    },
+    "changes": {
+      "type": "array"
+    },
+    "tests": {
+      "type": "array"
+    },
+    "verification": {
+      "type": "array"
+    },
+    "evidence": {
+      "type": "array"
+    },
+    "risks": {
+      "type": "array"
+    },
+    "unresolved": {
+      "type": "array"
+    },
+    "usage": {
+      "type": "object"
+    },
+    "recommended_next_action": {
+      "type": "string"
+    },
+    "producer_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "accountable_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contribution_record_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

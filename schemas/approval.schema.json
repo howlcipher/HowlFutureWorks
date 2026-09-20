@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Approval Artifact",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "work_item_id",
+    "actor",
+    "action",
+    "target",
+    "risk_tier",
+    "issued_at",
+    "expires_at",
+    "approver",
+    "action_digest"
+  ],
+  "properties": {
+    "work_item_id": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    },
+    "tool": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "normalized_parameters": {
+      "type": "object"
+    },
+    "risk_tier": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ]
+    },
+    "policy_version": {},
+    "issued_at": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "string"
+    },
+    "approver": {
+      "type": "string"
+    },
+    "action_digest": {
+      "type": "string"
+    }
+  }
+}

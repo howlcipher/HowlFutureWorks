@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "event_id": "20260919-hire-bot-engmgr-0001",
+  "occurred_at": "2026-09-19T12:00:00-04:00",
+  "employee_id": "bot-engmgr-0001",
+  "event_type": "hired",
+  "position_id_before": null,
+  "position_id_after": "engineering-manager",
+  "reason_code": "founding_roster",
+  "summary": "Founding workforce record created during organization bootstrap.",
+  "approved_by": "owner",
+  "evidence_refs": [
+    "CHARTER.md",
+    "ORG.md"
+  ],
+  "successor_employee_id": null
+}

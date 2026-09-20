@@ -1,0 +1,9 @@
+version: 1
+classes:
+  messages_or_publication: R3
+  purchase_or_financial_commitment: R4
+  permission_change: R4
+  destructive_remote_action: R4
+  production_change: R4
+  public_bot_template_share: R3
+  external_bot_template_share: R3

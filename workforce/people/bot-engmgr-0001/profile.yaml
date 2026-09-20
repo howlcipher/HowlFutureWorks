@@ -1,0 +1,13 @@
+schema_version: 1
+employee_id: bot-engmgr-0001
+display_name: 'Engineering Manager / Organizer #1'
+worker_type: ai_bot
+initial_position_id: engineering-manager
+initial_logical_role: engineering-manager
+hired_on: '2026-09-19'
+generation: 1
+manager_ref_at_hire: owner
+provider_kind: grok-bot
+predecessor_employee_id: null
+notes: Founding workforce record. Live platform identity is reconciled separately
+  and secrets are never stored here.

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Task Envelope",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "task_id",
+    "objective",
+    "risk_tier",
+    "allowed_tools",
+    "forbidden_actions",
+    "acceptance_criteria"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "work_item_id": {
+      "type": "string"
+    },
+    "accountable_role": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environment": {
+      "type": "string"
+    },
+    "risk_tier": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ]
+    },
+    "allowed_tools": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "budget": {
+      "type": "object"
+    },
+    "concurrency_ceiling": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "retry_ceiling": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "delegation_ceiling": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ttl": {
+      "type": "string"
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_approvals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "accountable_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requesting_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+budget_chars: 14000
+always_load:
+- AGENTS.md
+- organization.yaml
+- roles/auditor.md
+- policies/evidence.yaml
+- schemas/evidence.schema.json
+- schemas/approval.schema.json
+- knowledge/positions/auditor.md
+load_on_demand:
+- CHARTER.md
+- reports/
+- operations/
+- adr/
+- policies/
+- workforce/roster.yaml
+- workforce/events/
+- workforce/contributions/
+- knowledge/company/

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Employee Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "employee_id",
+    "display_name",
+    "worker_type",
+    "initial_position_id",
+    "initial_logical_role",
+    "hired_on",
+    "generation",
+    "manager_ref_at_hire",
+    "provider_kind",
+    "predecessor_employee_id",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "employee_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "worker_type": {
+      "enum": [
+        "ai_bot",
+        "human",
+        "service_agent"
+      ]
+    },
+    "initial_position_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "initial_logical_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hired_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "manager_ref_at_hire": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_kind": {
+      "type": "string",
+      "minLength": 1
+    },
+    "predecessor_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

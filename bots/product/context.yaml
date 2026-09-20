@@ -1,0 +1,15 @@
+budget_chars: 12000
+always_load:
+- AGENTS.md
+- organization.yaml
+- roles/product.md
+- product/README.md
+- policies/risk-tiers.yaml
+- templates/work-item.md
+- knowledge/positions/product.md
+load_on_demand:
+- CHARTER.md
+- rnd/
+- reports/
+- METRICS.md
+- knowledge/company/

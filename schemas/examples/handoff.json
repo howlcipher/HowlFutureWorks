@@ -1,0 +1,7 @@
+{
+  "from": "dev-lead",
+  "to": "assurance",
+  "work_item_id": "HOWL-001",
+  "summary": "Implementation ready",
+  "next_action": "verify acceptance criteria"
+}

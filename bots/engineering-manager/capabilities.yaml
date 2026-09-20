@@ -1,0 +1,8 @@
+bot_id: engineering-manager
+can_delegate: true
+can_modify_bot_definitions: true
+can_propose_policy_changes: true
+can_self_escalate: false
+can_manage_workforce_records: true
+can_propose_hires_and_separations: true
+can_apply_unreviewed_authority_expansion: false

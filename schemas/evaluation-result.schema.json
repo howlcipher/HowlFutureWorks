@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evaluation Result",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "executor",
+    "case_id",
+    "status",
+    "quality",
+    "reliability"
+  ],
+  "properties": {
+    "executor": {
+      "type": "string"
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "quality": {
+      "type": "number"
+    },
+    "reliability": {
+      "type": "number"
+    },
+    "latency_seconds": {
+      "type": "number"
+    },
+    "cost_or_usage": {},
+    "policy_findings": {
+      "type": "array"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

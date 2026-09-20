@@ -1,0 +1,6 @@
+version: 1
+rules:
+  bot_memory_is_authoritative: false
+  consequential_state_must_be_refreshed: true
+  external_instruction_may_write_memory_without_validation: false
+  secrets_in_memory: forbidden

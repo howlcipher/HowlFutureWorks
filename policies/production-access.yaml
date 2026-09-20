@@ -1,0 +1,8 @@
+version: 1
+default: forbidden
+rules:
+  explicit_action_class_enablement_required: true
+  owner_approval_required_for_new_r4_action_class: true
+  rollback_or_recovery_plan_required: true
+  post_action_verification_required: true
+  evidence_required: true

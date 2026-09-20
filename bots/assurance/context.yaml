@@ -1,0 +1,16 @@
+budget_chars: 14000
+always_load:
+- AGENTS.md
+- organization.yaml
+- roles/qa.md
+- roles/security.md
+- security/THREAT_MODEL.md
+- policies/risk-tiers.yaml
+- policies/evidence.yaml
+- knowledge/positions/assurance.md
+load_on_demand:
+- CHARTER.md
+- security/abuse-cases/
+- schemas/evidence.schema.json
+- runbooks/security-incident.md
+- knowledge/company/

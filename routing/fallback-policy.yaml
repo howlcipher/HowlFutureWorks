@@ -1,0 +1,7 @@
+version: 1
+fallback_behavior:
+  preserve_task_envelope: true
+  preserve_risk_tier: true
+  preserve_required_gates: true
+  checkpoint_before_switch: true
+  record_executor_change_in_result: true

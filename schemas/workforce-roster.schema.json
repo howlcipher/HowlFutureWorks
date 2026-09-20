@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Workforce Roster",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "model",
+    "as_of",
+    "employees"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "model": {
+      "const": "positions_outlive_workers"
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date"
+    },
+    "employees": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "employee_id",
+          "display_name",
+          "worker_type",
+          "position_id",
+          "logical_role",
+          "status",
+          "hired_on",
+          "generation",
+          "manager_ref",
+          "provider_kind",
+          "deployment_status",
+          "record_path",
+          "deployment_ref",
+          "deployed_fingerprint"
+        ],
+        "properties": {
+          "employee_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "worker_type": {
+            "enum": [
+              "ai_bot",
+              "human",
+              "service_agent"
+            ]
+          },
+          "position_id": {
+            "type": "string"
+          },
+          "logical_role": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "candidate",
+              "hired",
+              "active",
+              "suspended",
+              "terminated",
+              "retired",
+              "laid_off",
+              "replaced",
+              "provider_retired"
+            ]
+          },
+          "hired_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "generation": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "manager_ref": {
+            "type": "string"
+          },
+          "provider_kind": {
+            "type": "string"
+          },
+          "deployment_status": {
+            "enum": [
+              "not_yet_reconciled",
+              "deployed",
+              "disabled",
+              "unknown"
+            ]
+          },
+          "record_path": {
+            "type": "string"
+          },
+          "deployment_ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Provider/platform identity for the deployed worker; never a secret."
+          },
+          "deployed_fingerprint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Last reconciled configuration fingerprint."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+version: 1
+defaults:
+  max_depth: 2
+  max_workers: 4
+rules:
+  child_inherits_parent_risk_ceiling: true
+  child_may_self_escalate: false
+  spawning_agent_reconciles_results: true
+  recursive_spawning_requires_budget: true

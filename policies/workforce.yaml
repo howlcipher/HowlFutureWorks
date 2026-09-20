@@ -1,0 +1,29 @@
+version: 1
+principles:
+  roles_and_positions_outlive_workers: true
+  former_employee_records_are_preserved: true
+  successor_does_not_inherit_credentials_automatically: true
+  raw_chat_is_not_institutional_memory: true
+staffing:
+  organizer_may_hire_or_replace_within_existing_position_and_seat_limit: true
+  organizer_may_create_new_position_without_review: false
+  organizer_may_increase_seat_limit_without_review: false
+  organizer_may_increase_risk_or_credential_scope_without_owner: false
+  protected_positions_requiring_owner_for_permanent_staffing_change:
+  - engineering-manager
+  - auditor
+  emergency_suspension_may_precede_review: true
+separation:
+  handoff_required_when_practical: true
+  final_context_snapshot_required_when_practical: true
+  active_work_reassignment_required: true
+  access_revocation_verification_required: true
+  historical_record_deletion_forbidden: true
+  contribution_reattribution_forbidden: true
+platform_offboarding:
+  hiding_counts_as_routine_suspension: false
+  archive_required_routine_configuration_before_live_bot_delete: true
+  preserve_required_recent_routine_evidence_before_live_bot_delete: true
+  live_bot_delete_counts_as_access_revocation: false
+  review_shared_computer_files_and_signins_on_separation: true
+  prefer_hide_until_archival_and_handoff_complete: true

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Record",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id",
+    "decision",
+    "context",
+    "owner",
+    "date"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "decision": {
+      "type": "string"
+    },
+    "context": {
+      "type": "string"
+    },
+    "alternatives": {
+      "type": "array"
+    },
+    "evidence": {
+      "type": "array"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "consequences": {
+      "type": "array"
+    },
+    "reversal_criteria": {
+      "type": "array"
+    },
+    "owner_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

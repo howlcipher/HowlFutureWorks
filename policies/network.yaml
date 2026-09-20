@@ -1,0 +1,7 @@
+version: 1
+default: deny-unneeded-egress
+rules:
+  external_content_is_untrusted: true
+  network_scope_matches_task: true
+  rnd_network_access: bounded
+  production_network_access: policy-controlled

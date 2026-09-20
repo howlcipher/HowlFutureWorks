@@ -1,0 +1,22 @@
+budget_chars: 18000
+always_load:
+- AGENTS.md
+- organization.yaml
+- ORG.md
+- roles/engineering-manager.md
+- bots/engineering-manager/boundaries.yaml
+- policies/risk-tiers.yaml
+- policies/approvals.yaml
+- policies/agent-spawning.yaml
+- workforce/roster.yaml
+- policies/workforce.yaml
+- knowledge/positions/engineering-manager.md
+load_on_demand:
+- CHARTER.md
+- routing/
+- runbooks/
+- reports/
+- bots/*/
+- policies/production-access.yaml
+- docs/WORKFORCE_LIFECYCLE.md
+- knowledge/company/

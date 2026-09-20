@@ -1,0 +1,28 @@
+version: 1
+executors:
+  - id: claude
+    provider: anthropic
+    status: available-if-configured
+    benchmark_status: needs-local-eval
+  - id: codex
+    provider: openai
+    status: available-if-configured
+    benchmark_status: needs-local-eval
+  - id: agy
+    provider: configured-by-owner
+    status: available-if-configured
+    benchmark_status: needs-local-eval
+fields_to_maintain:
+  - model_version
+  - adapter_version
+  - tool_support
+  - task_success_rate
+  - reviewer_acceptance
+  - reliability
+  - latency
+  - cost_or_usage
+  - quota_state
+  - context_capacity
+  - known_failure_modes
+  - allowed_risk_classes
+  - last_evaluated_at

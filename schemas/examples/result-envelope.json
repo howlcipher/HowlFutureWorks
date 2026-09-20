@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-001",
+  "status": "complete",
+  "executor": {
+    "id": "codex"
+  },
+  "evidence": [
+    "evidence:validation"
+  ]
+}

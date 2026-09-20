@@ -1,0 +1,19 @@
+version: 1
+exact_action_binding_required_for: [R3, R4]
+approval_fields:
+  - work_item_id
+  - actor
+  - action
+  - tool
+  - target
+  - normalized_parameters
+  - risk_tier
+  - policy_version
+  - issued_at
+  - expires_at
+  - approver
+  - action_digest
+rules:
+  materially_changed_action_requires_new_approval: true
+  self_approval_for_authority_expansion: false
+  fail_closed_if_required_approval_unavailable: true

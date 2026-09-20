@@ -1,0 +1,11 @@
+{
+  "work_item_id": "HOWL-001",
+  "actor": "engineering-manager",
+  "action": "example",
+  "target": "example",
+  "risk_tier": "R3",
+  "issued_at": "2026-01-01T00:00:00Z",
+  "expires_at": "2026-01-01T01:00:00Z",
+  "approver": "owner",
+  "action_digest": "sha256:example"
+}

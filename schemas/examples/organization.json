@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "organization_id": "howl-future-works",
+  "display_name": "HowlFutureWorks",
+  "repository_slug": "howl-future-works",
+  "ecosystem": "Howl",
+  "purpose": "Human-governed autonomous software organization for discovering, building, verifying, operating, and improving the Howl ecosystem and adjacent software.",
+  "desired_state_source": "git",
+  "work_state_sources": [
+    "HowlBoard",
+    "HowlPlane"
+  ],
+  "policy_enforcement": "HowlFrame",
+  "primary_persistent_runtime": "grok-bot",
+  "provider_neutral_design": true,
+  "member_term": "member",
+  "position_term": "position",
+  "formal_name_rule": "Use HowlFutureWorks for the organization and howl-future-works for the repository/package slug.",
+  "employee_continuity_budget_chars": 24000
+}

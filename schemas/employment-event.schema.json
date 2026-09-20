@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Employment Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "occurred_at",
+    "employee_id",
+    "event_type",
+    "reason_code",
+    "summary",
+    "approved_by",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "employee_id": {
+      "type": "string"
+    },
+    "event_type": {
+      "enum": [
+        "hired",
+        "activated",
+        "reassigned",
+        "suspended",
+        "reinstated",
+        "terminated",
+        "retired",
+        "laid_off",
+        "replaced",
+        "provider_retired",
+        "rehired"
+      ]
+    },
+    "position_id_before": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "position_id_after": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "successor_employee_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

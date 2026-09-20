@@ -1,0 +1,5 @@
+bot_id: assurance
+can_delegate: true
+can_modify_bot_definitions: false
+can_propose_policy_changes: true
+can_self_escalate: false

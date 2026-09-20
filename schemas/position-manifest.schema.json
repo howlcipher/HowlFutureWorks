@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Persistent Position Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "desired_state",
+    "bots",
+    "semantics"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "desired_state": {
+      "const": "repository"
+    },
+    "bots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "status",
+          "persistent",
+          "role",
+          "risk_ceiling",
+          "seat_limit",
+          "workforce_managed",
+          "staffing_authority"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "approved",
+              "active",
+              "deprecated",
+              "retired"
+            ]
+          },
+          "persistent": {
+            "type": "boolean"
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "risk_ceiling": {
+            "enum": [
+              "R0",
+              "R1",
+              "R2",
+              "R3",
+              "R4"
+            ]
+          },
+          "seat_limit": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "workforce_managed": {
+            "type": "boolean"
+          },
+          "staffing_authority": {
+            "enum": [
+              "owner",
+              "engineering-manager"
+            ]
+          }
+        }
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entries_are",
+        "workforce_source",
+        "seat_rule"
+      ],
+      "properties": {
+        "entries_are": {
+          "const": "persistent_positions_not_employee_history"
+        },
+        "workforce_source": {
+          "const": "workforce/roster.yaml"
+        },
+        "seat_rule": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

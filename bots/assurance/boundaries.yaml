@@ -1,0 +1,6 @@
+bot_id: assurance
+risk_ceiling: R2
+secrets_in_prompt: forbidden
+production_credentials: forbidden
+self_authority_change: forbidden
+fail_closed_on_missing_required_approval: true

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "contribution_id": "contrib-example-001",
+  "employee_id": "bot-devlead-0001",
+  "occurred_at": "2026-09-19T12:00:00-04:00",
+  "role_at_time": "dev-lead",
+  "work_item_id": "HOWL-EXAMPLE",
+  "summary": "Example contribution record.",
+  "artifact_refs": [
+    "commit:deadbeef"
+  ],
+  "evidence_refs": [
+    "report:example"
+  ],
+  "verified_by": "bot-auditor-0001"
+}

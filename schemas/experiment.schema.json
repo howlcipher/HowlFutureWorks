@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Experiment",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id",
+    "problem",
+    "hypothesis",
+    "success_criteria",
+    "risk_tier",
+    "status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "problem": {
+      "type": "string"
+    },
+    "hypothesis": {
+      "type": "string"
+    },
+    "method": {
+      "type": "string"
+    },
+    "success_criteria": {
+      "type": "array"
+    },
+    "risk_tier": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2"
+      ]
+    },
+    "evidence": {
+      "type": "array"
+    },
+    "result": {
+      "type": "string"
+    },
+    "decision": {
+      "enum": [
+        "kill",
+        "defer",
+        "promote",
+        "pending"
+      ]
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

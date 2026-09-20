@@ -1,0 +1,7 @@
+version: 1
+rules:
+  provider_loyalty: forbidden
+  choose_by_measured_fit: true
+  risk_and_required_tools_are_hard_constraints: true
+  quota_outage_may_lower_assurance: false
+  prefer_least_cost_executor_meeting_quality_bar: true

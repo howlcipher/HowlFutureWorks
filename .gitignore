@@ -1,0 +1,12 @@
+build/
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+.env.*
+!.env.example
+reports/**/raw/
+evidence/raw/
+
+dist/

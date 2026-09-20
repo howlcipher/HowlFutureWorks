@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evidence Artifact",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id",
+    "claim",
+    "type",
+    "pointer"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "claim": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "pointer": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "producer": {
+      "type": "string"
+    }
+  }
+}

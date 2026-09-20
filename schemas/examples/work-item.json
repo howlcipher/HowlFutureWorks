@@ -1,0 +1,10 @@
+{
+  "id": "HOWL-001",
+  "problem": "Example recurring problem",
+  "desired_outcome": "Observable improvement",
+  "owner": "product",
+  "risk_tier": "R1",
+  "acceptance_criteria": [
+    "criterion"
+  ]
+}

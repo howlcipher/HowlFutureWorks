@@ -1,0 +1,6 @@
+version: 1
+rules:
+  policy_change_increasing_authority_requires_owner: true
+  bot_description_change_is_configuration_change: true
+  capability_change_requires_review: true
+  risk_reclassification_must_not_be_used_to_bypass_approval: true

@@ -1,0 +1,15 @@
+{
+  "task_id": "TASK-001",
+  "objective": "Validate repo scaffold",
+  "risk_tier": "R1",
+  "allowed_tools": [
+    "filesystem",
+    "git"
+  ],
+  "forbidden_actions": [
+    "production-write"
+  ],
+  "acceptance_criteria": [
+    "validation passes"
+  ]
+}

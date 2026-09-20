@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Context Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "employee_id",
+    "created_at",
+    "reason",
+    "stable_knowledge",
+    "open_work",
+    "decisions",
+    "risks",
+    "source_refs"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "snapshot_id": {
+      "type": "string"
+    },
+    "employee_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reason": {
+      "enum": [
+        "periodic",
+        "handoff",
+        "separation",
+        "reassignment",
+        "incident",
+        "manual"
+      ]
+    },
+    "stable_knowledge": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "open_work": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "handoff_to": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contains_raw_chain_of_thought": {
+      "const": false
+    }
+  }
+}

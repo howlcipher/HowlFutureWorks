@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "isolated-fix",
+      "class": "implementation"
+    },
+    {
+      "id": "cross-repo-change",
+      "class": "architecture+implementation"
+    },
+    {
+      "id": "debugging",
+      "class": "debugging"
+    },
+    {
+      "id": "security-remediation",
+      "class": "security"
+    },
+    {
+      "id": "browser-ui",
+      "class": "browser"
+    },
+    {
+      "id": "long-running",
+      "class": "orchestration"
+    }
+  ]
+}

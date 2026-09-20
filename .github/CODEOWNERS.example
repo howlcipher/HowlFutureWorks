@@ -1,0 +1,6 @@
+# Copy this file to .github/CODEOWNERS after replacing @OWNER with the real GitHub owner/team.
+CHARTER.md @OWNER
+policies/ @OWNER
+bots/ @OWNER
+SECURITY.md @OWNER
+RISK.md @OWNER

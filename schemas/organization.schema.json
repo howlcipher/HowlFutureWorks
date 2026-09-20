@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://howlcipher.github.io/howl-future-works/schemas/organization.schema.json",
+  "title": "HowlFutureWorks Organization Identity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "organization_id",
+    "display_name",
+    "repository_slug",
+    "ecosystem",
+    "purpose",
+    "desired_state_source",
+    "work_state_sources",
+    "policy_enforcement",
+    "primary_persistent_runtime",
+    "provider_neutral_design",
+    "member_term",
+    "position_term",
+    "employee_continuity_budget_chars",
+    "formal_name_rule"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "organization_id": {
+      "type": "string",
+      "const": "howl-future-works"
+    },
+    "display_name": {
+      "type": "string",
+      "const": "HowlFutureWorks"
+    },
+    "repository_slug": {
+      "type": "string",
+      "const": "howl-future-works"
+    },
+    "ecosystem": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 20
+    },
+    "desired_state_source": {
+      "type": "string",
+      "const": "git"
+    },
+    "work_state_sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "policy_enforcement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primary_persistent_runtime": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_neutral_design": {
+      "type": "boolean",
+      "const": true
+    },
+    "member_term": {
+      "type": "string",
+      "minLength": 1
+    },
+    "position_term": {
+      "type": "string",
+      "minLength": 1
+    },
+    "formal_name_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "employee_continuity_budget_chars": {
+      "type": "integer",
+      "minimum": 12000,
+      "maximum": 50000,
+      "description": "Maximum rendered employee continuity bundle size in characters."
+    }
+  }
+}

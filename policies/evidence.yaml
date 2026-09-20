@@ -1,0 +1,7 @@
+version: 1
+rules:
+  model_claim_alone_is_evidence: false
+  prefer_immutable_or_content_addressed: true
+  include_commit_or_artifact_identity_when_applicable: true
+  secrets_in_evidence: forbidden
+  independent_reconstruction_required_for_audit: true

@@ -1,0 +1,22 @@
+version: 1
+tiers:
+  R0:
+    name: Observe
+    examples: [read-only research, inventory, status, reporting]
+    default_human_approval: false
+  R1:
+    name: Sandbox
+    examples: [isolated worktree changes, disposable experiments, generated files]
+    default_human_approval: false
+  R2:
+    name: Development
+    examples: [branches, pull requests, tests, development CI, issue updates]
+    default_human_approval: false
+  R3:
+    name: Shared / Release
+    examples: [merge, staging/shared mutation, publication, external communications, release promotion]
+    default_human_approval: true
+  R4:
+    name: Critical
+    examples: [production, destructive bulk action, privilege change, secret operations, irreversible data, security-control change, financial or legal commitment]
+    default_human_approval: true

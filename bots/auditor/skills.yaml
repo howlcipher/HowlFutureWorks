@@ -1,0 +1,5 @@
+bot_id: auditor
+skills:
+  - id: core-role
+    status: planned
+    source: bots/auditor/instructions.md

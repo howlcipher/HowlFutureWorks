@@ -1,0 +1,17 @@
+budget_chars: 15000
+always_load:
+- AGENTS.md
+- organization.yaml
+- roles/dev-lead.md
+- routing/README.md
+- routing/capability-registry.yaml
+- policies/risk-tiers.yaml
+- schemas/task-envelope.schema.json
+- schemas/result-envelope.schema.json
+- knowledge/positions/dev-lead.md
+load_on_demand:
+- CHARTER.md
+- roles/software-architect.md
+- runbooks/
+- evals/
+- knowledge/company/

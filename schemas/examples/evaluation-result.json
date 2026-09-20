@@ -1,0 +1,7 @@
+{
+  "executor": "codex",
+  "case_id": "case-001",
+  "status": "pass",
+  "quality": 0.9,
+  "reliability": 0.95
+}
