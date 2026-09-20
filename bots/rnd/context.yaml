@@ -2,6 +2,8 @@ budget_chars: 12000
 always_load:
 - AGENTS.md
 - organization.yaml
+- policies/memory.yaml
+- policies/budgets.yaml
 - roles/rnd.md
 - rnd/README.md
 - policies/risk-tiers.yaml

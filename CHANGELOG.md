@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.1 - 2026-09-20
+
+- Add a durable-knowledge-retention principle to `policies/memory.yaml`: use conversations for disposable working context, use durable repository records for knowledge another session/provider/worker would otherwise rediscover ("write once, retrieve many").
+- Add machine-checked context-checkpoint budgets to `policies/budgets.yaml` (`context_checkpoint_threshold_percent`, `knowledge_artifacts.*`, `guidance.*`).
+- Add `orgctl.py checkpoint`: writes a schema-validated, size-bounded, non-overwriting context snapshot, with `reason` validated against the schema's (now-extended) enum.
+- Extend `schemas/context-snapshot.schema.json`'s `reason` enum with `task_complete`, `context_budget`, `provider_switch`, `session_end`, `material_decision`, `material_discovery`, and make `contains_raw_chain_of_thought` required.
+- Make every persistent position always load `policies/memory.yaml` and `policies/budgets.yaml`.
+- Extend `orgctl.py validate` to check memory/budget policy structure, per-position policy loading, position-knowledge file size, context-snapshot budget compliance, and handoff file size.
+- Add `docs/KNOWLEDGE_RETENTION.md` and ADR 0004; add a new test suite covering `orgctl.py checkpoint` end-to-end against a temporary repository copy.
+- Derive version-dependent test assertions (publish-guide bundle name) from `pyproject.toml`'s canonical version instead of a second hardcoded literal.
+
 ## 0.4.0 - 2026-09-19
 
 - Pin current audit dependencies (`PyYAML 6.0.3`, `jsonschema 4.26.0`, `pytest 9.1.1`) and verify dependency health in CI.

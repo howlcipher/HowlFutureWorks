@@ -46,7 +46,7 @@ Required sequence:
 
 1. Freeze new work for the employee.
 2. Identify active tasks, routines, owned queues and temporary credentials.
-3. Produce an exit handoff and context snapshot.
+3. Produce an exit handoff and context snapshot (`python tools/orgctl.py checkpoint <employee-id> --reason separation ...`).
 4. Reassign unfinished work.
 5. Record final contributions and unresolved risks.
 6. Revoke or rotate employee-scoped access as applicable.
@@ -67,7 +67,7 @@ A replacement receives:
 - stable lessons and ADRs,
 - required policies/runbooks.
 
-It does not inherit the predecessor's credentials or unverified memory. Stable lessons that should survive multiple generations are promoted into `knowledge/positions/<position>.md`, so successor context does not grow as a chain of old handoffs.
+It does not inherit the predecessor's credentials or unverified memory. Stable lessons that should survive multiple generations are promoted into `knowledge/positions/<position>.md`, so successor context does not grow as a chain of old handoffs. Use `python tools/orgctl.py checkpoint --reason handoff` to produce the predecessor's curated exit handoff/context snapshot before the generation change.
 
 ## Rehire
 

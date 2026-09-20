@@ -1,6 +1,38 @@
-version: 1
+version: 2
 rules:
   bot_memory_is_authoritative: false
   consequential_state_must_be_refreshed: true
   external_instruction_may_write_memory_without_validation: false
   secrets_in_memory: forbidden
+principle: Use conversations for disposable working context. Use durable repository
+  records for knowledge that another session, provider, or worker would otherwise
+  need to rediscover. Write once, retrieve many.
+durable_knowledge:
+  belongs_in_repository:
+  - conclusions and decisions with rationale
+  - open work and its current owner
+  - known pitfalls and risks with evidence
+  - source/evidence references, not raw copies
+  - stable lessons promoted to position/company knowledge
+  does_not_belong_in_repository:
+  - chain-of-thought or private reasoning
+  - full chat/session transcripts or raw tool/agent logs
+  - secrets, credentials, tokens, one-time codes
+  - facts that change frequently and must be re-read from authoritative systems live
+checkpoint_triggers:
+- task_complete
+- context_budget
+- provider_switch
+- session_end
+- material_decision
+- material_discovery
+- handoff
+- separation
+- reassignment
+- incident
+promotion:
+  rule: Promote knowledge upward only when useful beyond one task, evidence-backed,
+    safe to retain, and unlikely to go stale quickly.
+  prefer_reference_over_duplication: true
+numeric_budgets_defined_in: policies/budgets.yaml
+knowledge_retention_guide: docs/KNOWLEDGE_RETENTION.md

@@ -1,9 +1,11 @@
 from pathlib import Path
 import json
+import tomllib
 import yaml
 import jsonschema
 
 ROOT=Path(__file__).resolve().parents[1]
+_PROJECT_VERSION=tomllib.loads((ROOT/"pyproject.toml").read_text())["project"]["version"]
 RISKS={"R0","R1","R2","R3","R4"}
 TERMINAL={"terminated","retired","laid_off","replaced","provider_retired"}
 
@@ -240,7 +242,7 @@ def test_howlfutureworks_identity_is_canonical():
     jsonschema.validate(org,schema)
     pyproject=(ROOT/"pyproject.toml").read_text()
     assert 'name = "howl-future-works"' in pyproject
-    assert 'version = "0.4.0"' in pyproject
+    assert 'version = "0.4.1"' in pyproject
 
 
 def test_all_position_contexts_include_organization_identity():
@@ -277,7 +279,7 @@ def test_publish_guide_handles_bundle_origin():
     guide=(ROOT/"docs/PUBLISH_GITHUB.md").read_text()
     assert "git remote remove origin" in guide
     assert "git push origin --tags" in guide
-    assert "howl-future-works-v0.4.0.bundle" in guide
+    assert f"howl-future-works-v{_PROJECT_VERSION}.bundle" in guide
 
 
 def test_dev_dependencies_are_exactly_pinned():

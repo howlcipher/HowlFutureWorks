@@ -31,6 +31,10 @@ For any task, do **not** load the whole repository by default.
 
 Before staffing changes, read `docs/WORKFORCE_LIFECYCLE.md`. Firing/separating a worker must preserve its tenure, contributions, curated context, handoff and lifecycle events. Promote stable successor-relevant lessons into `knowledge/positions/` rather than chaining raw predecessor history. Do not replace institutional memory with raw chat logs.
 
+## Durable knowledge and checkpoints
+
+Before context, session or provider loss, checkpoint durable knowledge with `python tools/orgctl.py checkpoint`. Promote reusable knowledge upward into `knowledge/positions/` or `knowledge/company/` and reference existing authoritative documentation instead of reproducing it. See `docs/KNOWLEDGE_RETENTION.md`, `policies/memory.yaml` and `policies/budgets.yaml`.
+
 ## Organizer model
 
 The Engineering Manager / Organizer owns **position configuration and workforce lifecycle**. It may create or adjust persistent positions and propose position retirement; it may also propose/execute staffing changes within policy when the change is within the current authority model. Changes that increase authority, production access, credential scope, or reduce approval requirements must be proposed through policy review and require the Owner when the risk model says so.

@@ -22,5 +22,7 @@ A departed employee's record is not deleted merely because the live Bot was disa
 ## Context principle
 Persist conclusions, decisions, known pitfalls, open work and source/evidence references. Re-read changing facts from authoritative systems. Do not preserve raw model reasoning merely to make a future Bot feel continuous.
 
+Canonical behavioral rules for this are in `policies/memory.yaml`; canonical numeric checkpoint/handoff/knowledge budgets are in `policies/budgets.yaml` and `organization.yaml`.
+
 ## Reports
 Prefer compact summaries and references. `reports/**/raw/` and `evidence/raw/` are ignored by Git by default.

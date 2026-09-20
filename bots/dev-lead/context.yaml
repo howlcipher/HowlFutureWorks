@@ -2,6 +2,8 @@ budget_chars: 15000
 always_load:
 - AGENTS.md
 - organization.yaml
+- policies/memory.yaml
+- policies/budgets.yaml
 - roles/dev-lead.md
 - routing/README.md
 - routing/capability-registry.yaml

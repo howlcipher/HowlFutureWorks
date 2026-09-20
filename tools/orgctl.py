@@ -63,6 +63,27 @@ def validate():
             errors.append(f"organization repository_slug drift: {org.get('repository_slug')} != {project.get('name')}")
     except Exception as e: errors.append(f"organization: {e}")
 
+    # Durable knowledge / numeric budget policy.
+    ka={}
+    try:
+        mem=load_yaml(ROOT/"policies/memory.yaml") or {}
+        if mem.get("rules",{}).get("secrets_in_memory")!="forbidden":
+            errors.append("policies/memory.yaml rules.secrets_in_memory must be forbidden")
+        bud=load_yaml(ROOT/"policies/budgets.yaml") or {}
+        pct=bud.get("defaults",{}).get("context_checkpoint_threshold_percent")
+        if not isinstance(pct,int) or not (50<=pct<=90):
+            errors.append(f"policies/budgets.yaml defaults.context_checkpoint_threshold_percent must be an integer 50-90, got {pct}")
+        ka=bud.get("knowledge_artifacts",{}) or {}
+        for key in ("checkpoint_chars","handoff_chars","position_knowledge_file_chars"):
+            v=ka.get(key)
+            if not isinstance(v,int) or v<=0:
+                errors.append(f"policies/budgets.yaml knowledge_artifacts.{key} must be a positive integer")
+        if isinstance(ka.get("checkpoint_chars"),int) and isinstance(ka.get("handoff_chars"),int) and ka["checkpoint_chars"]>ka["handoff_chars"]:
+            errors.append("policies/budgets.yaml knowledge_artifacts.checkpoint_chars should not exceed handoff_chars")
+        if isinstance(ka.get("handoff_chars"),int) and isinstance(ka.get("position_knowledge_file_chars"),int) and ka["handoff_chars"]>ka["position_knowledge_file_chars"]:
+            errors.append("policies/budgets.yaml knowledge_artifacts.handoff_chars should not exceed position_knowledge_file_chars")
+    except Exception as ex: errors.append(f"memory/budget policy: {ex}")
+
     # Position/Bot definition validation.
     positions={}
     try:
@@ -78,6 +99,16 @@ def validate():
             ctxp=ROOT/f"bots/{bid}/context.yaml"
             if ctxp.exists():
                 ctx=load_yaml(ctxp) or {}
+                always=ctx.get("always_load",[])
+                for req_policy in ("policies/memory.yaml","policies/budgets.yaml"):
+                    if req_policy not in always:
+                        errors.append(f"{bid} context.yaml always_load missing {req_policy}")
+                kp=ROOT/f"knowledge/positions/{bid}.md"
+                pkf_limit=ka.get("position_knowledge_file_chars")
+                if kp.exists() and isinstance(pkf_limit,int):
+                    size=len(kp.read_text())
+                    if size>pkf_limit:
+                        errors.append(f"knowledge/positions/{bid}.md exceeds position_knowledge_file_chars: {size}>{pkf_limit}")
                 budget=ctx.get("budget_chars")
                 if not isinstance(budget,int) or budget<2000:
                     errors.append(f"{bid} context budget_chars must be an integer >= 2000")
@@ -191,7 +222,20 @@ def validate():
             if data.get("employee_id") not in set(eids): errors.append(f"{p.relative_to(ROOT)} references unknown employee {data.get('employee_id')}")
             target=data.get("handoff_to")
             if target and target!="owner" and target not in set(eids): errors.append(f"{p.relative_to(ROOT)} references unknown handoff target {target}")
+            limit=ka.get("checkpoint_chars")
+            if isinstance(limit,int):
+                size=len(p.read_text())
+                if size>limit: errors.append(f"{p.relative_to(ROOT)} exceeds checkpoint_chars budget: {size}>{limit}")
         except Exception as e: errors.append(f"invalid yaml {p.relative_to(ROOT)}: {e}")
+
+    for p in (ROOT/"workforce/people").glob("*/handoffs/*"):
+        if p.name==".gitkeep" or not p.is_file(): continue
+        try:
+            size=len(p.read_text())
+            limit=ka.get("handoff_chars")
+            if isinstance(limit,int) and size>limit:
+                errors.append(f"{p.relative_to(ROOT)} exceeds handoff_chars budget: {size}>{limit}")
+        except Exception as ex: errors.append(f"invalid handoff {p.relative_to(ROOT)}: {ex}")
 
     for folder in ["policies","routing"]:
         for p in (ROOT/folder).glob("*.yaml"):
@@ -413,6 +457,57 @@ def record_contribution(args):
     print(p.relative_to(ROOT))
 
 
+def checkpoint(args):
+    e=employee_by_id(args.employee_id)
+    if not e: raise SystemExit(f"unknown employee {args.employee_id}")
+
+    schema=load_json(ROOT/"schemas/context-snapshot.schema.json")
+    allowed_reasons=set(schema.get("properties",{}).get("reason",{}).get("enum",[]))
+    if args.reason not in allowed_reasons:
+        raise SystemExit(f"reason must be one of {sorted(allowed_reasons)}")
+
+    if args.handoff_to and args.handoff_to!="owner" and not employee_by_id(args.handoff_to):
+        raise SystemExit(f"unknown handoff target {args.handoff_to}; must be 'owner' or an existing employee id")
+
+    now=datetime.now().astimezone()
+    snapshot_id=args.id or f"context-{now.strftime('%Y%m%dt%H%M%S')}-{args.employee_id}"
+    if not safe_id(snapshot_id): raise SystemExit(f"context snapshot id must be lowercase kebab-case: {snapshot_id}")
+
+    p=ROOT/f"workforce/people/{args.employee_id}/context/{snapshot_id}.yaml"
+    if p.exists(): raise SystemExit(f"context snapshot exists: {p.relative_to(ROOT)}")
+
+    data={
+        'schema_version':1,
+        'snapshot_id':snapshot_id,
+        'employee_id':args.employee_id,
+        'created_at':now.isoformat(timespec='seconds'),
+        'reason':args.reason,
+        'stable_knowledge':args.stable,
+        'open_work':args.open_work,
+        'decisions':args.decision,
+        'risks':args.risk,
+        'source_refs':args.source_ref,
+        'handoff_to':args.handoff_to,
+        'contains_raw_chain_of_thought':False,
+    }
+
+    errors=[]
+    validate_instance(data,ROOT/"schemas/context-snapshot.schema.json",snapshot_id,errors)
+    if errors: raise SystemExit("invalid context snapshot: "+"; ".join(errors))
+
+    text=yaml_text(data)
+    budgets=load_yaml(ROOT/"policies/budgets.yaml") or {}
+    limit=(budgets.get("knowledge_artifacts") or {}).get("checkpoint_chars")
+    if isinstance(limit,int) and len(text)>limit:
+        raise SystemExit(
+            f"checkpoint exceeds checkpoint_chars budget: {len(text)}>{limit} chars; "
+            "compact stable_knowledge/open_work/decisions/risks/source_refs before writing"
+        )
+
+    dump_yaml(data,p)
+    print(f"{p.relative_to(ROOT)} chars={len(text)} limit={limit}")
+
+
 def org_status():
     org=organization()
     print(f"{org.get('display_name','Organization')} ({org.get('repository_slug','?')})")
@@ -479,6 +574,7 @@ def main():
     sp=sub.add_parser("propose-separation"); sp.add_argument('employee_id'); sp.add_argument('--type',required=True); sp.add_argument('--reason',required=True)
     eh=sub.add_parser("employee-history"); eh.add_argument("employee_id")
     rc=sub.add_parser("record-contribution"); rc.add_argument('employee_id'); rc.add_argument('--summary',required=True); rc.add_argument('--id'); rc.add_argument('--work-item'); rc.add_argument('--artifact',action='append'); rc.add_argument('--evidence',action='append'); rc.add_argument('--verified-by')
+    cp=sub.add_parser("checkpoint"); cp.add_argument('employee_id'); cp.add_argument('--reason',required=True); cp.add_argument('--stable',action='append',default=[]); cp.add_argument('--open-work',dest='open_work',action='append',default=[]); cp.add_argument('--decision',action='append',default=[]); cp.add_argument('--risk',action='append',default=[]); cp.add_argument('--source-ref',dest='source_ref',action='append',default=[]); cp.add_argument('--handoff-to',dest='handoff_to',default=None); cp.add_argument('--id')
     a=ap.parse_args()
     if a.cmd=="validate": raise SystemExit(validate())
     if a.cmd=="about": about()
@@ -496,5 +592,6 @@ def main():
     if a.cmd=="propose-hire": propose_hire(a)
     if a.cmd=="propose-separation": propose_separation(a)
     if a.cmd=="record-contribution": record_contribution(a)
+    if a.cmd=="checkpoint": checkpoint(a)
 
 if __name__=="__main__": main()

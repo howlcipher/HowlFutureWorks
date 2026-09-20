@@ -24,3 +24,5 @@ The Engineering Manager/Organizer owns reconciliation and may propose hires, sep
 ## Rebuild principle
 
 If the live Grok deployment is lost, rebuild positions from `bots/`, staff them from `workforce/roster.yaml`, then restore only curated employee/context/handoff knowledge. Do not reconstruct the organization from old chat transcripts.
+
+Persistent positions always load `policies/memory.yaml` and `policies/budgets.yaml`; checkpoint durable knowledge with `python tools/orgctl.py checkpoint` before a provider or session transition that would otherwise lose it.

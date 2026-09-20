@@ -1,7 +1,16 @@
-version: 1
+version: 2
 defaults:
   max_retries_per_failure_class: 2
   checkpoint_long_running_work: true
   blind_retry: forbidden
   cost_attribution_to_work_item: required
   unexpected_usage_spike_action: circuit-breaker
+  context_checkpoint_threshold_percent: 75
+knowledge_artifacts:
+  checkpoint_chars: 4000
+  handoff_chars: 6000
+  position_knowledge_file_chars: 8000
+guidance:
+  position_knowledge_entry_chars: 2500
+  decision_summary_chars: 5000
+  incident_summary_chars: 8000

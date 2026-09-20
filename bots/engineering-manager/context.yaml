@@ -2,6 +2,8 @@ budget_chars: 18000
 always_load:
 - AGENTS.md
 - organization.yaml
+- policies/memory.yaml
+- policies/budgets.yaml
 - ORG.md
 - roles/engineering-manager.md
 - bots/engineering-manager/boundaries.yaml
@@ -19,4 +21,5 @@ load_on_demand:
 - bots/*/
 - policies/production-access.yaml
 - docs/WORKFORCE_LIFECYCLE.md
+- docs/KNOWLEDGE_RETENTION.md
 - knowledge/company/

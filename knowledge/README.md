@@ -12,7 +12,7 @@ This directory stores **curated organizational knowledge that outlives individua
 
 ## Promotion rule
 
-Promote knowledge upward only when it is useful beyond one task, supported by evidence, safe to retain, and unlikely to become misleading quickly. Do not promote secrets, raw chats, chain-of-thought, transient quota state, or unverified model claims.
+Promote knowledge upward only when it is useful beyond one task, supported by evidence, safe to retain, and unlikely to become misleading quickly. Do not promote secrets, raw chats, chain-of-thought, transient quota state, or unverified model claims. Promoted knowledge should replace duplicated lower-level prose with a reference to its new location — `knowledge/positions/` and `knowledge/company/` hold compact **current** knowledge, not an append-only history of every promotion.
 
 ## Succession rule
 

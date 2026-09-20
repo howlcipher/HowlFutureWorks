@@ -22,3 +22,5 @@ The repo reduces token waste by separating durable knowledge from task-local con
 ## Employee continuity bundles
 
 Rendered employee continuity bundles are capped by `organization.yaml: employee_continuity_budget_chars`. If a successor needs more history than fits the cap, promote stable lessons into position/company knowledge and retrieve older evidence on demand rather than raising the budget casually.
+
+See also `docs/KNOWLEDGE_RETENTION.md` for checkpoint triggers, the numeric-budget pointers, and the `orgctl.py checkpoint` tool.

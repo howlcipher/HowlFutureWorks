@@ -9,7 +9,7 @@ Start **private** while the live organization is being reconciled and reports/wo
 From the release Git bundle:
 
 ```bash
-git clone -b main howl-future-works-v0.4.0.bundle howl-future-works
+git clone -b main howl-future-works-v0.4.1.bundle howl-future-works
 cd howl-future-works
 python -m venv .venv
 source .venv/bin/activate
@@ -17,8 +17,8 @@ python -m pip install -r requirements-dev.txt
 make validate
 make test
 
-git tag --list v0.4.0
-# The final release bundle should already contain v0.4.0.
+git tag --list v0.4.1
+# The final release bundle should already contain v0.4.1.
 
 # A bundle clone creates an origin that points back to the bundle file.
 git remote -v

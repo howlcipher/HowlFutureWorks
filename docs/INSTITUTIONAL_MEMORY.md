@@ -19,3 +19,5 @@ A successor should receive the current role/position bundle, compact position kn
 ## Context hygiene
 
 Position knowledge must be periodically compacted and revalidated. Keep evidence pointers rather than copied raw logs. Changing facts must be re-read from authoritative systems. Secrets and private reasoning are never institutional memory.
+
+See also `docs/KNOWLEDGE_RETENTION.md` for when and how to checkpoint (`orgctl.py checkpoint`) and the governing `policies/memory.yaml` principle.

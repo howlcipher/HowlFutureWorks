@@ -13,7 +13,8 @@
     "open_work",
     "decisions",
     "risks",
-    "source_refs"
+    "source_refs",
+    "contains_raw_chain_of_thought"
   ],
   "properties": {
     "schema_version": {
@@ -37,7 +38,13 @@
         "separation",
         "reassignment",
         "incident",
-        "manual"
+        "manual",
+        "task_complete",
+        "context_budget",
+        "provider_switch",
+        "session_end",
+        "material_decision",
+        "material_discovery"
       ]
     },
     "stable_knowledge": {
