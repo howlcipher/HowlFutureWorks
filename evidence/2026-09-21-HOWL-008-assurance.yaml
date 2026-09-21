@@ -1,0 +1,65 @@
+work_item: HOWL-008
+role: assurance
+dual_hat: [qa, security]
+verdict: PASS
+owner_complete_declared: false
+product_repo: howlcipher/howlboard
+tip_sha: "41a91af6a6432e0df4eeec03f0a93acdb09e3794"
+base_sha: "cab020c"
+pr: "https://github.com/howlcipher/howlboard/pull/8"
+branch: feat/howl-008-dependency-navigation
+verified_at: "2026-09-21 13:23:45 EDT"
+worktree: /workspace/howlboard
+working_tree: clean
+merged: false
+howl_009_started: false
+ac_map:
+  1_activatable_controls: PASS
+  2_shared_mission_view: PASS
+  3_open_mission_activation: PASS
+  4_data_mission_id_esc: PASS
+  5_constant_handler: PASS
+  6_encode_json_get_body: PASS
+  7_hostile_id_coverage: PASS
+  8_existing_target_loads: PASS
+  9_missing_target_honest: PASS
+  10_empty_no_block: PASS
+  11_informational_only_copy: PASS
+  12_non_goals_held: PASS
+  13_howl007_backend_compatible: PASS
+  14_tests_and_docs: PASS
+  15_no_budget_raise_no_broad_refactor: PASS
+  16_product_def_published_early: PASS
+  17_no_executor_prepicked: PASS
+howl007_contracts_still_green: true
+no_id_in_handler_js: true
+encode_json_open_mission: true
+demo_read_only_shared_renderer: true
+gates:
+  go_test_exit: 0
+  docs_test_exit: 0
+  secret_scan_hits: 0
+  gha_build_contract_docs_seo: success
+routing:
+  selected_executor: SELF
+  reconstructable_from_org_docs: true
+  evidence_based_not_preference: true
+  howl007_as_sufficiency_evidence_not_auto_rule: true
+  implementation_stayed_self: true
+  re_picked_by_assurance: false
+budgets:
+  budgets_yaml_raised: false
+  context_budget_chars_raised: false
+  note: "policies/budgets.yaml and bots/*/context.yaml budget_chars identical to origin/main"
+artifacts:
+  - reports/work-items/HOWL-008/assurance-report.md
+  - reports/work-items/HOWL-008/assurance-commands.log
+  - reports/work-items/HOWL-008/assurance-go-test.txt
+  - reports/work-items/HOWL-008/assurance-docs-test.txt
+  - reports/work-items/HOWL-008/assurance-ci.txt
+  - reports/work-items/HOWL-008/assurance-secret-scan.txt
+  - reports/work-items/HOWL-008/assurance-files-changed.txt
+  - reports/work-items/HOWL-008/assurance-routing-review.txt
+  - evidence/howl-008-assurance-verify-41a91af/SUMMARY.md
+  - evidence/2026-09-21-HOWL-008-assurance.yaml
+  - security/reviews/HOWL-008-assurance-2026-09-21.md

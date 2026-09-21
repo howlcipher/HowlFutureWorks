@@ -1,0 +1,58 @@
+=== RUN   TestMissionAPIContract
+=== RUN   TestMissionAPIContract/empty_before_seeding
+=== RUN   TestMissionAPIContract/CORS_headers_are_present
+=== RUN   TestMissionAPIContract/authority_is_computed_per_mission
+=== RUN   TestMissionAPIContract/lapsed_approval_reports_ENVELOPE_EXPIRED
+=== RUN   TestMissionAPIContract/claimed_verification_stays_distinct_from_passed
+=== RUN   TestMissionAPIContract/evidence_keeps_provenance
+=== RUN   TestMissionAPIContract/execution_delta_records_unexpected_changes
+=== RUN   TestMissionAPIContract/authority_gates_execution
+=== RUN   TestMissionAPIContract/approval_unblocks_execution_and_is_audited
+=== RUN   TestMissionAPIContract/rejection_denies_the_envelope
+=== RUN   TestMissionAPIContract/invalid_transitions_are_refused
+=== RUN   TestMissionAPIContract/create_validates_input
+=== RUN   TestMissionAPIContract/create_and_delete_round-trip_through_store_enumeration
+=== RUN   TestMissionAPIContract/depends_on_create_round-trips_through_get
+=== RUN   TestMissionAPIContract/depends_on_omitted_and_empty_list_mean_no_dependencies
+=== RUN   TestMissionAPIContract/DEMO_fixture_carries_informational_depends_on
+=== RUN   TestMissionAPIContract/dashboard_aggregates_verification_failures_and_expiry
+=== RUN   TestMissionAPIContract/projects_are_derived,_not_hard-coded
+=== RUN   TestMissionAPIContract/timeline_is_chronological_and_attributed
+--- PASS: TestMissionAPIContract (0.09s)
+    --- PASS: TestMissionAPIContract/empty_before_seeding (0.00s)
+    --- PASS: TestMissionAPIContract/CORS_headers_are_present (0.00s)
+    --- PASS: TestMissionAPIContract/authority_is_computed_per_mission (0.00s)
+    --- PASS: TestMissionAPIContract/lapsed_approval_reports_ENVELOPE_EXPIRED (0.00s)
+    --- PASS: TestMissionAPIContract/claimed_verification_stays_distinct_from_passed (0.00s)
+    --- PASS: TestMissionAPIContract/evidence_keeps_provenance (0.00s)
+    --- PASS: TestMissionAPIContract/execution_delta_records_unexpected_changes (0.00s)
+    --- PASS: TestMissionAPIContract/authority_gates_execution (0.00s)
+    --- PASS: TestMissionAPIContract/approval_unblocks_execution_and_is_audited (0.00s)
+    --- PASS: TestMissionAPIContract/rejection_denies_the_envelope (0.00s)
+    --- PASS: TestMissionAPIContract/invalid_transitions_are_refused (0.00s)
+    --- PASS: TestMissionAPIContract/create_validates_input (0.00s)
+    --- PASS: TestMissionAPIContract/create_and_delete_round-trip_through_store_enumeration (0.00s)
+    --- PASS: TestMissionAPIContract/depends_on_create_round-trips_through_get (0.00s)
+    --- PASS: TestMissionAPIContract/depends_on_omitted_and_empty_list_mean_no_dependencies (0.01s)
+    --- PASS: TestMissionAPIContract/DEMO_fixture_carries_informational_depends_on (0.00s)
+    --- PASS: TestMissionAPIContract/dashboard_aggregates_verification_failures_and_expiry (0.00s)
+    --- PASS: TestMissionAPIContract/projects_are_derived,_not_hard-coded (0.00s)
+    --- PASS: TestMissionAPIContract/timeline_is_chronological_and_attributed (0.00s)
+=== RUN   TestDeniedCapabilityFailsClosed
+--- PASS: TestDeniedCapabilityFailsClosed (0.06s)
+=== RUN   TestHandlerAttributesInterpolateNoValues
+--- PASS: TestHandlerAttributesInterpolateNoValues (0.00s)
+=== RUN   TestEscapeFunctionCoversQuoteCharacters
+--- PASS: TestEscapeFunctionCoversQuoteCharacters (0.00s)
+=== RUN   TestDependsOnRender
+--- PASS: TestDependsOnRender (0.12s)
+=== RUN   TestDependsOnNeverInHandlerJS
+--- PASS: TestDependsOnNeverInHandlerJS (0.00s)
+=== RUN   TestOpenMissionUsesEncodeJSON
+--- PASS: TestOpenMissionUsesEncodeJSON (0.00s)
+=== RUN   TestDemoOpenMissionReportsMissing
+--- PASS: TestDemoOpenMissionReportsMissing (0.00s)
+=== RUN   TestDependsOnControlUsesDataAttrPattern
+--- PASS: TestDependsOnControlUsesDataAttrPattern (0.00s)
+PASS
+ok  	howlboard/backend	0.275s
