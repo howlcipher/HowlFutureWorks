@@ -1,0 +1,13 @@
+A	evidence/2026-09-20-HOWL-002-assurance.yaml
+A	evidence/howl-002-assurance-verify-2026-09-20/SUMMARY.md
+A	evidence/howl-002-assurance-verify-2026-09-20/commands.log
+A	evidence/howl-002-assurance-verify-2026-09-20/excerpts/auto-id-code.txt
+A	evidence/howl-002-assurance-verify-2026-09-20/files-changed.txt
+A	evidence/howl-002-assurance-verify-2026-09-20/samples/contrib-20260920t220851-bot-devlead-0001.yaml
+A	evidence/howl-002-assurance-verify-2026-09-20/samples/contrib-howl002-assurance-valid.yaml
+A	evidence/howl-002-assurance-verify-2026-09-20/tip-sha.txt
+A	reports/audits/assurance-verification-HOWL-002-2026-09-20.md
+A	reports/audits/auditor-HOWL-002-2026-09-20.md
+A	reports/work-items/HOWL-002.json
+A	reports/work-items/HOWL-002/product-definition.md
+A	security/reviews/HOWL-002-2026-09-20.md

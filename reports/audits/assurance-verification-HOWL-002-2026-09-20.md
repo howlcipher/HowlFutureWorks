@@ -1,3 +1,11 @@
+> **SUPERSEDED for current-head disposition.**  
+> Successor report: `reports/audits/assurance-verification-HOWL-002-current-head-2026-09-20.md`  
+> Successor evidence pack: `evidence/howl-002-assurance-verify-a4c9d09/`  
+> Successor tip: `a4c9d09b8d770540c7090b109c1eb7eb88fb7239`  
+> Body below retained for history (verified tip was b7e55fc).
+
+---
+
 # Assurance verification — HOWL-002 (PR #1)
 
 - Finding / report id: `ASSURE-HOWL-002-2026-09-20`
