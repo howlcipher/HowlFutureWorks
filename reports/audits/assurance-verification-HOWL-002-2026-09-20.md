@@ -81,3 +81,7 @@ See companion review for threat analysis.
 - Did not merge, undraft, or push the PR.
 - Did not modify product code under test.
 - Did not declare Owner-complete.
+
+## Rematerialization note
+
+2026-09-20T22:14-04:00 — Working-tree copy of this report was lost after Auditor review; rematerialized by Engineering Manager from the Assurance report text previously reviewed in-session so it can be committed to Git. Assurance (Lain) should re-attach command logs/samples under `evidence/howl-002-assurance-verify-2026-09-20/` if available, or re-run verification and overwrite this report if any claim needs amendment.
