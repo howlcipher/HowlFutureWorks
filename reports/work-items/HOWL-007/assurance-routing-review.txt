@@ -1,0 +1,26 @@
+HOWL-007 Assurance — routing reconstructability review
+Verified tip (howlboard): eb86e95f40e7e794f338f33100814cb52967fe5c
+Org docs reviewed (read-only):
+  - reports/work-items/HOWL-007/product-definition.md
+  - reports/work-items/HOWL-007/em-acceptance.md
+  - routing/decision-records/HOWL-007.md
+
+CLAIM: SELF selected with evidence-based rationale; implementation stayed SELF.
+
+Reconstructability:
+1) Product definition explicitly did NOT pre-pick executor (routing note: EM classifies after AC).
+2) EM acceptance (em-acceptance.md) classifies task_class=bounded, risk=R2, tools=coding/git.
+3) orgctl probe recorded: route --task-class bounded --risk R2 --required-tool coding
+   → SELF_preferred_unless_expected_value; eligible if delegated: claude, codex, agy, astra(=codex).
+4) SELF sufficient? Yes — bounded cross-cut; escape helpers exist; Assurance independent.
+5) External expected value? Not established for this HowlBoard/HowlFrame slice; quota unknown → conservative.
+6) Selection table: SELF SELECTED; Claude/Codex/Astra/AGY eligible-not-selected.
+7) Decision record HOWL-007.md: selected_executor: SELF; reasons match EM acceptance; verification_required: assurance_independent.
+
+Implementation stayed SELF (evidence):
+- howlboard PR #7 title/commit authored as native product change on feat/howl-007-mission-dependencies
+- Files are ordinary HowlFrame/Go/docs edits (server.howl, mission_view.howl, fixtures, contract_test.go, docs)
+- No external executor invocation artifacts required for the slice; publish path is native git/gh as EM envelope directed
+- Assurance does NOT re-pick executor
+
+RESULT: PASS — SELF selection reconstructable from org docs; implementation consistent with SELF envelope.

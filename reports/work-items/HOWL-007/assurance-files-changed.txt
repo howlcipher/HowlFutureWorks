@@ -1,0 +1,11 @@
+M	backend/contract_test.go
+M	backend/server.howl
+M	data/fixtures/missions.json
+M	docs/demo.js
+M	docs/domain_model.md
+M	docs/limitations.md
+M	docs/missions.json
+M	docs/roadmap.md
+M	frontend/mission_view.howl
+A	frontend/render_harness.howl
+M	scripts/test_docs.py

@@ -1,0 +1,63 @@
+work_item: HOWL-007
+role: assurance
+dual_hat: [qa, security]
+verdict: PASS
+owner_complete_declared: false
+product_repo: howlcipher/howlboard
+tip_sha: "eb86e95f40e7e794f338f33100814cb52967fe5c"
+base_sha: "8037dd8"
+pr: "https://github.com/howlcipher/howlboard/pull/7"
+branch: feat/howl-007-mission-dependencies
+verified_at: "2026-09-21 12:47:43 EDT"
+worktree: /workspace/howlboard
+working_tree: clean
+merged: false
+howl_008_started: false
+ac_map:
+  1_depends_on_field: PASS
+  2_create_path: PASS
+  3_round_trip: PASS
+  4_fail_closed_invalid: PASS
+  5_mission_view_render: PASS
+  6_empty_no_block: PASS
+  7_shared_app_demo_view: PASS
+  8_informational_only_copy: PASS
+  9_non_goals_held: PASS
+  10_demo_fixture: PASS
+  11_html_esc_no_handler_js: PASS
+  12_backend_contract_tests: PASS
+  13_frontend_render_tests: PASS
+  14_docs_drift: PASS
+  15_domain_model: PASS
+  16_no_budget_raise_routing_deferred: PASS
+field_naming:
+  product_field: depends_on
+  drift_depends_vs_depends_on: false
+  note: "CSS classes depends-block/label/list and local var deps are presentation-only"
+authority_verification_unchanged: true
+gates:
+  go_test_exit: 0
+  docs_test_exit: 0
+  secret_scan_hits: 0
+  gha_build_contract_docs_seo: success
+routing:
+  selected_executor: SELF
+  reconstructable_from_org_docs: true
+  implementation_stayed_self: true
+  re_picked_by_assurance: false
+budgets:
+  budgets_yaml_raised: false
+  context_budget_chars_raised: false
+  note: "eb48dc7 compacted always-load only; limits identical to main"
+artifacts:
+  - reports/work-items/HOWL-007/assurance-report.md
+  - reports/work-items/HOWL-007/assurance-commands.log
+  - reports/work-items/HOWL-007/assurance-go-test.txt
+  - reports/work-items/HOWL-007/assurance-docs-test.txt
+  - reports/work-items/HOWL-007/assurance-ci.txt
+  - reports/work-items/HOWL-007/assurance-secret-scan.txt
+  - reports/work-items/HOWL-007/assurance-files-changed.txt
+  - reports/work-items/HOWL-007/assurance-routing-review.txt
+  - evidence/howl-007-assurance-verify-eb86e95/SUMMARY.md
+  - evidence/2026-09-21-HOWL-007-assurance.yaml
+  - security/reviews/HOWL-007-assurance-2026-09-21.md

@@ -1,0 +1,48 @@
+# HOWL-007 Assurance verification commands log
+# When: 2026-09-21 (America/Detroit)
+# Role: bot-assurance (independent; dual QA+Security)
+# Product tip: howlcipher/howlboard eb86e95f40e7e794f338f33100814cb52967fe5c
+# Base: 8037dd8 ; Branch: feat/howl-007-mission-dependencies ; PR: #7
+# Did NOT merge. Did NOT start HOWL-008. Did NOT print secrets.
+
+pwd / workspace inspection
+cd /workspace/howlboard
+git status   # clean on feat/howl-007-mission-dependencies
+git rev-parse HEAD   # eb86e95f40e7e794f338f33100814cb52967fe5c
+git fetch origin
+git diff --name-status 8037dd8..HEAD
+git log --oneline 8037dd8..HEAD
+
+# Key diffs reviewed (not copied wholesale into org repo):
+git diff 8037dd8..HEAD -- backend/server.howl
+git diff 8037dd8..HEAD -- frontend/mission_view.howl
+git diff 8037dd8..HEAD -- data/fixtures/missions.json docs/missions.json
+git diff 8037dd8..HEAD -- backend/contract_test.go
+git diff 8037dd8..HEAD -- frontend/render_harness.howl
+git diff 8037dd8..HEAD -- docs/domain_model.md docs/limitations.md docs/roadmap.md scripts/test_docs.py docs/demo.js
+git diff 8037dd8..HEAD -G 'authority|lifecycle|can_transition'
+
+# Field naming
+rg -n 'depends_on|"depends"' backend frontend data docs scripts
+rg -n '\bdepends\b' backend frontend data docs scripts
+
+# Real artifact tests
+cd /workspace/howlboard/backend && go test ./...          # EXIT 0
+cd /workspace/howlboard/backend && go test -v -count=1 ./...  # EXIT 0; DependsOn* PASS
+cd /workspace/howlboard && python3 scripts/test_docs.py   # EXIT 0
+
+# CI
+gh pr checks 7 -R howlcipher/howlboard                   # Build... pass
+gh pr view 7 -R howlcipher/howlboard --json number,title,headRefOid,state,statusCheckRollup
+# headRefOid == eb86e95f40e7e794f338f33100814cb52967fe5c ; conclusion SUCCESS
+
+# Secret scan (changed files only; PEM armor checked via split BEGIN + PRIVATE KEY fragments — no contiguous header literal written)
+# RESULT: 0 hits
+
+# Org budgets (HowlFutureWorks)
+git diff main...HEAD -- policies/budgets.yaml            # empty (unchanged)
+# bots/*/context.yaml budget_chars identical main vs HEAD (EM 18000, DL 15000, Assurance 14000, Product 12000, Auditor 14000)
+# eb48dc7 chore compacted always-load only; commit message: "No budget increases"
+
+# Routing docs read (reconstruct SELF)
+# product-definition.md, em-acceptance.md, routing/decision-records/HOWL-007.md
