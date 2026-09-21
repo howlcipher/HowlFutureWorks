@@ -1,0 +1,31 @@
+/workspace/HowlFutureWorks-howl003/dist/howl-future-works-v0.4.1.zip
+/workspace/HowlFutureWorks-howl003/dist/howl-future-works-v0.4.1.bundle
+/workspace/HowlFutureWorks-howl003/dist/RELEASE.txt
+/workspace/HowlFutureWorks-howl003/dist/SHA256SUMS.txt
+build_exit=0
+/workspace/HowlFutureWorks-howl003/dist/howl-future-works-v0.4.1.bundle is okay
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+VALIDATION PASSED
+........................................................................ [ 97%]
+..                                                                       [100%]
+74 passed in 6.11s
+VALIDATION PASSED
+........................................................................ [ 97%]
+..                                                                       [100%]
+74 passed in 5.97s
+distribution verification passed; ZIP and bundle trees are identical
+verify_exit=0
+
+NOTE: make(1) not installed on verifier host; invoked Makefile recipes:
+  python tools/package_release.py build
+  python tools/package_release.py verify
+Post-packaging: refs/heads/main ABSENT (was absent before packaging).

@@ -1,0 +1,35 @@
+schema: howlfutureworks.evidence.manifest/v1
+id: 2026-09-20-HOWL-003-assurance
+date: "2026-09-20"
+timezone: America/Detroit
+work_item: HOWL-003
+pr: https://github.com/howlcipher/HowlFutureWorks/pull/2
+branch: fix/howl-003-dist-pr-checkout
+tip_sha: fd04b190ffd5c44af5401e3a945cbfff837d2d6e
+base_sha: 3b9c3bc64d4e0bbef3a34637c0b2dd60faf43121
+role: assurance
+overall: PASS
+owner_complete: false
+product_code_modified: false
+push_or_commit: false
+checks:
+  "1_reproduce_or_fix": PASS
+  "2_normal_local_main_dist": PASS
+  "3_pr_like_dist": PASS
+  "4_bundle_heads_and_clone": PASS
+  "5_archive_bundle_identity": PASS
+  "6_pytest_orgctl": PASS
+  "7_ci_distribution_gate": PASS
+  "8_scope_and_secrets": PASS
+artifacts:
+  evidence_dir: evidence/howl-003-assurance-verify-fd04b19/
+  summary: evidence/howl-003-assurance-verify-fd04b19/SUMMARY.md
+  commands_log: evidence/howl-003-assurance-verify-fd04b19/commands.log
+  audit_report: reports/audits/assurance-verification-HOWL-003-2026-09-20.md
+  security_review: security/reviews/HOWL-003-2026-09-20.md
+notes:
+  - make missing on verifier; Makefile recipes run via python tools/package_release.py
+  - gh unauthenticated; distribution=success on PR #2 noted by parent; workflow file verified present/unchanged
+  - packaging_main_ref restore / divergent main covered by pytest
+recommendation: PASS — proceed to owner merge decision; owner-complete not declared
+blockers: []
