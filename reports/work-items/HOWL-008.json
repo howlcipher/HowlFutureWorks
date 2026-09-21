@@ -2,11 +2,11 @@
   "id": "HOWL-008",
   "title": "Navigable informational mission dependencies",
   "status": "open",
-  "phase": "product-definition",
+  "phase": "implementation",
   "risk_tier": "R2",
   "opened_on": "2026-09-21",
   "owner_employee_id": "bot-engmgr-0001",
-  "assignee_employee_id": "bot-product-0001",
+  "assignee_employee_id": "bot-devlead-0001",
   "org_repository": "https://github.com/howlcipher/HowlFutureWorks",
   "org_main_sha_at_open": "27b8528a96ab3f9b929dda4d0f1fb9ee495bc7eb",
   "target_repository": "https://github.com/howlcipher/howlboard",
@@ -41,5 +41,22 @@
     "budgets_raised": false
   },
   "routing_note": "EM classifies after Product AC using live HOWL-005/006 policy; HOWL-007 SELF success is evidence not a rule; Astra=Codex alias.",
-  "updated_at": "2026-09-21T17:11:59.745867+00:00"
+  "updated_at": "2026-09-21T17:13:54.761812+00:00",
+  "product_definition": "reports/work-items/HOWL-008/product-definition.md",
+  "em_acceptance": "reports/work-items/HOWL-008/em-acceptance.md",
+  "routing_decision": "routing/decision-records/HOWL-008.md",
+  "routing": {
+    "task_class": "bounded",
+    "risk_tier": "R2",
+    "selected": "SELF",
+    "eligible_not_selected": [
+      "claude",
+      "codex",
+      "agy"
+    ],
+    "astra": "alias_of_codex",
+    "orgctl": "SELF_preferred_unless_expected_value",
+    "howl007": "sufficiency_evidence_not_auto_rule",
+    "quota_state": "unknown_treated_constrained"
+  }
 }
