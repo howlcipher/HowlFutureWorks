@@ -74,3 +74,8 @@ Assurance verification **PASS**. Safe to proceed with merge review / Owner decis
 
 ## Blockers
 None for checks 1–6.
+
+## Remediation note (post-Auditor Medium finding)
+- Auditor (tip `b1e39f1`) found that documenting the PEM private-key armor header as a contiguous scan-pattern string failed `tests/test_structure.py::test_no_obvious_secret_files_or_secret_literals`.
+- Evidence pack and Auditor report citations were reworded to describe that pattern without the forbidden contiguous literal.
+- Re-verified: that structure test **PASS**; full pytest **78 passed** on this tip after remediation.
