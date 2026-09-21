@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import argparse, subprocess, tempfile, sys, hashlib, tomllib
+import argparse, contextlib, subprocess, tempfile, sys, hashlib, tomllib
 
 ROOT=Path(__file__).resolve().parents[1]
 DIST=ROOT/'dist'
@@ -32,6 +32,32 @@ def sha256(path):
     return h.hexdigest()
 
 
+def _rev_parse(ref):
+    r=subprocess.run(['git','rev-parse','-q','--verify',ref],cwd=ROOT,text=True,capture_output=True)
+    return r.stdout.strip() if r.returncode==0 else None
+
+
+@contextlib.contextmanager
+def packaging_main_ref(commit):
+    """Advertise packaged HEAD as refs/heads/main for `git bundle create`.
+
+    GitHub Actions PR checkouts are detached and often have no local main, so
+    `git bundle create … HEAD main` fails. Point a temporary packaging ref at
+    HEAD, then restore the previous main (or delete the ref if it did not
+    exist) so `git clone -b main` still works without leaving the repo
+    rewritten.
+    """
+    previous=_rev_parse('refs/heads/main')
+    try:
+        run('git','update-ref','refs/heads/main',commit)
+        yield
+    finally:
+        if previous is None:
+            subprocess.run(['git','update-ref','-d','refs/heads/main'],cwd=ROOT,capture_output=True)
+        else:
+            run('git','update-ref','refs/heads/main',previous)
+
+
 def build():
     ensure_clean(); DIST.mkdir(exist_ok=True)
     name=slug(); ver=version(); zipf=DIST/f'{name}-v{ver}.zip'; bundle=DIST/f'{name}-v{ver}.bundle'; sums=DIST/'SHA256SUMS.txt'; release=DIST/'RELEASE.txt'
@@ -45,7 +71,8 @@ def build():
     tag_check=subprocess.run(['git','rev-parse','-q','--verify',f'{tag}^{{commit}}'],cwd=ROOT,text=True,capture_output=True)
     if tag_check.returncode==0 and tag_check.stdout.strip()==commit:
         refs.append(tag)
-    subprocess.run(['git','bundle','create',str(bundle),*refs],cwd=ROOT,check=True)
+    with packaging_main_ref(commit):
+        subprocess.run(['git','bundle','create',str(bundle),*refs],cwd=ROOT,check=True)
     release.write_text(f'HowlFutureWorks / {name} v{version()}\ncommit {commit}\nbranch main\n')
     sums.write_text(f'{sha256(zipf)}  {zipf.name}\n{sha256(bundle)}  {bundle.name}\n{sha256(release)}  {release.name}\n')
     for p in (zipf,bundle,release,sums): print(p)
