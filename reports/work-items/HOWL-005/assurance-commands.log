@@ -1,0 +1,59 @@
+=== HOWL-005 Assurance command transcript ===
+Started: 2026-09-20 23:33:20 EDT (America/Detroit)
+Worktree: /workspace/HowlFutureWorks-howl005
+Tip verified: 069c73ba5f7f2da26ea1f9d7a2eef3beb8c6103b
+Base main: a5554eab36425f5496cd1059a9312cef1bd9463a
+Venv: /workspace/.venv-hfw
+Reviewer: Assurance (independent; Dev Lead security-review not sole trust)
+
+=== git fetch + worktree ===
+git fetch origin feat/howl-005-executor-routing main
+git worktree add /workspace/HowlFutureWorks-howl005 069c73ba5f7f2da26ea1f9d7a2eef3beb8c6103b
+HEAD = 069c73ba5f7f2da26ea1f9d7a2eef3beb8c6103b (match)
+
+=== git diff --name-status origin/main...HEAD ===
+(see assurance-files-changed.txt — 20 paths; no HOWL-006)
+
+=== orgctl validate ===
+2026-09-20 23:33:27 EDT
+VALIDATION PASSED
+EXIT=0
+(full: assurance-validate.txt)
+
+=== pytest ===
+2026-09-20 23:33:32 EDT
+98 passed in 8.83s
+PYTEST_EXIT=0
+(full: assurance-pytest.txt)
+
+=== orgctl route examples ===
+2026-09-20 23:33:32 EDT
+trivial/R0 → result=selected decision=SELF
+trivial/R1 → SELF (json)
+simple/R2 → SELF
+bounded/R2 → SELF_or_owner_configured_known_capable; uncertainty visible; all profiles needs-local-eval
+complex/R3 → evidence-insufficient
+critical/R4 → evidence-insufficient; independent_verification=required
+(full: assurance-orgctl-route.txt)
+
+=== orgctl render-all (context budgets) ===
+2026-09-20 23:33:50 EDT
+All 6 bots rendered; RENDER_EXIT=0
+budget_chars vs origin/main: UNCHANGED for assurance/auditor/dev-lead/engineering-manager/product/rnd
+policies/budgets.yaml: no diff vs main
+dev-lead context.yaml: only load_on_demand additions (routing docs); budget_chars stays 15000; always_load unchanged
+
+=== secret-literal scan ===
+High-signal credential patterns: NONE in changed files and routing/
+(full: assurance-secret-scan.txt)
+
+=== GitHub Actions (PR #4) ===
+headRefOid=069c73ba5f7f2da26ea1f9d7a2eef3beb8c6103b
+validate (3.11) SUCCESS
+validate (3.13) SUCCESS
+distribution SUCCESS
+
+=== HOWL-006 guard ===
+No HOWL-006 paths in diff; no reports/work-items/HOWL-006
+
+Ended: 2026-09-20 23:34:15 EDT

@@ -1,0 +1,49 @@
+# HOWL-005 Assurance evidence manifest
+schema_hint: howl-assurance-manifest/v1
+work_item: HOWL-005
+pr: 4
+pr_url: https://github.com/howlcipher/HowlFutureWorks/pull/4
+branch: feat/howl-005-executor-routing
+tip_sha: "069c73ba5f7f2da26ea1f9d7a2eef3beb8c6103b"
+base_main_sha: "a5554eab36425f5496cd1059a9312cef1bd9463a"
+verified_at: "2026-09-20 23:34 EDT (America/Detroit)"
+lane: assurance
+independent_of_dev_lead: true
+owner_complete_declared: false
+merged: false
+howl_006_started: false
+overall_verdict: PASS
+blocking_findings: []
+ac_failures: []
+budgets_unchanged: true
+budgets_raised: false
+orgctl_validate: PASS
+pytest: "98 passed"
+ci_github_actions:
+  validate_3_11: SUCCESS
+  validate_3_13: SUCCESS
+  distribution: SUCCESS
+worktree: /workspace/HowlFutureWorks-howl005
+artifacts:
+  - reports/work-items/HOWL-005/assurance-report.md
+  - reports/work-items/HOWL-005/assurance-commands.log
+  - reports/work-items/HOWL-005/assurance-orgctl-route.txt
+  - reports/work-items/HOWL-005/assurance-pytest.txt
+  - reports/work-items/HOWL-005/assurance-validate.txt
+  - reports/work-items/HOWL-005/assurance-secret-scan.txt
+  - reports/work-items/HOWL-005/assurance-files-changed.txt
+  - evidence/howl-005-assurance-verify-069c73b/SUMMARY.md
+  - evidence/2026-09-20-HOWL-005-assurance.yaml
+  - security/reviews/HOWL-005-assurance-2026-09-20.md
+themes:
+  A_task_class_defaults: PASS
+  B_self_vs_delegate: PASS
+  C_provider_neutrality: PASS
+  D_no_fabricated_scores: PASS
+  E_quota_fallback_recursive: PASS
+  F_howlframe_privilege: PASS
+  G_independent_verification: PASS
+  H_context_budgets: PASS
+  I_validate_pytest_route: PASS
+  J_no_secrets: PASS
+  K_security_challenges: PASS
