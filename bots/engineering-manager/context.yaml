@@ -10,10 +10,10 @@ always_load:
 - policies/risk-tiers.yaml
 - policies/approvals.yaml
 - policies/agent-spawning.yaml
-- workforce/roster.yaml
 - policies/workforce.yaml
 - knowledge/positions/engineering-manager.md
 load_on_demand:
+- workforce/roster.yaml
 - CHARTER.md
 - routing/
 - runbooks/
