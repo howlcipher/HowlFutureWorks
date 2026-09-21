@@ -1,0 +1,35 @@
+=== Workflow / direct-main convenience scan ===
+PR base/head (from earlier MCP): base=main head=ops/howl-004-github-publishing tip=4d24315
+
+--- Scan PR-added docs for push-to-main as default convenience ---
+runbooks/github-publishing.md:35:merge according to policy (not convenience push to main)
+
+--- Broader repo docs/scripts that might prescribe direct main push as convenience (informational) ---
+docs/PUBLISH_GITHUB.md:43:git push -u origin main
+
+--- Explicit prohibitions of main convenience (PR files) ---
+runbooks/github-publishing.md:12:- Do **not** push to `main` merely because credentials work. Use feature branches and PRs.
+runbooks/github-publishing.md:35:merge according to policy (not convenience push to main)
+reports/work-items/HOWL-004.json:16:    "no direct-to-main convenience path",
+
+--- Co-authored-by / Cursor Agent trailers on tip ---
+No Co-authored-by / Cursor Agent / Generated-by trailers on tip commit
+
+--- Prove tip on origin ---
+4d24315c50600d67272fc8d99575a7505cd38520	refs/heads/ops/howl-004-github-publishing
+4d24315c50600d67272fc8d99575a7505cd38520
+
+--- gh pr view (read-only; no tokens) ---
+{"author":{"id":"MDQ6VXNlcjM2MDUwOTg5","is_bot":false,"login":"howlcipher","name":"William Elias"},"baseRefName":"main","headRefName":"ops/howl-004-github-publishing","headRefOid":"4d24315c50600d67272fc8d99575a7505cd38520","isDraft":false,"number":3,"state":"OPEN","title":"docs(HOWL-004): governed bot-native GitHub publishing","url":"https://github.com/howlcipher/HowlFutureWorks/pull/3"}
+
+--- Pre-existing docs/PUBLISH_GITHUB.md (NOT introduced by HOWL-004) ---
+Contains 'git push -u origin main' in the initial-repo-from-bundle bootstrap section.
+Context: first-time publish after cloning a release bundle — not ordinary feature workflow.
+HOWL-004 runbook explicitly prohibits convenience pushes to main and points Related to PUBLISH_GITHUB.md for initial publication only.
+FLAG (informational, not a HOWL-004 regression): pre-existing bootstrap path remains; PR does not add a direct-main convenience default for bot-native publish.
+
+--- Deterministic checks ---
+pytest: 78 passed in ~6.56s (venv /workspace/HowlFutureWorks/.venv)
+orgctl: python tools/orgctl.py validate → VALIDATION PASSED
+git show --stat: 3 files, +146 (work-item json, product-definition, runbook)
+git diff --name-status origin/main...HEAD: A A A (three adds only)

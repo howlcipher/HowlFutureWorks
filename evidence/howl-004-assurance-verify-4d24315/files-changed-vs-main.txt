@@ -1,0 +1,3 @@
+A	reports/work-items/HOWL-004.json
+A	reports/work-items/HOWL-004/product-definition.md
+A	runbooks/github-publishing.md
