@@ -1,0 +1,24 @@
+=== GHA check-runs on tip 65ac49e0c3c91183d3768b424a98eb1859d3c6dd ===
+captured: 2026-09-21 11:30:20 EDT
+source: gh api repos/howlcipher/HowlFutureWorks/commits/65ac49e0c3c91183d3768b424a98eb1859d3c6dd/check-runs
+also: MCP pull_request_read get_check_runs on PR #5
+
+validate (3.11): status=completed conclusion=success
+  started: 2026-09-21 11:26:49 EDT (15:26:49Z)
+  completed: 2026-09-21 11:27:08 EDT (15:27:08Z)
+  url: https://github.com/howlcipher/HowlFutureWorks/actions/runs/35618982629/job/106396939429
+
+validate (3.13): status=completed conclusion=success
+  started: 2026-09-21 11:26:49 EDT (15:26:49Z)
+  completed: 2026-09-21 11:27:10 EDT (15:27:10Z)
+  url: https://github.com/howlcipher/HowlFutureWorks/actions/runs/35618982629/job/106396939838
+
+distribution: status=completed conclusion=success
+  started: 2026-09-21 11:27:13 EDT (15:27:13Z)
+  completed: 2026-09-21 11:27:46 EDT (15:27:46Z)
+  url: https://github.com/howlcipher/HowlFutureWorks/actions/runs/35618982629/job/106397091512
+
+combined commit status API: state=pending statuses=[] total_count=0
+(note: actionable gates are the check-runs above — all green; no pending distribution)
+
+conclusion: GHA validate + distribution GREEN on tip; no wait/poll needed

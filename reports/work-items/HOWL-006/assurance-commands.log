@@ -1,0 +1,917 @@
+=== HOWL-006 Assurance commands log ===
+started: 2026-09-21 11:28:26 EDT
+cwd: /workspace/HowlFutureWorks
+tip: 65ac49e0c3c91183d3768b424a98eb1859d3c6dd
+branch: feat/howl-006-executor-baseline
+worktree note: preferred /workspace/HowlFutureWorks-howl006 absent; using /workspace/HowlFutureWorks @ tip
+venv: /workspace/.venv-hfw
+
+=== Independent orgctl route proofs 2026-09-21 11:28:46 EDT ===
+tip: 65ac49e0c3c91183d3768b424a98eb1859d3c6dd
+
+----- route --task-class trivial --risk-tier R0 -----
+usage: orgctl route [-h]
+                    --task-class {trivial,simple,bounded,complex,critical}
+                    --risk {R0,R1,R2,R3,R4} [--required-tool REQUIRED_TOOLS]
+                    [--objective OBJECTIVE] [--json]
+orgctl route: error: the following arguments are required: --risk
+
+----- route --task-class simple --risk-tier R1 -----
+usage: orgctl route [-h]
+                    --task-class {trivial,simple,bounded,complex,critical}
+                    --risk {R0,R1,R2,R3,R4} [--required-tool REQUIRED_TOOLS]
+                    [--objective OBJECTIVE] [--json]
+orgctl route: error: the following arguments are required: --risk
+
+----- route --task-class bounded --risk-tier R2 -----
+usage: orgctl route [-h]
+                    --task-class {trivial,simple,bounded,complex,critical}
+                    --risk {R0,R1,R2,R3,R4} [--required-tool REQUIRED_TOOLS]
+                    [--objective OBJECTIVE] [--json]
+orgctl route: error: the following arguments are required: --risk
+
+----- route --task-class complex --risk-tier R3 -----
+usage: orgctl route [-h]
+                    --task-class {trivial,simple,bounded,complex,critical}
+                    --risk {R0,R1,R2,R3,R4} [--required-tool REQUIRED_TOOLS]
+                    [--objective OBJECTIVE] [--json]
+orgctl route: error: the following arguments are required: --risk
+
+----- route --task-class critical --risk-tier R4 -----
+usage: orgctl route [-h]
+                    --task-class {trivial,simple,bounded,complex,critical}
+                    --risk {R0,R1,R2,R3,R4} [--required-tool REQUIRED_TOOLS]
+                    [--objective OBJECTIVE] [--json]
+orgctl route: error: the following arguments are required: --risk
+
+=== orgctl validate 2026-09-21 11:28:49 EDT ===
+=== budgets vs main 2026-09-21 11:28:49 EDT ===
+bots/engineering-manager/context.yaml main=e11852e59b68a046cccd48c3c916ad40 tip=e11852e59b68a046cccd48c3c916ad40 same=YES
+  main_budget: 1:budget_chars: 18000
+  tip_budget:  1:budget_chars: 18000
+bots/dev-lead/context.yaml main=0e222a919e290038d72f7b978bbde36b tip=0e222a919e290038d72f7b978bbde36b same=YES
+  main_budget: 1:budget_chars: 15000
+  tip_budget:  1:budget_chars: 15000
+bots/assurance/context.yaml main=15cdddeaf986e3589e0e867bafba1765 tip=15cdddeaf986e3589e0e867bafba1765 same=YES
+  main_budget: 1:budget_chars: 14000
+  tip_budget:  1:budget_chars: 14000
+bots/auditor/context.yaml main=359fc1f57dbe258ccc3ac71ce29bddfe tip=359fc1f57dbe258ccc3ac71ce29bddfe same=YES
+  main_budget: 1:budget_chars: 14000
+  tip_budget:  1:budget_chars: 14000
+bots/product/context.yaml main=cb705cb8c8b3069cea0ea584c4e1ab0a tip=cb705cb8c8b3069cea0ea584c4e1ab0a same=YES
+  main_budget: 1:budget_chars: 12000
+  tip_budget:  1:budget_chars: 12000
+bots/rnd/context.yaml main=26f7849f16967f711bbe0ecb656be4f1 tip=26f7849f16967f711bbe0ecb656be4f1 same=YES
+  main_budget: 1:budget_chars: 12000
+  tip_budget:  1:budget_chars: 12000
+policies/budgets.yaml main=3cc5cf9a6240eeb6936deac3f2af6298 tip=3cc5cf9a6240eeb6936deac3f2af6298 same=YES
+  main_budget: 
+  tip_budget:  
+
+=== orgctl render-all (budget check) ===
+VALIDATION PASSED
+exit=0
+=== pytest -q 2026-09-21 11:28:49 EDT ===
+build/bots/engineering-manager.md sha256=17249d0312b1b20702aad2b665973e1dd8d66c37e0b2b622664b9498c2a699e8
+build/bots/product.md sha256=734dcc1dd333303a445d491b0d79a8ac2ad03d7e383f8ad5e3295b55e4111f5a
+build/bots/rnd.md sha256=9f84909f78497eee6770c1aecb251e69ad1045231f660232b28677f0fb5b0442
+build/bots/dev-lead.md sha256=c277ede51979951b6b251bef3353c321655e1dffaff4e2914bbcf166565d1dae
+build/bots/assurance.md sha256=36cb36a4b4cccbba6662c1739bf043fa0206e084dc8dd7c8971f9d60d4ab6154
+build/bots/auditor.md sha256=600ca6b0d42b2a6ebd47b749716e7ac265bbd63ab119c1545fdb3454c892b884
+exit=0
+........................................................................ [ 72%]
+...........................                                              [100%]
+99 passed in 9.83s
+exit=0
+=== Independent orgctl route proofs 2026-09-21 11:29:08 EDT ===
+tip: 65ac49e0c3c91183d3768b424a98eb1859d3c6dd
+flag: --task-class / --risk (corrected)
+
+----- route --task-class trivial --risk R0 --json -----
+{
+  "command": "route",
+  "deterministic": true,
+  "model_invoke": false,
+  "task_class": "trivial",
+  "risk_tier": "R0",
+  "required_tools": [],
+  "objective": null,
+  "result": "selected",
+  "decision": "SELF",
+  "rationale": [
+    "trivial defaults to SELF",
+    "external delegation requires expected value",
+    "merely having an executor installed is not a reason to invoke it"
+  ],
+  "selection_steps": [
+    {
+      "step": "classify_task_class_and_risk",
+      "task_class": "trivial",
+      "risk_tier": "R0"
+    },
+    {
+      "step": "decide_self_vs_delegate",
+      "decision": "SELF"
+    },
+    {
+      "step": "record_rationale_or_evidence_insufficient"
+    }
+  ],
+  "independent_verification": "not_required",
+  "uncertainty": null
+}
+
+----- route --task-class simple --risk R1 --json -----
+{
+  "command": "route",
+  "deterministic": true,
+  "model_invoke": false,
+  "task_class": "simple",
+  "risk_tier": "R1",
+  "required_tools": [],
+  "objective": null,
+  "result": "selected",
+  "decision": "SELF",
+  "rationale": [
+    "simple defaults to SELF",
+    "external delegation requires expected value",
+    "merely having an executor installed is not a reason to invoke it"
+  ],
+  "selection_steps": [
+    {
+      "step": "classify_task_class_and_risk",
+      "task_class": "simple",
+      "risk_tier": "R1"
+    },
+    {
+      "step": "decide_self_vs_delegate",
+      "decision": "SELF"
+    },
+    {
+      "step": "record_rationale_or_evidence_insufficient"
+    }
+  ],
+  "independent_verification": "not_required",
+  "uncertainty": null
+}
+
+----- route --task-class bounded --risk R2 --json -----
+{
+  "command": "route",
+  "deterministic": true,
+  "model_invoke": false,
+  "task_class": "bounded",
+  "risk_tier": "R2",
+  "required_tools": [],
+  "objective": null,
+  "result": "selected",
+  "decision": "SELF_preferred_unless_expected_value",
+  "rationale": [
+    "choose by measured fit not loyalty/rankings",
+    "prefer least-resource-intensive sufficient executor",
+    "quality over cost when failure material"
+  ],
+  "eligible_profiles": [
+    {
+      "id": "claude",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "codex",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "agy",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "astra",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    }
+  ],
+  "selection_steps": [
+    {
+      "step": "classify_task_class_and_risk",
+      "task_class": "bounded",
+      "risk_tier": "R2"
+    },
+    {
+      "step": "filter_hard_constraints",
+      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+    },
+    {
+      "step": "assess_measured_fit",
+      "profiles": [
+        {
+          "id": "claude",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "codex",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "agy",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "astra",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        }
+      ]
+    },
+    {
+      "step": "prefer_least_resource_intensive_sufficient",
+      "policy": true
+    },
+    {
+      "step": "apply_quality_over_cost_when_failure_material",
+      "policy": true
+    },
+    {
+      "step": "require_independent_verification_if_critical",
+      "required": false
+    },
+    {
+      "step": "record_rationale_or_evidence_insufficient"
+    }
+  ],
+  "independent_verification": "not_required",
+  "uncertainty": null,
+  "external_requires_expected_value": true
+}
+
+----- route --task-class complex --risk R3 --json -----
+{
+  "command": "route",
+  "deterministic": true,
+  "model_invoke": false,
+  "task_class": "complex",
+  "risk_tier": "R3",
+  "required_tools": [],
+  "objective": null,
+  "result": "selected",
+  "decision": "eligible_profile_by_measured_fit",
+  "rationale": [
+    "choose by measured fit not loyalty/rankings",
+    "prefer least-resource-intensive sufficient executor",
+    "quality over cost when failure material"
+  ],
+  "eligible_profiles": [
+    {
+      "id": "claude",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "codex",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "agy",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "astra",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    }
+  ],
+  "selection_steps": [
+    {
+      "step": "classify_task_class_and_risk",
+      "task_class": "complex",
+      "risk_tier": "R3"
+    },
+    {
+      "step": "filter_hard_constraints",
+      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+    },
+    {
+      "step": "assess_measured_fit",
+      "profiles": [
+        {
+          "id": "claude",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "codex",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "agy",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "astra",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        }
+      ]
+    },
+    {
+      "step": "prefer_least_resource_intensive_sufficient",
+      "policy": true
+    },
+    {
+      "step": "apply_quality_over_cost_when_failure_material",
+      "policy": true
+    },
+    {
+      "step": "require_independent_verification_if_critical",
+      "required": false
+    },
+    {
+      "step": "record_rationale_or_evidence_insufficient"
+    }
+  ],
+  "independent_verification": "preferred",
+  "uncertainty": null,
+  "external_requires_expected_value": true
+}
+
+----- route --task-class critical --risk R4 --json -----
+{
+  "command": "route",
+  "deterministic": true,
+  "model_invoke": false,
+  "task_class": "critical",
+  "risk_tier": "R4",
+  "required_tools": [],
+  "objective": null,
+  "result": "selected",
+  "decision": "eligible_profile_by_measured_fit",
+  "rationale": [
+    "choose by measured fit not loyalty/rankings",
+    "prefer least-resource-intensive sufficient executor",
+    "quality over cost when failure material"
+  ],
+  "eligible_profiles": [
+    {
+      "id": "claude",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "codex",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "agy",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    },
+    {
+      "id": "astra",
+      "status": "available-if-configured",
+      "benchmark_status": "baseline-evaluated",
+      "eligible": true,
+      "reason": "measured evidence present"
+    }
+  ],
+  "selection_steps": [
+    {
+      "step": "classify_task_class_and_risk",
+      "task_class": "critical",
+      "risk_tier": "R4"
+    },
+    {
+      "step": "filter_hard_constraints",
+      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+    },
+    {
+      "step": "assess_measured_fit",
+      "profiles": [
+        {
+          "id": "claude",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "codex",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "agy",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        },
+        {
+          "id": "astra",
+          "status": "available-if-configured",
+          "benchmark_status": "baseline-evaluated",
+          "eligible": true,
+          "reason": "measured evidence present"
+        }
+      ]
+    },
+    {
+      "step": "prefer_least_resource_intensive_sufficient",
+      "policy": true
+    },
+    {
+      "step": "apply_quality_over_cost_when_failure_material",
+      "policy": true
+    },
+    {
+      "step": "require_independent_verification_if_critical",
+      "required": true
+    },
+    {
+      "step": "record_rationale_or_evidence_insufficient"
+    }
+  ],
+  "independent_verification": "required",
+  "uncertainty": null,
+  "external_requires_expected_value": true
+}
+
+HOWL-006 Assurance independent secret scan
+roots: ['reports/work-items/HOWL-006', 'evals/howl-006', 'routing/capability-registry.yaml']
+files_scanned: 31
+hits_after_demo_filter: 0
+none
+note: values not printed; PEM private-key armor detected by descriptive pattern name only
+=== orgctl context / headroom 2026-09-21 11:29:21 EDT ===
+----- engineering-manager -----
+budget_chars: 18000
+always_load:
+  - AGENTS.md
+  - organization.yaml
+  - policies/memory.yaml
+  - policies/budgets.yaml
+  - ORG.md
+  - roles/engineering-manager.md
+  - bots/engineering-manager/boundaries.yaml
+  - policies/risk-tiers.yaml
+  - policies/approvals.yaml
+  - policies/agent-spawning.yaml
+  - workforce/roster.yaml
+  - policies/workforce.yaml
+  - knowledge/positions/engineering-manager.md
+load_on_demand:
+  - CHARTER.md
+  - routing/
+  - runbooks/
+  - reports/
+  - bots/*/
+  - policies/production-access.yaml
+  - docs/WORKFORCE_LIFECYCLE.md
+  - docs/KNOWLEDGE_RETENTION.md
+  - knowledge/company/
+----- dev-lead -----
+budget_chars: 15000
+always_load:
+  - AGENTS.md
+  - organization.yaml
+  - policies/memory.yaml
+  - policies/budgets.yaml
+  - roles/dev-lead.md
+  - routing/README.md
+  - routing/capability-registry.yaml
+  - policies/risk-tiers.yaml
+  - schemas/task-envelope.schema.json
+  - schemas/result-envelope.schema.json
+  - knowledge/positions/dev-lead.md
+load_on_demand:
+  - CHARTER.md
+  - roles/software-architect.md
+  - runbooks/
+  - evals/
+  - knowledge/company/
+  - docs/EXECUTOR_ROUTING.md
+  - routing/fallback-policy.yaml
+  - routing/routing-policy.yaml
+  - routing/decision-records/
+  - EVALS.md
+  - routing/task-classes.yaml
+  - routing/selection-policy.yaml
+----- assurance -----
+budget_chars: 14000
+always_load:
+  - AGENTS.md
+  - organization.yaml
+  - policies/memory.yaml
+  - policies/budgets.yaml
+  - roles/qa.md
+  - roles/security.md
+  - security/THREAT_MODEL.md
+  - policies/risk-tiers.yaml
+  - policies/evidence.yaml
+  - knowledge/positions/assurance.md
+load_on_demand:
+  - CHARTER.md
+  - security/abuse-cases/
+  - schemas/evidence.schema.json
+  - runbooks/security-incident.md
+  - knowledge/company/
+----- auditor -----
+budget_chars: 14000
+always_load:
+  - AGENTS.md
+  - organization.yaml
+  - policies/memory.yaml
+  - policies/budgets.yaml
+  - roles/auditor.md
+  - policies/evidence.yaml
+  - schemas/evidence.schema.json
+  - schemas/approval.schema.json
+  - knowledge/positions/auditor.md
+load_on_demand:
+  - CHARTER.md
+  - reports/
+  - operations/
+  - adr/
+  - policies/
+  - workforce/roster.yaml
+  - workforce/events/
+  - workforce/contributions/
+  - knowledge/company/
+----- product -----
+budget_chars: 12000
+always_load:
+  - AGENTS.md
+  - organization.yaml
+  - policies/memory.yaml
+  - policies/budgets.yaml
+  - roles/product.md
+  - product/README.md
+  - policies/risk-tiers.yaml
+  - templates/work-item.md
+  - knowledge/positions/product.md
+load_on_demand:
+  - CHARTER.md
+  - rnd/
+  - reports/
+  - METRICS.md
+  - knowledge/company/
+----- rnd -----
+budget_chars: 12000
+always_load:
+  - AGENTS.md
+  - organization.yaml
+  - policies/memory.yaml
+  - policies/budgets.yaml
+  - roles/rnd.md
+  - rnd/README.md
+  - policies/risk-tiers.yaml
+  - policies/network.yaml
+  - templates/experiment.md
+  - knowledge/positions/rnd.md
+load_on_demand:
+  - CHARTER.md
+  - product/
+  - security/THREAT_MODEL.md
+  - routing/
+  - knowledge/company/
+
+=== render-all with sizes ===
+assurance used=10898 limit=14000 headroom=3102
+auditor used=10629 limit=14000 headroom=3371
+dev-lead used=14916 limit=15000 headroom=84
+engineering-manager used=17828 limit=18000 headroom=172
+product used=10053 limit=12000 headroom=1947
+rnd used=10183 limit=12000 headroom=1817
+=== EVAL fixture sizes (bounded check) ===
+136K	evals/howl-006
+   10 evals/howl-006/EVAL-D/fixture/a.py
+   57 evals/howl-006/EVAL-D/fixture/b.py
+   60 evals/howl-006/EVAL-A/fixture/EXPECTED.md
+   65 evals/howl-006/EVAL-D/fixture/PROMPT.md
+   65 evals/howl-006/EVAL-E/fixture/PROMPT.md
+   70 evals/howl-006/EVAL-A/fixture/test_broken_add.py
+   74 evals/howl-006/EVAL-E/fixture/steps.md
+   80 evals/howl-006/EVAL-A/fixture/broken_add.py
+   94 evals/howl-006/EVAL-C/fixture/PROMPT.md
+   97 evals/howl-006/EVAL-B/fixture/PROMPT.md
+   98 evals/howl-006/EVAL-B/fixture/buggy.py
+  108 evals/howl-006/EVAL-C/fixture/insecure_demo.py
+  896 evals/howl-006/README.md
+  916 evals/howl-006/EVAL-B/README.md
+  919 evals/howl-006/EVAL-A/README.md
+  921 evals/howl-006/EVAL-D/README.md
+  926 evals/howl-006/EVAL-E/README.md
+  927 evals/howl-006/EVAL-C/README.md
+ 1689 evals/howl-006/EVAL-A/result.json
+ 1691 evals/howl-006/EVAL-D/result.json
+ 1696 evals/howl-006/EVAL-E/result.json
+ 1697 evals/howl-006/EVAL-C/result.json
+ 2056 evals/howl-006/EVAL-B/result.json
+15212 total
+
+=== Label presence in result.json ===
+EVAL-A ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+EVAL-B ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+EVAL-C ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+EVAL-D ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+EVAL-E ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+
+=== AVAILABLE≠preferred / authority wording samples ===
+=== GHA check-runs on tip 65ac49e0c3c91183d3768b424a98eb1859d3c6dd 2026-09-21 11:29:24 EDT ===
+routing/capability-registry.yaml:2:# HOWL-006 baseline facts only. AVAILABLE ≠ preferred. No rankings/scores.
+routing/capability-registry.yaml:4:# Astra = Codex (Owner clarification): runtime_alias_of codex; not a separate install.
+routing/capability-registry.yaml:9:  install_status: installed
+routing/capability-registry.yaml:17:  install_status: installed
+routing/capability-registry.yaml:25:  install_status: installed
+routing/capability-registry.yaml:33:  install_status: installed
+routing/selection-policy.yaml:3:  self_preferred_when_sufficient: true
+routing/selection-policy.yaml:6:  permanent_ranking: forbidden
+routing/selection-policy.yaml:27:  if_permitted: {child_authority_lte_parent: true, child_risk_lte_parent: true, child_budget_lte_parent: true, preserve_evidence_lineage: true}
+docs/EXECUTOR_ROUTING.md:4:loyalty or permanent rankings. This document explains the routing layer. Machine
+docs/EXECUTOR_ROUTING.md:22:4. Merely having an executor installed is not a reason to invoke it.
+docs/EXECUTOR_ROUTING.md:55:Forbidden: provider loyalty, permanent rankings, inventing capability scores,
+docs/EXECUTOR_ROUTING.md:69:Profiles are configuration + evidence, not authority. Credentials stay in platform
+docs/EXECUTOR_ROUTING.md:86:**Off by default.** If ever Owner-permitted: child authority, risk, and budget must
+routing/README.md:3:No permanent rankings or provider loyalty. Self for trivial/simple; external only
+EVALS.md:29:- Update the registry after representative evals; rankings are never permanent.
+
+=== HowlFrame / recursive defaults ===
+routing/selection-policy.yaml:25:recursive_delegation:
+routing/selection-policy.yaml:27:  if_permitted: {child_authority_lte_parent: true, child_risk_lte_parent: true, child_budget_lte_parent: true, preserve_evidence_lineage: true}
+routing/selection-policy.yaml:29:security: {task_envelope_required: true, child_privilege_may_exceed_parent: false, howlframe_bypass: forbidden, secrets_in_routing_config: forbidden, model_output_untrusted_until_validated: true, fallback_may_lower_assurance: false}
+docs/EXECUTOR_ROUTING.md:12:| **Ephemeral executors** (Claude, Codex, AGY, Astra, …) | Bounded implementation via HowlFrame adapters; disposable context |
+docs/EXECUTOR_ROUTING.md:48:3. Filter hard constraints (tools, risk, privilege, HowlFrame, quota)
+docs/EXECUTOR_ROUTING.md:119:- Direct executor CLI bypass of HowlFrame is forbidden
+
+=== quota / cost honesty ===
+reports/work-items/HOWL-006/security-review.md:13:| Rankings / scores | **Pass** — labels INITIAL BASELINE / LOW SAMPLE / NOT PERMANENT RANKING; no permanent ordering invented. |
+reports/work-items/HOWL-006/security-review.md:16:Residual: long-horizon quota/reliability unknown; treat baseline as low-sample only.
+reports/work-items/HOWL-006/assurance-commands.log:172:    "quality over cost when failure material"
+reports/work-items/HOWL-006/assurance-commands.log:212:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/assurance-commands.log:252:      "step": "apply_quality_over_cost_when_failure_material",
+reports/work-items/HOWL-006/assurance-commands.log:282:    "quality over cost when failure material"
+reports/work-items/HOWL-006/assurance-commands.log:322:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/assurance-commands.log:362:      "step": "apply_quality_over_cost_when_failure_material",
+reports/work-items/HOWL-006/assurance-commands.log:392:    "quality over cost when failure material"
+reports/work-items/HOWL-006/assurance-commands.log:432:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/assurance-commands.log:472:      "step": "apply_quality_over_cost_when_failure_material",
+reports/work-items/HOWL-006/assurance-commands.log:662:EVAL-A ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+reports/work-items/HOWL-006/assurance-commands.log:663:EVAL-B ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+reports/work-items/HOWL-006/assurance-commands.log:664:EVAL-C ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+reports/work-items/HOWL-006/assurance-commands.log:665:EVAL-D ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+reports/work-items/HOWL-006/assurance-commands.log:666:EVAL-E ['INITIAL BASELINE', 'LOW SAMPLE', 'NOT PERMANENT RANKING'] n_runs 4 fallback False scores_invented False
+reports/work-items/HOWL-006/assurance-commands.log:692:docs/EXECUTOR_ROUTING.md:48:3. Filter hard constraints (tools, risk, privilege, HowlFrame, quota)
+reports/work-items/HOWL-006/assurance-commands.log:695:=== quota / cost honesty ===
+reports/work-items/HOWL-006/evidence/route-proofs.md:114:    "quality over cost when failure material"
+reports/work-items/HOWL-006/evidence/route-proofs.md:154:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/evidence/route-proofs.md:194:      "step": "apply_quality_over_cost_when_failure_material",
+reports/work-items/HOWL-006/evidence/route-proofs.md:229:    "quality over cost when failure material"
+reports/work-items/HOWL-006/evidence/route-proofs.md:269:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/evidence/route-proofs.md:309:      "step": "apply_quality_over_cost_when_failure_material",
+reports/work-items/HOWL-006/evidence/route-proofs.md:344:    "quality over cost when failure material"
+reports/work-items/HOWL-006/evidence/route-proofs.md:384:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/evidence/route-proofs.md:424:      "step": "apply_quality_over_cost_when_failure_material",
+reports/work-items/HOWL-006/evidence/eval-run-summary.md:4:**LABELS:** INITIAL BASELINE · LOW SAMPLE · NOT PERMANENT RANKING
+reports/work-items/HOWL-006/runtime-inventory.md:5:**Probe rule:** record only `authenticated` | `not_authenticated` | `blocked` | `unknown`. No secrets/tokens/cookies/OTP.
+reports/work-items/HOWL-006/runtime-inventory.md:26:- Long-horizon reliability, quota_state trends, cost curves beyond this low-sample baseline.
+reports/work-items/HOWL-006/runtime-inventory.md:41:Minimal EVAL-A..E: **one combined isolated run per authenticated runtime** (Claude, Codex, AGY). Astra does not get a separate API burn — shares Codex outcomes. Labels: **INITIAL BASELINE / LOW SAMPLE / NOT PERMANENT RANKING**. No silent cross-executor fallback. No invented rankings.
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:87:    "quality over cost when failure material"
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:127:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:167:      "step": "apply_quality_over_cost_when_failure_material",
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:197:    "quality over cost when failure material"
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:237:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:277:      "step": "apply_quality_over_cost_when_failure_material",
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:307:    "quality over cost when failure material"
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:347:      "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"
+reports/work-items/HOWL-006/assurance-orgctl-route.txt:387:      "step": "apply_quality_over_cost_when_failure_material",
+{"completed_at":"2026-09-21T15:27:46Z","conclusion":"success","html_url":"https://github.com/howlcipher/HowlFutureWorks/actions/runs/35618982629/job/106397091512","name":"distribution","started_at":"2026-09-21T15:27:13Z","status":"completed"}
+{"completed_at":"2026-09-21T15:27:10Z","conclusion":"success","html_url":"https://github.com/howlcipher/HowlFutureWorks/actions/runs/35618982629/job/106396939838","name":"validate (3.13)","started_at":"2026-09-21T15:26:49Z","status":"completed"}
+{"completed_at":"2026-09-21T15:27:08Z","conclusion":"success","html_url":"https://github.com/howlcipher/HowlFutureWorks/actions/runs/35618982629/job/106396939429","name":"validate (3.11)","started_at":"2026-09-21T15:26:49Z","status":"completed"}
+
+=== combined status ===
+{"state":"pending","statuses":[],"total_count":0}
+=== files changed tip vs main 2026-09-21 11:29:25 EDT ===
+tip: 65ac49e0c3c91183d3768b424a98eb1859d3c6dd
+main: 1fb67757fb1ec3068b38f05e50480d5d0755c538
+A	evals/howl-006/EVAL-A/README.md
+A	evals/howl-006/EVAL-A/fixture/EXPECTED.md
+A	evals/howl-006/EVAL-A/fixture/broken_add.py
+A	evals/howl-006/EVAL-A/fixture/test_broken_add.py
+A	evals/howl-006/EVAL-A/result.json
+A	evals/howl-006/EVAL-B/README.md
+A	evals/howl-006/EVAL-B/fixture/PROMPT.md
+A	evals/howl-006/EVAL-B/fixture/buggy.py
+A	evals/howl-006/EVAL-B/result.json
+A	evals/howl-006/EVAL-C/README.md
+A	evals/howl-006/EVAL-C/fixture/PROMPT.md
+A	evals/howl-006/EVAL-C/fixture/insecure_demo.py
+A	evals/howl-006/EVAL-C/result.json
+A	evals/howl-006/EVAL-D/README.md
+A	evals/howl-006/EVAL-D/fixture/PROMPT.md
+A	evals/howl-006/EVAL-D/fixture/a.py
+A	evals/howl-006/EVAL-D/fixture/b.py
+A	evals/howl-006/EVAL-D/result.json
+A	evals/howl-006/EVAL-E/README.md
+A	evals/howl-006/EVAL-E/fixture/PROMPT.md
+A	evals/howl-006/EVAL-E/fixture/steps.md
+A	evals/howl-006/EVAL-E/result.json
+A	evals/howl-006/README.md
+A	reports/work-items/HOWL-006.json
+A	reports/work-items/HOWL-006/em-acceptance.md
+A	reports/work-items/HOWL-006/evidence/eval-run-summary.md
+A	reports/work-items/HOWL-006/evidence/route-proofs.md
+A	reports/work-items/HOWL-006/evidence/secret-scan.txt
+A	reports/work-items/HOWL-006/product-definition.md
+A	reports/work-items/HOWL-006/runtime-inventory.md
+A	reports/work-items/HOWL-006/security-review.md
+M	routing/capability-registry.yaml
+M	tests/test_executor_routing.py
+M	tools/orgctl.py
+
+=== stat ===
+ evals/howl-006/EVAL-A/README.md                    |  26 ++
+ evals/howl-006/EVAL-A/fixture/EXPECTED.md          |   1 +
+ evals/howl-006/EVAL-A/fixture/broken_add.py        |   3 +
+ evals/howl-006/EVAL-A/fixture/test_broken_add.py   |   4 +
+ evals/howl-006/EVAL-A/result.json                  |  63 +++
+ evals/howl-006/EVAL-B/README.md                    |  26 ++
+ evals/howl-006/EVAL-B/fixture/PROMPT.md            |   1 +
+ evals/howl-006/EVAL-B/fixture/buggy.py             |   4 +
+ evals/howl-006/EVAL-B/result.json                  |  67 ++++
+ evals/howl-006/EVAL-C/README.md                    |  26 ++
+ evals/howl-006/EVAL-C/fixture/PROMPT.md            |   1 +
+ evals/howl-006/EVAL-C/fixture/insecure_demo.py     |   5 +
+ evals/howl-006/EVAL-C/result.json                  |  63 +++
+ evals/howl-006/EVAL-D/README.md                    |  26 ++
+ evals/howl-006/EVAL-D/fixture/PROMPT.md            |   1 +
+ evals/howl-006/EVAL-D/fixture/a.py                 |   1 +
+ evals/howl-006/EVAL-D/fixture/b.py                 |   4 +
+ evals/howl-006/EVAL-D/result.json                  |  63 +++
+ evals/howl-006/EVAL-E/README.md                    |  26 ++
+ evals/howl-006/EVAL-E/fixture/PROMPT.md            |   1 +
+ evals/howl-006/EVAL-E/fixture/steps.md             |   1 +
+ evals/howl-006/EVAL-E/result.json                  |  63 +++
+ evals/howl-006/README.md                           |  19 +
+ reports/work-items/HOWL-006.json                   | 134 +++++++
+ reports/work-items/HOWL-006/em-acceptance.md       |  76 ++++
+ .../HOWL-006/evidence/eval-run-summary.md          |  13 +
+ .../work-items/HOWL-006/evidence/route-proofs.md   | 443 +++++++++++++++++++++
+ .../work-items/HOWL-006/evidence/secret-scan.txt   |   4 +
+ reports/work-items/HOWL-006/product-definition.md  |  77 ++++
+ reports/work-items/HOWL-006/runtime-inventory.md   |  41 ++
+ reports/work-items/HOWL-006/security-review.md     |  16 +
+ routing/capability-registry.yaml                   |  69 +++-
+ tests/test_executor_routing.py                     |  32 +-
+ tools/orgctl.py                                    |  17 +-
+ 34 files changed, 1396 insertions(+), 21 deletions(-)
+
+=== local dirty (not tip) ===
+## feat/howl-006-executor-baseline...origin/feat/howl-006-executor-baseline
+ M reports/work-items/HOWL-006.json
+?? reports/work-items/HOWL-006/assurance-ci.txt
+?? reports/work-items/HOWL-006/assurance-commands.log
+?? reports/work-items/HOWL-006/assurance-files-changed.txt
+?? reports/work-items/HOWL-006/assurance-orgctl-route.txt
+?? reports/work-items/HOWL-006/assurance-pytest.txt
+?? reports/work-items/HOWL-006/assurance-secret-scan.txt
+?? reports/work-items/HOWL-006/assurance-validate.txt
+=== /tmp eval workspaces (independent spot-check) ===
+total 52
+drwxr-xr-x 5 box  box   4096 Sep 21 11:20 .
+drwxrwxrwt 1 root root 20480 Sep 21 11:29 ..
+drwxr-xr-x 7 box  box   4096 Sep 21 11:22 agy
+drwxr-xr-x 7 box  box   4096 Sep 21 11:14 claude
+-rw-r--r-- 1 box  box     98 Sep 21 11:15 claude-A.out
+drwxr-xr-x 7 box  box   4096 Sep 21 11:19 codex
+-rw-r--r-- 1 box  box     98 Sep 21 11:20 codex-A.out
+--- claude ---
+total 48
+drwxr-xr-x 7 box box 4096 Sep 21 11:14 .
+drwxr-xr-x 5 box box 4096 Sep 21 11:20 ..
+drwxr-xr-x 4 box box 4096 Sep 21 11:14 EVAL-A
+drwxr-xr-x 2 box box 4096 Sep 21 11:14 EVAL-B
+drwxr-xr-x 2 box box 4096 Sep 21 11:14 EVAL-C
+drwxr-xr-x 3 box box 4096 Sep 21 11:14 EVAL-D
+drwxr-xr-x 2 box box 4096 Sep 21 11:14 EVAL-E
+-rw-r--r-- 1 box box  986 Sep 21 11:14 PROMPT.md
+-rw-r--r-- 1 box box  481 Sep 21 11:14 SUMMARY.md
+-rw-r--r-- 1 box box    7 Sep 21 11:14 exitcode.txt
+-rw-r--r-- 1 box box  157 Sep 21 11:14 stderr.txt
+-rw-r--r-- 1 box box   85 Sep 21 11:14 stdout.txt
+--- codex ---
+total 68
+drwxr-xr-x 7 box box  4096 Sep 21 11:19 .
+drwxr-xr-x 5 box box  4096 Sep 21 11:20 ..
+drwxr-xr-x 4 box box  4096 Sep 21 11:19 EVAL-A
+drwxr-xr-x 3 box box  4096 Sep 21 11:19 EVAL-B
+drwxr-xr-x 2 box box  4096 Sep 21 00:02 EVAL-C
+drwxr-xr-x 3 box box  4096 Sep 21 11:19 EVAL-D
+drwxr-xr-x 2 box box  4096 Sep 21 11:19 EVAL-E
+-rw-r--r-- 1 box box   986 Sep 21 11:18 PROMPT.md
+-rw-r--r-- 1 box box   487 Sep 21 11:19 SUMMARY.md
+-rw-r--r-- 1 box box     7 Sep 21 11:20 exitcode.txt
+-rw-r--r-- 1 box box 22494 Sep 21 11:20 stderr.txt
+-rw-r--r-- 1 box box   261 Sep 21 11:20 stdout.txt
+--- agy ---
+total 44
+drwxr-xr-x 7 box box 4096 Sep 21 11:22 .
+drwxr-xr-x 5 box box 4096 Sep 21 11:20 ..
+drwxr-xr-x 4 box box 4096 Sep 21 11:21 EVAL-A
+drwxr-xr-x 3 box box 4096 Sep 21 11:21 EVAL-B
+drwxr-xr-x 3 box box 4096 Sep 21 11:22 EVAL-C
+drwxr-xr-x 3 box box 4096 Sep 21 11:22 EVAL-D
+drwxr-xr-x 2 box box 4096 Sep 21 11:22 EVAL-E
+-rw-r--r-- 1 box box  986 Sep 21 11:20 PROMPT.md
+-rw-r--r-- 1 box box  482 Sep 21 11:22 SUMMARY.md
+-rw-r--r-- 1 box box    7 Sep 21 11:22 exitcode.txt
+-rw-r--r-- 1 box box    0 Sep 21 11:20 stderr.txt
+-rw-r--r-- 1 box box 1838 Sep 21 11:22 stdout.txt
+
+=== registry size impact on always-load (dev-lead) ===
+1715 routing/capability-registry.yaml
+727
+main registry bytes vs tip above
+
+=== pytest HowlFrame / routing related ===
+.....................                                                    [100%]
+tests/test_executor_routing.py:74:            "baseline-evaluated",
+tests/test_executor_routing.py:88:    assert classes["trivial"]["default_executor"] == "SELF"
+tests/test_executor_routing.py:89:    assert classes["simple"]["default_executor"] == "SELF"
+tests/test_executor_routing.py:140:    # After HOWL-006 baseline-evaluated evidence, critical may select measured-fit
+tests/test_executor_routing.py:171:def test_privilege_howlframe_recursive_defaults():
+tests/test_executor_routing.py:173:    assert sec["howlframe_bypass"] == "forbidden"
+tests/test_executor_routing.py:174:    assert sec["child_privilege_may_exceed_parent"] is False
+tests/test_executor_routing.py:177:    assert y("routing/selection-policy.yaml")["recursive_delegation"]["default"] == "off"
+tests/test_executor_routing.py:179:    assert ta["direct_executor_cli_bypass_of_howlframe"] == "forbidden"
+tests/test_executor_routing.py:198:    assert data["decision"] == "SELF"
+tests/test_executor_routing.py:206:    assert "decision: SELF" in r.stdout
+tests/test_executor_routing.py:229:def test_validate_detects_recursive_default_on(repo_copy):
+tests/test_executor_routing.py:232:    sel["recursive_delegation"]["default"] = "on"
+tests/test_executor_routing.py:236:    assert "recursive_delegation" in r.stdout
+tests/test_executor_routing.py:249:def test_validate_detects_howlframe_bypass_weakened(repo_copy):
+tests/test_executor_routing.py:252:    ta["rules"]["direct_executor_cli_bypass_of_howlframe"] = "allowed"
+tests/test_executor_routing.py:256:    assert "HowlFrame" in r.stdout or "howlframe" in r.stdout.lower()
+tests/test_executor_routing.py:294:        "recursive",
+tests/test_executor_routing.py:313:        "recursive",
+
+=== Independent auth probe summary (enums only; no PII/secrets) 2026-09-21 11:29:47 EDT ===
+claude: installed=yes version=2.1.278 auth=authenticated (loggedIn true, authMethod claude.ai)
+codex: installed=yes version=0.155.1 auth=authenticated (ChatGPT login status)
+agy: installed=yes version=1.2.7 auth=authenticated (agy models lists models)
+astra: no distinct binary; runtime_alias_of=codex; auth follows codex
+EM render headroom measured: engineering-manager used=17828 limit=18000 headroom=172
+dev-lead used=14916 limit=15000 headroom=84 (registry always-load grew 727->1715 bytes)
+budgets.yaml and all bots/*/context.yaml budget_chars UNCHANGED vs main
+GHA: validate(3.11)=success validate(3.13)=success distribution=success on tip 65ac49e
+pytest: 99 passed; orgctl validate: VALIDATION PASSED
+secret scan hits: 0
+ended: 2026-09-21 11:29:47 EDT
