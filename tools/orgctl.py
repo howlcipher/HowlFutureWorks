@@ -445,7 +445,7 @@ def propose_separation(args):
 def record_contribution(args):
     e=employee_by_id(args.employee_id)
     if not e: raise SystemExit(f"unknown employee {args.employee_id}")
-    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dT%H%M%S')}-{args.employee_id}"
+    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dt%H%M%S')}-{args.employee_id}"
     if not safe_id(cid): raise SystemExit("contribution id must be lowercase kebab-case")
     p=ROOT/f"workforce/contributions/{cid}.yaml"
     if p.exists(): raise SystemExit(f"contribution exists: {p.relative_to(ROOT)}")

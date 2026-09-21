@@ -1,0 +1,10 @@
+schema_version: 1
+contribution_id: contrib-20260920t220851-bot-devlead-0001
+employee_id: bot-devlead-0001
+occurred_at: '2026-09-20T22:08:51-04:00'
+role_at_time: dev-lead
+work_item_id: null
+summary: HOWL-002 assurance verify auto-id
+artifact_refs: []
+evidence_refs: []
+verified_by: null

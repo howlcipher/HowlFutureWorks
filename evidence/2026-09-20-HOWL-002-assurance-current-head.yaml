@@ -1,0 +1,35 @@
+schema_version: 1
+evidence_id: 2026-09-20-HOWL-002-assurance-current-head
+work_item: HOWL-002
+tip_sha: a4c9d09b8d770540c7090b109c1eb7eb88fb7239
+previous_product_tip: b7e55fc6c6d1ef751b825c3e26a57c344149e833
+producer: bot-assurance-0001
+produced_at: "2026-09-20T22:28:00-04:00"
+authoritative: true
+hygiene: originally_generated
+supersedes:
+  - evidence/howl-002-assurance-verify-2026-09-20/
+  - reports/audits/assurance-verification-HOWL-002-2026-09-20.md
+  - evidence/2026-09-20-HOWL-002-assurance.yaml
+artifacts:
+  - reports/audits/assurance-verification-HOWL-002-current-head-2026-09-20.md
+  - security/reviews/HOWL-002-current-head-a4c9d09.md
+  - evidence/howl-002-assurance-verify-a4c9d09/
+disposition:
+  qa: PASS
+  security: PASS
+  overall: PASS
+  owner_complete: false
+  distribution_ci: FAIL
+  distribution_note: HOWL-003 separate; do not claim dist green
+checks:
+  "1_tip_sha": PASS
+  "2_orgctl_blob_unchanged": PASS
+  "3_test_record_contribution_unchanged_pytest": PASS
+  "4_full_pytest_and_validate": PASS
+  "5_evidence_only_diff": PASS
+  "6_secret_scan": PASS
+  "7_ci_makefile_noted": PASS
+notes:
+  - Detached checkout of origin tip a4c9d09; no product code modified; no push.
+  - Auto-id line confirmed lowercase t at tools/orgctl.py:448.

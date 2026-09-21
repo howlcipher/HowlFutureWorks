@@ -1,0 +1,169 @@
+=== HOWL-002 Assurance Evidence Collection ===
+Date (America/Detroit): 2026-09-20 22:27:34 EDT
+PWD: /workspace/HowlFutureWorks
+
+=== CHECK 1: tip SHA ===
++ git fetch origin fix/howl-002-contribution-auto-id (already done)
++ git rev-parse HEAD
+a4c9d09b8d770540c7090b109c1eb7eb88fb7239
+CHECK1: PASS (matches expected a4c9d09)
+
+=== CHECK 2: tools/orgctl.py unchanged vs b7e55fc ===
++ git diff b7e55fc..HEAD -- tools/orgctl.py
+(empty diff)
++ git rev-parse b7e55fc:tools/orgctl.py
+f09754e4130b7fe2b237a1365b1ee2388cbcbb69
++ git rev-parse HEAD:tools/orgctl.py
+f09754e4130b7fe2b237a1365b1ee2388cbcbb69
+CHECK2: PASS (orgctl.py identical)
+
+=== CHECK 3: tests/test_record_contribution.py vs b7e55fc ===
++ git diff b7e55fc..HEAD -- tests/test_record_contribution.py
+(empty diff)
++ git rev-parse b7e55fc:tests/test_record_contribution.py
+7b7fe7f687e3181ed7b4ea70da0d127a6cc5cc1c
++ git rev-parse HEAD:tests/test_record_contribution.py
+7b7fe7f687e3181ed7b4ea70da0d127a6cc5cc1c
+CHECK3-blob: PASS (unchanged vs b7e55fc)
++ /workspace/.venv-hfw/bin/pytest -q tests/test_record_contribution.py
+....                                                                     [100%]
+4 passed in 0.73s
+exit_code=0
+CHECK3-pytest: PASS
+
+=== CHECK 4: full pytest + orgctl validate ===
++ /workspace/.venv-hfw/bin/pytest -q
+........................................................................ [ 96%]
+...                                                                      [100%]
+75 passed in 6.01s
+exit_code=0
++ /workspace/.venv-hfw/bin/python tools/orgctl.py validate
+VALIDATION PASSED
+exit_code=0
+CHECK4: PASS
+
+=== CHECK 5: commits and name-status after b7e55fc ===
++ git log --oneline b7e55fc..HEAD
+a4c9d09 docs(HOWL-002): add Assurance verification evidence to PR tip
+0b3abf7 docs(HOWL-002): land Assurance, Product, and Auditor evidence on PR tip
++ git diff --name-status b7e55fc..HEAD
+A	evidence/2026-09-20-HOWL-002-assurance.yaml
+A	evidence/howl-002-assurance-verify-2026-09-20/SUMMARY.md
+A	evidence/howl-002-assurance-verify-2026-09-20/commands.log
+A	evidence/howl-002-assurance-verify-2026-09-20/excerpts/auto-id-code.txt
+A	evidence/howl-002-assurance-verify-2026-09-20/files-changed.txt
+A	evidence/howl-002-assurance-verify-2026-09-20/samples/contrib-20260920t220851-bot-devlead-0001.yaml
+A	evidence/howl-002-assurance-verify-2026-09-20/samples/contrib-howl002-assurance-valid.yaml
+A	evidence/howl-002-assurance-verify-2026-09-20/tip-sha.txt
+A	reports/audits/assurance-verification-HOWL-002-2026-09-20.md
+A	reports/audits/auditor-HOWL-002-2026-09-20.md
+A	reports/work-items/HOWL-002.json
+A	reports/work-items/HOWL-002/product-definition.md
+A	security/reviews/HOWL-002-2026-09-20.md
+--- flag .py/.sh outside tests ---
+(end flags)
+
+=== AUTO-ID lowercase t check ===
++ rg -n "auto.?id|contribution.*id|contrib_" tools/ tests/ 2>/dev/null | head -50
+tools/orgctl.py:448:    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dt%H%M%S')}-{args.employee_id}"
+tools/orgctl.py:449:    if not safe_id(cid): raise SystemExit("contribution id must be lowercase kebab-case")
+tools/orgctl.py:450:    p=ROOT/f"workforce/contributions/{cid}.yaml"
+tools/orgctl.py:453:      'schema_version':1,'contribution_id':cid,'employee_id':args.employee_id,'occurred_at':now.isoformat(timespec='seconds'),
+tools/orgctl.py:576:    rc=sub.add_parser("record-contribution"); rc.add_argument('employee_id'); rc.add_argument('--summary',required=True); rc.add_argument('--id'); rc.add_argument('--work-item'); rc.add_argument('--artifact',action='append'); rc.add_argument('--evidence',action='append'); rc.add_argument('--verified-by')
+tests/test_record_contribution.py:48:def test_record_contribution_auto_id_writes_schema_valid_file(repo_copy):
+tests/test_record_contribution.py:54:        "HOWL-002 regression auto-id",
+tests/test_record_contribution.py:62:    cid = doc["contribution_id"]
+tests/test_record_contribution.py:71:    assert doc["summary"] == "HOWL-002 regression auto-id"
+tests/test_record_contribution.py:74:def test_record_contribution_explicit_valid_id_works(repo_copy):
+tests/test_record_contribution.py:75:    cid = "contrib-howl002-explicit-valid"
+tests/test_record_contribution.py:86:    path = repo_copy / "workforce" / "contributions" / f"{cid}.yaml"
+tests/test_record_contribution.py:90:    assert doc["contribution_id"] == cid
+tests/test_record_contribution.py:93:def test_record_contribution_explicit_invalid_id_rejected(repo_copy):
+tests/test_record_contribution.py:109:    """Pre-existing contribution docs (if any) still parse and schema-validate."""
+tests/test_record_contribution.py:117:        assert SAFE_ID.fullmatch(doc["contribution_id"])
+./tests/test_record_contribution.py:48:def test_record_contribution_auto_id_writes_schema_valid_file(repo_copy):
+./tests/test_record_contribution.py:54:        "HOWL-002 regression auto-id",
+./tests/test_record_contribution.py:71:    assert doc["summary"] == "HOWL-002 regression auto-id"
+./security/reviews/HOWL-002-2026-09-20.md:10:Contribution auto-id generator change in `tools/orgctl.py` (`strftime` uppercase `T` → lowercase `t`) so auto `record-contribution` IDs satisfy `safe_id`.
+./tools/orgctl.py:449:    if not safe_id(cid): raise SystemExit("contribution id must be lowercase kebab-case")
+445:def record_contribution(args):
+576:    rc=sub.add_parser("record-contribution"); rc.add_argument('employee_id'); rc.add_argument('--summary',required=True); rc.add_argument('--id'); rc.add_argument('--work-item'); rc.add_argument('--artifact',action='append'); rc.add_argument('--evidence',action='append'); rc.add_argument('--verified-by')
+594:    if a.cmd=="record-contribution": record_contribution(a)
+tests/test_record_contribution.py:69:    assert "t" in stamp
+193:    # Historical workforce/event/context/contribution records.
+212:    for p in (ROOT/"workforce/contributions").glob("*.yaml"):
+215:            validate_instance(data,ROOT/"schemas/contribution.schema.json",str(p.relative_to(ROOT)),errors)
+445:def record_contribution(args):
+448:    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dt%H%M%S')}-{args.employee_id}"
+449:    if not safe_id(cid): raise SystemExit("contribution id must be lowercase kebab-case")
+450:    p=ROOT/f"workforce/contributions/{cid}.yaml"
+451:    if p.exists(): raise SystemExit(f"contribution exists: {p.relative_to(ROOT)}")
+453:      'schema_version':1,'contribution_id':cid,'employee_id':args.employee_id,'occurred_at':now.isoformat(timespec='seconds'),
+539:    for p in sorted((ROOT/"workforce/contributions").glob("*.yaml")):
+576:    rc=sub.add_parser("record-contribution"); rc.add_argument('employee_id'); rc.add_argument('--summary',required=True); rc.add_argument('--id'); rc.add_argument('--work-item'); rc.add_argument('--artifact',action='append'); rc.add_argument('--evidence',action='append'); rc.add_argument('--verified-by')
+594:    if a.cmd=="record-contribution": record_contribution(a)
+
+=== CHECK 6: secret scan of new files ===
+Scanning new/changed files for secrets patterns...
+CHECK6: PASS (no obvious secrets in changed files)
+
+=== CHECK 7: CI/Makefile / dist / audit ===
++ ls Makefile* 2>/dev/null; rg -n 'audit|dist|ci' Makefile 2>/dev/null | head -40
+-rw-r--r-- 1 box box 385 Sep 20 20:01 Makefile
+3:validate:
+9:test:
+12:audit:
+18:dist:
+1:.PHONY: validate test render audit dist verify-dist
+12:audit:
+18:dist:
+21:verify-dist:
++ make -n audit 2>&1 | head -20
+--: line 141: make: command not found
++ make -n dist 2>&1 | head -20
+--: line 143: make: command not found
+NOTE: distribution CI remains FAIL / HOWL-003 — do NOT claim dist green.
+total 12
+drwxr-xr-x 2 box box 4096 Sep 20 20:01 .
+drwxr-xr-x 3 box box 4096 Sep 20 20:01 ..
+-rw-r--r-- 1 box box 1412 Sep 20 20:01 validate.yml
+CHECK7: recorded (dist CI remains FAIL / HOWL-003)
+
+=== DONE checks ===
+
+=== AUTO-ID LINE AT HEAD (reconfirm) ===
++ sed -n '448p' tools/orgctl.py
+    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dt%H%M%S')}-{args.employee_id}"
+CONFIRMED: strftime uses lowercase t in %Y%m%dt%H%M%S (not uppercase T)
+
+=== Makefile targets (make binary missing; recipe recorded) ===
+.PHONY: validate test render audit dist verify-dist
+
+validate:
+	python tools/orgctl.py validate
+
+render:
+	python tools/orgctl.py render-all
+
+test:
+	python -m pytest -q
+
+audit:
+	python tools/orgctl.py validate
+	python -m pytest -q
+	python -m compileall -q tools tests
+	git diff --check
+
+dist:
+	python tools/package_release.py build
+
+verify-dist:
+	python tools/package_release.py verify
+
++ manual audit recipe equivalent:
+  /workspace/.venv-hfw/bin/python tools/orgctl.py validate  # already PASS
+  /workspace/.venv-hfw/bin/pytest -q                         # already 75 passed
+compileall exit_code=0
+git diff --check exit_code=0
+NOTE: make dist / verify-dist NOT run as green claim; distribution CI remains FAIL / HOWL-003.
+Makefile has audit and dist targets; make binary not installed on this box.
