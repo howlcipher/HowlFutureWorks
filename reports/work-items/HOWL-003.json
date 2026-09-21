@@ -1,0 +1,51 @@
+{
+  "id": "HOWL-003",
+  "title": "Release packaging on PR checkouts without local main",
+  "problem": "tools/package_release.py runs `git bundle create … HEAD main`. GitHub Actions pull_request checkouts are detached HEAD and typically have no local main branch, so bundle create fails with `fatal: ambiguous argument 'main': unknown revision or path not in the working tree.` Distribution CI (`make dist`) is red on PRs even when validate/pytest pass. Push-to-main checkouts still work because they have local main.",
+  "desired_outcome": "package_release.py build succeeds on detached PR checkouts that lack local main, still advertises packaged HEAD as refs/heads/main so `git clone -b main` works, and restores any pre-existing local main (or leaves main absent) after bundle create. Dist CI gate stays in place.",
+  "owner": "engineering-manager",
+  "owner_employee_id": "bot-engmgr-0001",
+  "assignee_employee_id": "bot-devlead-0001",
+  "phase": "implementation",
+  "priority": "P2",
+  "risk_tier": "R2",
+  "complexity": "small-bounded-maintenance",
+  "status": "approved-for-implementation",
+  "opened_on": "2026-09-21",
+  "evidence": [
+    "GHA PR distribution job: `git bundle create dist/howl-future-works-v0.4.1.bundle HEAD main` exit 128",
+    "stderr: fatal: ambiguous argument 'main': unknown revision or path not in the working tree.",
+    "validate/pytest jobs on the same PR checkout succeed; only distribution fails",
+    "push-to-main validate workflow distribution job succeeds (local main present)"
+  ],
+  "acceptance_criteria": [
+    "git bundle create succeeds on a detached checkout with no local main",
+    "Built bundle advertises both HEAD and refs/heads/main at the packaged commit",
+    "git clone -b main of the bundle checks out the packaged HEAD",
+    "If local main already existed, it is restored to its previous SHA after packaging",
+    "If local main did not exist, it is not left behind after packaging",
+    "Existing on-main packaging path still works",
+    "Dist CI gate (make dist / make verify-dist) remains in the validate workflow",
+    "Regression coverage in tests/test_package_release.py"
+  ],
+  "non_goals": [
+    "Changing tools/orgctl.py",
+    "HOWL-002 contribution auto-id files or PR #1",
+    "Removing or weakening the distribution CI job",
+    "Version bump / release solely for this fix",
+    "Altering ZIP archive contents or checksum format"
+  ],
+  "routing": {
+    "next": "cloudagent-publish",
+    "executor_policy": "EM-authorized CloudAgent publish-only onto a new branch from origin/main",
+    "product_definition": "accepted",
+    "em_decision": "AC unambiguous; R2; publish implementation on fix/howl-003-dist-pr-checkout, not onto PR #1"
+  },
+  "dependencies": [],
+  "product_definition_accepted_at": "2026-09-21T02:30:00+00:00",
+  "artifacts": [
+    "tools/package_release.py",
+    "tests/test_package_release.py",
+    "reports/work-items/HOWL-003/product-definition.md"
+  ]
+}

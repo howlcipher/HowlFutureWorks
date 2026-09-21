@@ -1,0 +1,21 @@
+# workflow-dist-gate.txt — extracted from tip fd04b19 .github/workflows/validate.yml
+# PR does not modify this file (git diff origin/main...HEAD -- .github/workflows/validate.yml empty)
+# Parent agent reported GHA check_runs distribution=success on PR #2
+# Local gh CLI not authenticated; could not re-confirm check_runs via API
+
+  distribution:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: python -m pip install -r requirements-dev.txt
+      - run: make dist
+      - run: make verify-dist
