@@ -21,7 +21,7 @@ This is a semantic map, not a generated file listing. Use `git ls-files` when an
 
 - `policies/` — machine-readable risk, approvals, credentials, access, budgets, workforce and change policy.
 - `schemas/` — JSON Schema contracts plus validated examples.
-- `routing/` — executor capability registry, routing and fallback policy.
+- `routing/` — task classes, selection policy, capability registry, fallback, decision records.
 - `runbooks/` — repeatable operational, security, staffing and recovery procedures.
 - `security/` — threat model, abuse-case, regression-test and review areas.
 
@@ -42,7 +42,7 @@ This is a semantic map, not a generated file listing. Use `git ls-files` when an
 
 ## Tooling and repository controls
 
-- `tools/orgctl.py` — validate, inspect, render and propose controlled organizational changes.
+- `tools/orgctl.py` — validate, route inspection, render and propose controlled organizational changes.
 - `tools/package_release.py` — clean-room ZIP/Git-bundle build and verification.
 - `tests/` — structural and governance regression tests.
 - `.github/` — CI, Dependabot and repository collaboration scaffolding.

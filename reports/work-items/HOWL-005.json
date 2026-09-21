@@ -1,0 +1,50 @@
+{
+  "id": "HOWL-005",
+  "title": "Intelligent Executor Routing",
+  "status": "open",
+  "phase": "implementation",
+  "risk_tier": "R2",
+  "opened_on": "2026-09-20",
+  "owner_employee_id": "bot-engmgr-0001",
+  "assignee_employee_id": "bot-devlead-0001",
+  "problem": "Organization knows external executor families exist but lacks complete deterministic policy for self vs delegate, task classes, capability sufficiency, quota/cost, fallback, independent verification, and cold-start uncertainty.",
+  "impact": "Without routing policy, persistent Bots may overuse expensive models, delegate trivial work, choose inconsistently, hard-code provider preference, exhaust quota, or use the builder as sole verifier.",
+  "desired_outcome": "A persistent member can answer self vs delegate, required capabilities, eligible profiles, selection rationale, verification need, and evidence-insufficient behavior without inventing provider rankings. HOWL-005 defines policy and deterministic tooling only \u2014 no executor authentication or large benchmarks.",
+  "acceptance_criteria": [
+    "Trivial and simple work default to SELF; external delegation requires expected value",
+    "Machine-readable task classes: trivial, simple, bounded, complex, critical (complexity does not override risk)",
+    "Claude, Codex, AGY remain registered; Astra added with honest needs-local-eval state",
+    "Selection policy forbids provider loyalty and permanent ranking; considers measured evidence, tools, risk, reliability, quota, cost/usage, latency, context, known failure modes",
+    "Prefer least-resource-intensive sufficiently capable executor; quality over cost when failure cost material",
+    "Critical/consequential work requires independent verification; builder not sole verifier",
+    "Security: task envelopes, child privilege <= parent, HowlFrame bypass forbidden, recursive delegation off by default, no secrets in routing config",
+    "Missing benchmarks produce visible uncertainty; never invent capability scores",
+    "Quota states: healthy, constrained, scarce, exhausted, unknown with conservative semantics",
+    "Cold-start and fallback/retry rules documented; multi-model fan-out not normalized",
+    "docs/EXECUTOR_ROUTING.md; orgctl route inspection if clean; schemas/validation/tests; context budgets pass",
+    "No Claude/Codex/AGY/Astra authentication in HOWL-005"
+  ],
+  "non_goals": [
+    "Authenticate or login to Claude/Codex/AGY/Astra",
+    "Large external-model benchmarks or fabricated scores",
+    "HowlBoard/HowlPlane implementation",
+    "Product feature development",
+    "Weakening HowlFrame, approvals, or privilege model",
+    "Permanent provider rankings"
+  ],
+  "baseline": {
+    "main": "a5554ea",
+    "claude": "present",
+    "codex": "present",
+    "agy": "present",
+    "astra": "absent",
+    "task_classes_yaml": "absent",
+    "selection_policy_yaml": "absent",
+    "docs_executor_routing": "absent",
+    "native_github_publish": "operational"
+  },
+  "product_definition": "reports/work-items/HOWL-005/product-definition.md",
+  "em_acceptance": "reports/work-items/HOWL-005/em-acceptance.md",
+  "branch": "feat/howl-005-executor-routing",
+  "updated_at": "2026-09-21T03:26:27.024571+00:00"
+}

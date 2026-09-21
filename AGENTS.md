@@ -27,6 +27,10 @@ For any task, do **not** load the whole repository by default.
 - Never write secrets into prompts, Markdown, YAML, reports, evidence, or Git history.
 - Prefer reversible, scoped actions and evidence-backed completion.
 
+## Executor routing
+
+Persistent members handle ordinary work themselves. External executors only when expected benefit justifies it. Choose by measured fit, not loyalty or rankings. See `routing/`.
+
 ## Workforce continuity
 
 Before staffing changes, read `docs/WORKFORCE_LIFECYCLE.md`. Firing/separating a worker must preserve its tenure, contributions, curated context, handoff and lifecycle events. Promote stable successor-relevant lessons into `knowledge/positions/` rather than chaining raw predecessor history. Do not replace institutional memory with raw chat logs.

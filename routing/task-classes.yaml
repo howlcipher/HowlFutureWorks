@@ -1,0 +1,28 @@
+version: 1
+# Complexity ≠ risk. Complexity never overrides risk policy (policies/risk-tiers.yaml).
+classes:
+  trivial:
+    description: Deterministic or near-zero-judgment work
+    default_executor: SELF
+    external_delegation: requires_expected_value
+  simple:
+    description: Ordinary work within persistent-member competence
+    default_executor: SELF
+    external_delegation: requires_expected_value
+  bounded:
+    description: Scoped work that may benefit from a specialized executor
+    default_executor: SELF_or_eligible_profile
+    external_delegation: when_expected_value
+  complex:
+    description: Multi-step or multi-domain work with material failure cost
+    default_executor: eligible_profile_or_SELF
+    external_delegation: when_expected_value
+    independent_verification: preferred
+  critical:
+    description: Consequential work where failure is material
+    default_executor: eligible_profile_with_verification
+    external_delegation: when_expected_value
+    independent_verification: required
+rules:
+  complexity_does_not_override_risk: true
+  risk_policy_source: policies/risk-tiers.yaml
