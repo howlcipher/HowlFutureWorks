@@ -1,0 +1,45 @@
+{
+  "id": "HOWL-008",
+  "title": "Navigable informational mission dependencies",
+  "status": "open",
+  "phase": "product-definition",
+  "risk_tier": "R2",
+  "opened_on": "2026-09-21",
+  "owner_employee_id": "bot-engmgr-0001",
+  "assignee_employee_id": "bot-product-0001",
+  "org_repository": "https://github.com/howlcipher/HowlFutureWorks",
+  "org_main_sha_at_open": "27b8528a96ab3f9b929dda4d0f1fb9ee495bc7eb",
+  "target_repository": "https://github.com/howlcipher/howlboard",
+  "target_main_sha_at_open": "cab020ca62dbffce79b8c3877f899b743e6d53fe",
+  "predecessor": "HOWL-007",
+  "problem": "After HOWL-007, depends_on IDs are visible as plain escaped text; operators cannot follow a dependency reference to open that mission.",
+  "desired_outcome": "Dependency IDs are navigable controls that open the referenced mission via existing open_mission, using shared mission_view.howl for app+demo; safe data-attribute + encode_json lookup; informational-only semantics preserved; missing targets fail honestly.",
+  "non_goals": [
+    "execution ordering",
+    "blocking / satisfaction",
+    "cycle detection",
+    "authority / ChangeOps propagation",
+    "HowlPlane scheduling",
+    "automatic dispatch",
+    "graph visualization",
+    "broad API request serialization refactor",
+    "context budget increases",
+    "HOWL-009 auto-start",
+    "executor pre-selection"
+  ],
+  "context_budget_preflight": {
+    "engineering-manager": {
+      "used": 14908,
+      "limit": 18000,
+      "headroom": 3092
+    },
+    "dev-lead": {
+      "used": 9831,
+      "limit": 15000,
+      "headroom": 5169
+    },
+    "budgets_raised": false
+  },
+  "routing_note": "EM classifies after Product AC using live HOWL-005/006 policy; HOWL-007 SELF success is evidence not a rule; Astra=Codex alias.",
+  "updated_at": "2026-09-21T17:11:59.745867+00:00"
+}
