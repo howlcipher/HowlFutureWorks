@@ -1,0 +1,55 @@
+{
+  "id": "HOWL-004",
+  "title": "Establish governed bot-native GitHub publishing",
+  "status": "open",
+  "phase": "native-publish-proof",
+  "risk_tier": "R2",
+  "opened_on": "2026-09-20",
+  "owner_employee_id": "bot-engmgr-0001",
+  "assignee_employee_id": "bot-devlead-0001",
+  "problem": "Dev Lead cannot natively push/PRs from shared Grok Bot computer; CloudAgent was required for HOWL-002/003 publication.",
+  "impact": "Ordinary approved feature-branch publish depends on CloudAgent; slows governance loop; blurs publish path.",
+  "acceptance_seed": [
+    "gh installed and authenticated via human-controlled flow",
+    "no secrets in chat/Git/evidence/memory/logs",
+    "native branch push + gh pr create without CloudAgent",
+    "no direct-to-main convenience path",
+    "shared-computer credential boundary documented",
+    "non-secret recovery runbook",
+    "CloudAgent remains optional fallback"
+  ],
+  "non_goals": [
+    "executor routing overhaul",
+    "Claude/Codex/AGY/Astra auth",
+    "HowlBoard",
+    "uppercase-T cleanup",
+    "GHA redesign",
+    "production deploy",
+    "weakening merge/HowlFrame policy"
+  ],
+  "auth_state_initial": {
+    "gh_installed": true,
+    "gh_version": "2.46.0",
+    "authenticated": false,
+    "credential_helper": "unset",
+    "git_user_name": "unset",
+    "git_user_email": "unset",
+    "remote": "https://github.com/howlcipher/HowlFutureWorks.git",
+    "ls_remote_HEAD": "efab575 (readable without write auth)"
+  },
+  "auth_state_after_login": {
+    "gh_installed": true,
+    "authenticated": true,
+    "account": "howlcipher",
+    "git_protocol": "https",
+    "credential_helper": "gh auth git-credential",
+    "token_scopes_nonsecret": [
+      "gist",
+      "read:org",
+      "repo"
+    ],
+    "insecure_storage_flag_used": false,
+    "hosts_yml_mode": "0600"
+  },
+  "updated_at": "2026-09-21T03:09:18.878456+00:00"
+}
