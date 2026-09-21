@@ -71,6 +71,9 @@ def test_registry_membership_includes_astra_and_prior_executors():
         assert ex["benchmark_status"] in {
             "needs-local-eval",
             "evaluated",
+            "baseline-evaluated",
+            "partially-evaluated",
+            "blocked",
             "unknown",
             "stale",
         }

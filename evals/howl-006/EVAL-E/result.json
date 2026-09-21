@@ -1,0 +1,30 @@
+{
+  "eval_id": "EVAL-E",
+  "kind": "orchestration-smoke",
+  "labels": [
+    "INITIAL BASELINE",
+    "LOW SAMPLE",
+    "NOT PERMANENT RANKING"
+  ],
+  "captured_at": "2026-09-21 00:01 EDT",
+  "runs": [
+    {
+      "executor": "claude",
+      "status": "blocked:not_authenticated"
+    },
+    {
+      "executor": "codex",
+      "status": "blocked:not_authenticated"
+    },
+    {
+      "executor": "agy",
+      "status": "blocked:not_authenticated"
+    },
+    {
+      "executor": "astra",
+      "status": "blocked:not_installed"
+    }
+  ],
+  "scores_invented": false,
+  "cross_executor_fallback": false
+}
