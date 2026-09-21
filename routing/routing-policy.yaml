@@ -1,7 +1,17 @@
 version: 1
+# High-level routing rules. Detailed selection: selection-policy.yaml.
+canonical:
+  task_classes: routing/task-classes.yaml
+  selection: routing/selection-policy.yaml
+  registry: routing/capability-registry.yaml
+  fallback: routing/fallback-policy.yaml
 rules:
   provider_loyalty: forbidden
+  permanent_ranking: forbidden
   choose_by_measured_fit: true
+  self_preferred_when_sufficient: true
+  external_requires_expected_value: true
   risk_and_required_tools_are_hard_constraints: true
+  complexity_does_not_override_risk: true
   quota_outage_may_lower_assurance: false
   prefer_least_cost_executor_meeting_quality_bar: true

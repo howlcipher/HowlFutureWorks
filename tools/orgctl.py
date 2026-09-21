@@ -45,6 +45,301 @@ def manifest(): return load_yaml(ROOT/"bots/manifest.yaml") or {"bots":[]}
 def workforce(): return load_yaml(ROOT/"workforce/roster.yaml") or {"employees":[]}
 
 
+
+REQUIRED_EXECUTORS = ("claude", "codex", "agy", "astra")
+TASK_CLASS_IDS = ("trivial", "simple", "bounded", "complex", "critical")
+QUOTA_STATES = ("healthy", "constrained", "scarce", "exhausted", "unknown")
+
+
+def validate_routing(errors):
+    """Meaningful routing policy checks (HOWL-005)."""
+    reg_path = ROOT / "routing/capability-registry.yaml"
+    sel_path = ROOT / "routing/selection-policy.yaml"
+    tc_path = ROOT / "routing/task-classes.yaml"
+    rp_path = ROOT / "routing/routing-policy.yaml"
+    fb_path = ROOT / "routing/fallback-policy.yaml"
+    for rel in (
+        "routing/capability-registry.yaml",
+        "routing/selection-policy.yaml",
+        "routing/task-classes.yaml",
+        "routing/routing-policy.yaml",
+        "routing/fallback-policy.yaml",
+    ):
+        if not (ROOT / rel).exists():
+            errors.append(f"missing {rel}")
+            return
+
+    try:
+        registry = load_yaml(reg_path) or {}
+        selection = load_yaml(sel_path) or {}
+        classes = load_yaml(tc_path) or {}
+        routing = load_yaml(rp_path) or {}
+        fallback = load_yaml(fb_path) or {}
+        tool_access = load_yaml(ROOT / "policies/tool-access.yaml") or {}
+        risk_tiers = load_yaml(ROOT / "policies/risk-tiers.yaml") or {}
+    except Exception as e:
+        errors.append(f"routing load: {e}")
+        return
+
+    executors = registry.get("executors") or []
+    ids = [e.get("id") for e in executors if isinstance(e, dict)]
+    if len(ids) != len(set(ids)):
+        errors.append("routing: duplicate executor IDs in capability-registry")
+    for req in REQUIRED_EXECUTORS:
+        if req not in ids:
+            errors.append(f"routing: capability-registry missing required executor {req}")
+
+    class_map = classes.get("classes") or {}
+    for cid in TASK_CLASS_IDS:
+        if cid not in class_map:
+            errors.append(f"routing: task-classes missing class {cid}")
+    if classes.get("rules", {}).get("complexity_does_not_override_risk") is not True:
+        errors.append("routing: complexity_does_not_override_risk must be true")
+    risk_src = classes.get("rules", {}).get("risk_policy_source")
+    if risk_src and not (ROOT / risk_src).exists():
+        errors.append(f"routing: unknown risk_policy_source {risk_src}")
+    known_risks = set((risk_tiers.get("tiers") or {}).keys()) | RISKS
+    for cid, meta in class_map.items():
+        if not isinstance(meta, dict):
+            continue
+        for key in ("allowed_risk_tiers", "risk_refs"):
+            for r in meta.get(key) or []:
+                if r not in known_risks:
+                    errors.append(f"routing: task class {cid} references unknown risk {r}")
+
+    for default_cls in ("trivial", "simple"):
+        d = (class_map.get(default_cls) or {}).get("default_executor")
+        if d != "SELF":
+            errors.append(f"routing: {default_cls} must default to SELF, got {d}")
+
+    crit = class_map.get("critical") or {}
+    if crit.get("independent_verification") != "required":
+        errors.append("routing: critical class must require independent verification")
+
+    principles = selection.get("principles") or {}
+    for key, expected in (
+        ("self_preferred_when_sufficient", True),
+        ("external_requires_expected_value", True),
+        ("provider_loyalty", "forbidden"),
+        ("permanent_ranking", "forbidden"),
+        ("least_resource_intensive_sufficient", True),
+        ("quality_over_cost_when_failure_material", True),
+        ("invent_capability_scores", "forbidden"),
+    ):
+        if key not in principles:
+            errors.append(f"routing: selection-policy principles missing {key}")
+        elif principles.get(key) != expected:
+            errors.append(f"routing: selection-policy principles.{key} must be {expected!r}")
+
+    qstates = selection.get("quota_states") or []
+    if set(qstates) != set(QUOTA_STATES):
+        errors.append(f"routing: quota_states must be exactly {list(QUOTA_STATES)}")
+    for st in qstates:
+        if st not in QUOTA_STATES:
+            errors.append(f"routing: invalid quota state {st}")
+
+    rec = selection.get("recursive_delegation") or {}
+    if rec.get("default") not in (False, "off"):
+        errors.append("routing: recursive_delegation.default must be off")
+
+    ver = selection.get("verification") or {}
+    if ver.get("critical_requires_independent") is not True:
+        errors.append("routing: critical_requires_independent must be true")
+    if ver.get("builder_not_sole_verifier") is not True:
+        errors.append("routing: builder_not_sole_verifier must be true")
+
+    sec = selection.get("security") or {}
+    if sec.get("howlframe_bypass") != "forbidden":
+        errors.append("routing: howlframe_bypass must be forbidden")
+    if sec.get("child_privilege_may_exceed_parent") is not False:
+        errors.append("routing: child_privilege_may_exceed_parent must be false")
+    if sec.get("secrets_in_routing_config") != "forbidden":
+        errors.append("routing: secrets_in_routing_config must be forbidden")
+    if sec.get("fallback_may_lower_assurance") is not False:
+        errors.append("routing: fallback_may_lower_assurance must be false")
+
+    rr = routing.get("rules") or {}
+    if rr.get("provider_loyalty") != "forbidden":
+        errors.append("routing: routing-policy provider_loyalty must be forbidden")
+    if rr.get("permanent_ranking") not in (None, "forbidden") and rr.get("permanent_ranking") is not False:
+        # allow absent only if forbidden elsewhere; prefer explicit
+        if rr.get("permanent_ranking") != "forbidden":
+            errors.append("routing: routing-policy permanent_ranking must be forbidden")
+    if rr.get("quota_outage_may_lower_assurance") is not False:
+        errors.append("routing: quota_outage_may_lower_assurance must be false")
+    if rr.get("self_preferred_when_sufficient") is not True:
+        errors.append("routing: routing-policy self_preferred_when_sufficient must be true")
+    if rr.get("external_requires_expected_value") is not True:
+        errors.append("routing: routing-policy external_requires_expected_value must be true")
+
+    fb = fallback.get("fallback_behavior") or {}
+    if fb.get("blind_retry") != "forbidden":
+        errors.append("routing: fallback blind_retry must be forbidden")
+    if fb.get("multi_model_fan_out") != "not_normalized":
+        errors.append("routing: fallback multi_model_fan_out must be not_normalized")
+    if fb.get("preserve_assurance_and_approvals") is not True:
+        errors.append("routing: fallback must preserve assurance and approvals")
+    retries = fb.get("max_retries_per_failure_class")
+    if retries != 2:
+        errors.append(f"routing: max_retries_per_failure_class must be 2, got {retries}")
+
+    ta = tool_access.get("rules") or {}
+    if ta.get("direct_executor_cli_bypass_of_howlframe") != "forbidden":
+        errors.append("routing: tool-access HowlFrame bypass must remain forbidden")
+    if ta.get("child_worker_may_exceed_parent_scope") is not False:
+        errors.append("routing: tool-access child_worker_may_exceed_parent_scope must be false")
+
+    # No secrets-looking keys in routing YAML values (heuristic).
+    import re as _re
+    secretish = _re.compile(r"(?i)(api[_-]?key|secret|password|token|begin\s+private)")
+    for p in (ROOT / "routing").rglob("*.yaml"):
+        raw = p.read_text()
+        if secretish.search(raw):
+            # allow the word in policy forbidding secrets
+            if "secrets_in_routing_config" in raw and raw.count("secret") <= 3:
+                continue
+            if "forbidden" in raw and "secret" in raw.lower():
+                continue
+            errors.append(f"routing: possible secret material in {p.relative_to(ROOT)}")
+
+
+def route_inspect(task_class, risk, required_tools=None, objective=None):
+    """Deterministic routing inspection. Never invokes a model."""
+    required_tools = required_tools or []
+    out = {
+        "command": "route",
+        "deterministic": True,
+        "model_invoke": False,
+        "task_class": task_class,
+        "risk_tier": risk,
+        "required_tools": required_tools,
+        "objective": objective,
+    }
+    if task_class not in TASK_CLASS_IDS:
+        out["result"] = "invalid-input"
+        out["errors"] = [f"unknown task class {task_class}"]
+        return out
+    if risk not in RISKS:
+        out["result"] = "invalid-input"
+        out["errors"] = [f"unknown risk tier {risk}"]
+        return out
+
+    classes = load_yaml(ROOT / "routing/task-classes.yaml") or {}
+    selection = load_yaml(ROOT / "routing/selection-policy.yaml") or {}
+    registry = load_yaml(ROOT / "routing/capability-registry.yaml") or {}
+    class_meta = (classes.get("classes") or {}).get(task_class) or {}
+    principles = selection.get("principles") or {}
+
+    steps = []
+    steps.append({"step": "classify_task_class_and_risk", "task_class": task_class, "risk_tier": risk})
+
+    default = class_meta.get("default_executor", "SELF")
+    self_preferred = principles.get("self_preferred_when_sufficient") is True
+    external_requires_ev = principles.get("external_requires_expected_value") is True
+
+    if task_class in ("trivial", "simple") and self_preferred:
+        decision = "SELF"
+        rationale = [
+            f"{task_class} defaults to SELF",
+            "external delegation requires expected value",
+            "merely having an executor installed is not a reason to invoke it",
+        ]
+        steps.append({"step": "decide_self_vs_delegate", "decision": decision})
+        out.update({
+            "result": "selected",
+            "decision": decision,
+            "rationale": rationale,
+            "selection_steps": steps + [{"step": "record_rationale_or_evidence_insufficient"}],
+            "independent_verification": class_meta.get("independent_verification", "not_required"),
+            "uncertainty": None,
+        })
+        return out
+
+    # Hard constraints / eligibility from registry
+    eligible = []
+    uncertainty = []
+    for ex in registry.get("executors") or []:
+        eid = ex.get("id")
+        status = ex.get("status")
+        bench = ex.get("benchmark_status")
+        entry = {"id": eid, "status": status, "benchmark_status": bench}
+        if status not in ("available-if-configured", "available"):
+            entry["eligible"] = False
+            entry["reason"] = f"status={status}"
+        elif bench in (None, "needs-local-eval", "unknown"):
+            entry["eligible"] = "uncertain"
+            entry["reason"] = "evidence-insufficient"
+            uncertainty.append(eid)
+        else:
+            entry["eligible"] = True
+            entry["reason"] = "measured evidence present"
+        eligible.append(entry)
+    steps.append({"step": "filter_hard_constraints", "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"})
+    steps.append({"step": "assess_measured_fit", "profiles": eligible})
+
+    if uncertainty and not any(e.get("eligible") is True for e in eligible):
+        decision = "SELF" if task_class in ("trivial", "simple", "bounded") else "evidence-insufficient"
+        cold = (selection.get("cold_start") or {})
+        rationale = [
+            "no fabricated capability scores",
+            "registry profiles lack local eval evidence",
+            f"cold_start guidance: trivial/simple→SELF; bounded may use Owner-configured path with incomplete evidence marked",
+        ]
+        if task_class in ("complex", "critical"):
+            rationale.append("complex/critical require stronger justification + verification before external pick")
+            decision = "evidence-insufficient"
+        elif task_class == "bounded":
+            decision = "SELF_or_owner_configured_known_capable"
+            rationale.append(str(cold.get("bounded")))
+        steps.append({"step": "prefer_least_resource_intensive_sufficient", "skipped": True, "reason": "evidence-insufficient"})
+        out.update({
+            "result": "evidence-insufficient" if decision == "evidence-insufficient" else "selected",
+            "decision": decision,
+            "rationale": rationale,
+            "eligible_profiles": eligible,
+            "selection_steps": steps + [
+                {"step": "apply_quality_over_cost_when_failure_material"},
+                {"step": "require_independent_verification_if_critical",
+                 "required": class_meta.get("independent_verification") == "required"},
+                {"step": "record_rationale_or_evidence_insufficient"},
+            ],
+            "independent_verification": class_meta.get("independent_verification", "not_required"),
+            "uncertainty": "visible: missing benchmark data; never invent scores",
+            "external_requires_expected_value": external_requires_ev,
+            "recursive_delegation_default": (selection.get("recursive_delegation") or {}).get("default"),
+        })
+        return out
+
+    # Measured evidence present for at least one profile — still prefer least resource / SELF when sufficient
+    if self_preferred and task_class in ("bounded",):
+        decision = "SELF_preferred_unless_expected_value"
+    else:
+        decision = "eligible_profile_by_measured_fit"
+    steps.append({"step": "prefer_least_resource_intensive_sufficient", "policy": True})
+    steps.append({"step": "apply_quality_over_cost_when_failure_material", "policy": True})
+    steps.append({
+        "step": "require_independent_verification_if_critical",
+        "required": class_meta.get("independent_verification") == "required"
+        or (selection.get("verification") or {}).get("critical_requires_independent") is True
+        and task_class == "critical",
+    })
+    out.update({
+        "result": "selected",
+        "decision": decision,
+        "rationale": [
+            "choose by measured fit not loyalty/rankings",
+            "prefer least-resource-intensive sufficient executor",
+            "quality over cost when failure material",
+        ],
+        "eligible_profiles": eligible,
+        "selection_steps": steps + [{"step": "record_rationale_or_evidence_insufficient"}],
+        "independent_verification": class_meta.get("independent_verification", "not_required"),
+        "uncertainty": None,
+        "external_requires_expected_value": external_requires_ev,
+    })
+    return out
+
+
 def validate():
     errors=[]
     required=[
@@ -251,6 +546,12 @@ def validate():
         ex=ROOT/"schemas/examples"/f"{stem}.json"
         if not ex.exists(): errors.append(f"missing schema example for {stem}")
         else: validate_instance(load_json(ex),p,f"schema example {stem}",errors)
+
+    # Executor routing policy (HOWL-005).
+    try:
+        validate_routing(errors)
+    except Exception as e:
+        errors.append(f"routing validation: {e}")
 
     if errors:
         print("VALIDATION FAILED")
@@ -575,6 +876,12 @@ def main():
     eh=sub.add_parser("employee-history"); eh.add_argument("employee_id")
     rc=sub.add_parser("record-contribution"); rc.add_argument('employee_id'); rc.add_argument('--summary',required=True); rc.add_argument('--id'); rc.add_argument('--work-item'); rc.add_argument('--artifact',action='append'); rc.add_argument('--evidence',action='append'); rc.add_argument('--verified-by')
     cp=sub.add_parser("checkpoint"); cp.add_argument('employee_id'); cp.add_argument('--reason',required=True); cp.add_argument('--stable',action='append',default=[]); cp.add_argument('--open-work',dest='open_work',action='append',default=[]); cp.add_argument('--decision',action='append',default=[]); cp.add_argument('--risk',action='append',default=[]); cp.add_argument('--source-ref',dest='source_ref',action='append',default=[]); cp.add_argument('--handoff-to',dest='handoff_to',default=None); cp.add_argument('--id')
+    rt=sub.add_parser("route",help="deterministic executor routing inspection (no model invoke)")
+    rt.add_argument("--task-class",required=True,choices=list(TASK_CLASS_IDS))
+    rt.add_argument("--risk",required=True,choices=sorted(RISKS))
+    rt.add_argument("--required-tool",action="append",default=[],dest="required_tools")
+    rt.add_argument("--objective",default=None)
+    rt.add_argument("--json",action="store_true",help="emit JSON instead of YAML")
     a=ap.parse_args()
     if a.cmd=="validate": raise SystemExit(validate())
     if a.cmd=="about": about()
@@ -593,5 +900,12 @@ def main():
     if a.cmd=="propose-separation": propose_separation(a)
     if a.cmd=="record-contribution": record_contribution(a)
     if a.cmd=="checkpoint": checkpoint(a)
+    if a.cmd=="route":
+        result=route_inspect(a.task_class,a.risk,a.required_tools,a.objective)
+        if a.json:
+            print(json.dumps(result,indent=2,sort_keys=False))
+        else:
+            print(yaml_text(result))
+        raise SystemExit(0 if result.get("result") in {"selected","evidence-insufficient"} else 2)
 
 if __name__=="__main__": main()

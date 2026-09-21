@@ -1,0 +1,29 @@
+version: 1
+principles:
+  self_preferred_when_sufficient: true
+  external_requires_expected_value: true
+  provider_loyalty: forbidden
+  permanent_ranking: forbidden
+  least_resource_intensive_sufficient: true
+  quality_over_cost_when_failure_material: true
+  invent_capability_scores: forbidden
+  multi_model_fan_out: not_normalized
+quota_states: [healthy, constrained, scarce, exhausted, unknown]
+quota_semantics:
+  healthy: normal_selection
+  constrained: prefer_cheaper_sufficient
+  scarce: reserve_high_capability_for_material_outcome
+  exhausted: no_new_external_spend_without_owner
+  unknown: conservative_treat_as_constrained
+selection_steps: [classify_task_class_and_risk, decide_self_vs_delegate, filter_hard_constraints, assess_measured_fit, prefer_least_resource_intensive_sufficient, apply_quality_over_cost_when_failure_material, require_independent_verification_if_critical, record_rationale_or_evidence_insufficient]
+measured_fit_factors: [evidence, tools, risk, reliability, quota_cost, latency, context, failure_modes]
+cold_start:
+  trivial_simple: SELF
+  bounded: owner_configured_path_with_incomplete_evidence_marked
+  complex_critical: stronger_justification_plus_verification
+  never_auto_pick_most_expensive_when_evidence_missing: true
+recursive_delegation:
+  default: "off"
+  if_permitted: {child_authority_lte_parent: true, child_risk_lte_parent: true, child_budget_lte_parent: true, preserve_evidence_lineage: true}
+verification: {critical_requires_independent: true, builder_not_sole_verifier: true, different_provider_not_proof_of_independence: true, prefer_deterministic_evidence: true}
+security: {task_envelope_required: true, child_privilege_may_exceed_parent: false, howlframe_bypass: forbidden, secrets_in_routing_config: forbidden, model_output_untrusted_until_validated: true, fallback_may_lower_assurance: false}

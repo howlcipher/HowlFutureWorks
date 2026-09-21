@@ -17,3 +17,10 @@ load_on_demand:
 - runbooks/
 - evals/
 - knowledge/company/
+- docs/EXECUTOR_ROUTING.md
+- routing/fallback-policy.yaml
+- routing/routing-policy.yaml
+- routing/decision-records/
+- EVALS.md
+- routing/task-classes.yaml
+- routing/selection-policy.yaml

@@ -3,5 +3,13 @@ fallback_behavior:
   preserve_task_envelope: true
   preserve_risk_tier: true
   preserve_required_gates: true
+  preserve_assurance_and_approvals: true
   checkpoint_before_switch: true
   record_executor_change_in_result: true
+  blind_retry: forbidden
+  multi_model_fan_out: not_normalized
+  max_retries_per_failure_class: 2
+steps:
+  - classify_failure
+  - bounded_retry_if_eligible
+  - select_eligible_alternative_or_escalate
