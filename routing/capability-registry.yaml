@@ -1,14 +1,13 @@
 version: 1
-# HOWL-006 baseline facts only. AVAILABLE ≠ preferred. No rankings/scores.
-# Raw evidence: evals/howl-006/ and reports/work-items/HOWL-006/ (referenced, not embedded).
-# Astra = Codex (Owner clarification): runtime_alias_of codex; not a separate install.
+# HOWL-006 facts. AVAILABLE ≠ preferred. No rankings. Evidence: evals/howl-006/, reports/work-items/HOWL-006/
+# Astra = Codex alias (Owner). Full field list maintained over time as evidence grows.
 executors:
 - id: claude
   provider: anthropic
   status: available-if-configured
   install_status: installed
   auth_status: authenticated
-  cli_version: 2.1.278
+  cli_version: "2.1.278"
   benchmark_status: baseline-evaluated
   evidence_ref: reports/work-items/HOWL-006/runtime-inventory.md
 - id: codex
@@ -16,7 +15,7 @@ executors:
   status: available-if-configured
   install_status: installed
   auth_status: authenticated
-  cli_version: 0.155.1
+  cli_version: "0.155.1"
   benchmark_status: baseline-evaluated
   evidence_ref: reports/work-items/HOWL-006/runtime-inventory.md
 - id: agy
@@ -24,7 +23,7 @@ executors:
   status: available-if-configured
   install_status: installed
   auth_status: authenticated
-  cli_version: 1.2.7
+  cli_version: "1.2.7"
   benchmark_status: baseline-evaluated
   evidence_ref: reports/work-items/HOWL-006/runtime-inventory.md
 - id: astra
@@ -32,23 +31,9 @@ executors:
   status: available-if-configured
   install_status: installed
   auth_status: authenticated
-  cli_version: 0.155.1
+  cli_version: "0.155.1"
   runtime_alias_of: codex
   benchmark_status: baseline-evaluated
   evidence_ref: reports/work-items/HOWL-006/runtime-inventory.md
-  notes: 'Owner clarification 2026-09-21: Astra is Codex (same CLI/runtime/auth).
-    Not a separate binary. Baseline shares Codex EVAL-A..E evidence.'
-fields_to_maintain:
-- model_version
-- adapter_version
-- tool_support
-- task_success_rate
-- reviewer_acceptance
-- reliability
-- latency
-- cost_or_usage
-- quota_state
-- context_capacity
-- known_failure_modes
-- allowed_risk_classes
-- last_evaluated_at
+  notes: Owner 2026-09-21 — Astra is Codex (same CLI/auth); not a separate binary.
+fields_to_maintain: [model_version, adapter_version, tool_support, task_success_rate, reviewer_acceptance, reliability, latency, cost_or_usage, quota_state, context_capacity, known_failure_modes, allowed_risk_classes, last_evaluated_at]
