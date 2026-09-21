@@ -35,7 +35,7 @@
 
 ### 2 — Secrets in diff
 - Files vs `origin/main`: three adds only (`runbooks/github-publishing.md`, `reports/work-items/HOWL-004.json`, `reports/work-items/HOWL-004/product-definition.md`).
-- Pattern scan (gho_/ghp_/AKIA/BEGIN PRIVATE KEY/cookie=/Authorization:/password=/token= assignments with values): **CLEAN**.
+- Pattern scan (gho_/ghp_/AKIA/PEM private-key header marker/cookie=/Authorization:/password=/token= assignments with values): **CLEAN**.
 - High-confidence added-line prefix scan: no live token/key material.
 - Evidence: `secret-scan.txt`, `files-changed-vs-main.txt`.
 

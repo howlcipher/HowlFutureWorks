@@ -20,7 +20,7 @@ gh pr view 3 --repo howlcipher/HowlFutureWorks --json number,state,isDraft,baseR
 
 # Check 2 — secret scan (values never echoed)
 git diff --name-status origin/main...HEAD
-# pattern scan for gho_/ghp_/AKIA/BEGIN PRIVATE KEY/cookie=/Authorization:/password=/token= assignments
+# pattern scan for gho_/ghp_/AKIA/PEM private-key header marker/cookie=/Authorization:/password=/token= assignments
 # → RESULT: CLEAN (see secret-scan.txt)
 
 # Check 3/5 — runbook excerpts
