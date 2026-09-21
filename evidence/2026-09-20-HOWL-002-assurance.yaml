@@ -1,0 +1,14 @@
+id: evidence-2026-09-20-HOWL-002-assurance
+claim: "Independent Assurance verification PASS for HOWL-002 on PR tip b7e55fc; contribution auto-id uses lowercase t and satisfies safe_id without weakening the gate."
+type: assurance-verification
+pointer: reports/audits/assurance-verification-HOWL-002-2026-09-20.md
+sha256: c9d0d00ee39850a96f0d3abf74c64cff2bea5819a277ed4620069424590ae035
+created_at: "2026-09-20T22:09:00-04:00"
+producer: bot-assurance-0001
+authoritative_commit: b7e55fc6c6d1ef751b825c3e26a57c344149e833
+artifacts:
+  - path: evidence/howl-002-assurance-verify-2026-09-20/
+    note: "Independent command transcript, samples, excerpts"
+  - path: security/reviews/HOWL-002-2026-09-20.md
+    note: "Security lane companion"
+verifier: "Reconstruct from worktree of origin/pr-1 at tip SHA; re-run pytest tests/test_record_contribution.py, orgctl validate, and record-contribution auto/explicit paths."

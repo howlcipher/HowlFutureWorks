@@ -1,0 +1,16 @@
+===== auto-id code path =====
+File: tools/orgctl.py function record_contribution
+def safe_id(s): return bool(re.fullmatch(r"[a-z0-9][a-z0-9-]{1,63}",s))
+def record_contribution(args):
+    e=employee_by_id(args.employee_id)
+    if not e: raise SystemExit(f"unknown employee {args.employee_id}")
+    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dt%H%M%S')}-{args.employee_id}"
+    if not safe_id(cid): raise SystemExit("contribution id must be lowercase kebab-case")
+    p=ROOT/f"workforce/contributions/{cid}.yaml"
+    if p.exists(): raise SystemExit(f"contribution exists: {p.relative_to(ROOT)}")
+    dump_yaml({
+      'schema_version':1,'contribution_id':cid,'employee_id':args.employee_id,'occurred_at':now.isoformat(timespec='seconds'),
+      'role_at_time':e['logical_role'],'work_item_id':args.work_item,'summary':args.summary,
+      'artifact_refs':args.artifact or [],'evidence_refs':args.evidence or [],'verified_by':args.verified_by
+    },p)
+    print(p.relative_to(ROOT))

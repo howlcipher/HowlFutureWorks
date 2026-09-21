@@ -1,0 +1,46 @@
+{
+  "id": "HOWL-002",
+  "title": "Fix auto-generated contribution ID failing safe_id validation",
+  "problem": "tools/orgctl.py record-contribution without --id generates contrib-{YYYYMMDDTHHMMSS}-{employee_id}, which includes uppercase T and fails safe_id() lowercase kebab-case validation, so automatic contribution recording cannot succeed.",
+  "desired_outcome": "record-contribution without --id creates a schema-valid contribution whose auto-generated id satisfies safe_id; explicit valid ids continue to work; explicit invalid ids continue to be rejected; unrelated identifier formats unchanged.",
+  "owner": "engineering-manager",
+  "owner_employee_id": "bot-engmgr-0001",
+  "assignee_employee_id": "bot-devlead-0001",
+  "phase": "implementation",
+  "priority": "P2",
+  "risk_tier": "R2",
+  "complexity": "small-bounded-maintenance",
+  "status": "approved-for-implementation",
+  "opened_on": "2026-09-20",
+  "evidence": [
+    "Auto-generated example: contrib-20260920T214045-bot-engmgr-0001 -> safe_id False",
+    "CLI without --id: SystemExit 'contribution id must be lowercase kebab-case'",
+    "CLI with --id contrib-repro-valid-20260920: wrote workforce/contributions/contrib-repro-valid-20260920.yaml (removed after copy to evidence/)"
+  ],
+  "acceptance_criteria": [
+    "record-contribution without --id creates a schema-valid contribution file",
+    "Auto-generated ID satisfies safe_id / lowercase kebab-case",
+    "Explicit valid lowercase --id still works",
+    "Invalid explicit --id still rejected",
+    "Existing contribution records remain compatible",
+    "No unrelated identifier formats change (prefer contribution-only fix)",
+    "Regression coverage prevents recurrence"
+  ],
+  "non_goals": [
+    "General orgctl refactor",
+    "Changing checkpoint ID behavior unless a shared helper is demonstrably required",
+    "Unrelated cleanup",
+    "Version bump / release solely for this fix"
+  ],
+  "routing": {
+    "next": "dev-lead-implement",
+    "executor_policy": "prefer-dev-lead-self; no automatic external executor; intelligent routing not fully landed",
+    "product_definition": "accepted",
+    "em_decision": "AC unambiguous; R2; self-implement by Dev Lead preferred"
+  },
+  "dependencies": [],
+  "product_definition_accepted_at": "2026-09-21T01:42:07.398711+00:00",
+  "artifacts": [
+    "product-definition-via-agent-handoff-2026-09-20"
+  ]
+}

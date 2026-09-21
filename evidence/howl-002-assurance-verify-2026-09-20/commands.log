@@ -1,0 +1,376 @@
+===== tip SHA =====
+CMD: git rev-parse HEAD
+b7e55fc6c6d1ef751b825c3e26a57c344149e833
+Expected: b7e55fc6c6d1ef751b825c3e26a57c344149e833
+Match: YES
+
+===== git log --oneline -5 =====
+CMD: git log --oneline -5
+CWD: /workspace/HowlFutureWorks-howl002
+START: 2026-09-20T22:08:40-04:00
+EXIT: 0
+--- stdout ---
+b7e55fc fix(HOWL-002): contribution auto-id safe_id compliance
+3b9c3bc docs: add HowlFutureWorks Pages site
+a154e84 Add durable knowledge and checkpoint policy
+3d0e1d8 Publish HowlFutureWorks v0.4.0
+--- stderr ---
+END: 2026-09-20T22:08:40-04:00
+
+===== git show --stat HEAD =====
+CMD: git show --stat HEAD
+CWD: /workspace/HowlFutureWorks-howl002
+START: 2026-09-20T22:08:40-04:00
+EXIT: 0
+--- stdout ---
+commit b7e55fc6c6d1ef751b825c3e26a57c344149e833
+Author: Cursor Agent <cursoragent@cursor.com>
+Date:   Mon Sep 21 02:05:06 2026 +0000
+
+    fix(HOWL-002): contribution auto-id safe_id compliance
+    
+    Auto-generated contribution ids use lowercase t so they pass safe_id.
+    Adds regression tests and Dev Lead evidence package.
+    
+    Co-authored-by: William Elias <wylelias.123@gmail.com>
+
+ .../work-items/HOWL-002/dev-lead-implementation.md |  61 +++++++++++
+ tests/test_record_contribution.py                  | 117 +++++++++++++++++++++
+ tools/orgctl.py                                    |   2 +-
+ 3 files changed, 179 insertions(+), 1 deletion(-)
+--- stderr ---
+END: 2026-09-20T22:08:40-04:00
+
+===== files changed vs origin/main =====
+CMD: git diff --name-status origin/main...HEAD
+A	evidence/work-items/HOWL-002/dev-lead-implementation.md
+A	tests/test_record_contribution.py
+M	tools/orgctl.py
+
+===== git diff --stat origin/main...HEAD =====
+ .../work-items/HOWL-002/dev-lead-implementation.md |  61 +++++++++++
+ tests/test_record_contribution.py                  | 117 +++++++++++++++++++++
+ tools/orgctl.py                                    |   2 +-
+ 3 files changed, 179 insertions(+), 1 deletion(-)
+===== auto-id code path =====
+File: tools/orgctl.py function record_contribution
+def safe_id(s): return bool(re.fullmatch(r"[a-z0-9][a-z0-9-]{1,63}",s))
+def record_contribution(args):
+    e=employee_by_id(args.employee_id)
+    if not e: raise SystemExit(f"unknown employee {args.employee_id}")
+    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dt%H%M%S')}-{args.employee_id}"
+    if not safe_id(cid): raise SystemExit("contribution id must be lowercase kebab-case")
+    p=ROOT/f"workforce/contributions/{cid}.yaml"
+    if p.exists(): raise SystemExit(f"contribution exists: {p.relative_to(ROOT)}")
+    dump_yaml({
+      'schema_version':1,'contribution_id':cid,'employee_id':args.employee_id,'occurred_at':now.isoformat(timespec='seconds'),
+      'role_at_time':e['logical_role'],'work_item_id':args.work_item,'summary':args.summary,
+      'artifact_refs':args.artifact or [],'evidence_refs':args.evidence or [],'verified_by':args.verified_by
+    },p)
+    print(p.relative_to(ROOT))
+
+===== list-workforce =====
+CMD: python tools/orgctl.py list-workforce
+CWD: /workspace/HowlFutureWorks-howl002
+START: 2026-09-20T22:08:40-04:00
+EXIT: 0
+--- stdout ---
+EMPLOYEE ID             STATUS          POSITION               NAME
+bot-engmgr-0001         active          engineering-manager    Engineering Manager / Organizer #1
+bot-product-0001        active          product                Product #1
+bot-rnd-0001            active          rnd                    R&D #1
+bot-devlead-0001        active          dev-lead               Dev Lead #1
+bot-assurance-0001      active          assurance              Assurance #1
+bot-auditor-0001        active          auditor                Independent Auditor #1
+--- stderr ---
+END: 2026-09-20T22:08:40-04:00
+
+===== CHECK1 record-contribution WITHOUT --id =====
+CMD: python tools/orgctl.py record-contribution bot-devlead-0001 --summary HOWL-002 assurance verify auto-id
+CWD: /workspace/hfw-howl002-cli-throwaway
+START: 2026-09-20T22:08:51-04:00
+EXIT: 0
+--- stdout ---
+workforce/contributions/contrib-20260920t220851-bot-devlead-0001.yaml
+--- stderr ---
+END: 2026-09-20T22:08:51-04:00
+CHECK1_REL=workforce/contributions/contrib-20260920t220851-bot-devlead-0001.yaml EC=0
+===== CHECK1 artifact content =====
+schema_version: 1
+contribution_id: contrib-20260920t220851-bot-devlead-0001
+employee_id: bot-devlead-0001
+occurred_at: '2026-09-20T22:08:51-04:00'
+role_at_time: dev-lead
+work_item_id: null
+summary: HOWL-002 assurance verify auto-id
+artifact_refs: []
+evidence_refs: []
+verified_by: null
+CHECK1_CID=contrib-20260920t220851-bot-devlead-0001
+
+===== CHECK2 safe_id analysis =====
+cid='contrib-20260920t220851-bot-devlead-0001'
+safe_id_fullmatch=True
+has_uppercase=False
+has_uppercase_T=False
+stamp='20260920t220851'
+stamp_has_T=False
+stamp_has_t=True
+CHECK2_PASS=True
+EXIT: 0
+
+===== CHECK3 record-contribution WITH valid --id =====
+CMD: python tools/orgctl.py record-contribution bot-devlead-0001 --summary HOWL-002 assurance explicit valid --id contrib-howl002-assurance-valid
+CWD: /workspace/hfw-howl002-cli-throwaway
+START: 2026-09-20T22:08:51-04:00
+EXIT: 0
+--- stdout ---
+workforce/contributions/contrib-howl002-assurance-valid.yaml
+--- stderr ---
+END: 2026-09-20T22:08:51-04:00
+schema_version: 1
+contribution_id: contrib-howl002-assurance-valid
+employee_id: bot-devlead-0001
+occurred_at: '2026-09-20T22:08:51-04:00'
+role_at_time: dev-lead
+work_item_id: null
+summary: HOWL-002 assurance explicit valid
+artifact_refs: []
+evidence_refs: []
+verified_by: null
+CHECK3_EC=0 REL=workforce/contributions/contrib-howl002-assurance-valid.yaml
+
+===== CHECK4 record-contribution WITH invalid --id =====
+CMD: python tools/orgctl.py record-contribution bot-devlead-0001 --summary HOWL-002 assurance explicit invalid --id Contrib-Bad
+CWD: /workspace/hfw-howl002-cli-throwaway
+START: 2026-09-20T22:08:51-04:00
+EXIT: 1
+--- stdout ---
+--- stderr ---
+contribution id must be lowercase kebab-case
+END: 2026-09-20T22:08:51-04:00
+CHECK4_EC=1 (expect non-zero)
+ls: cannot access '/workspace/hfw-howl002-cli-throwaway/workforce/contributions/Contrib-Bad.yaml': No such file or directory
+
+===== CHECK5 schema validation =====
+PASS schema: contrib-20260920t220851-bot-devlead-0001.yaml id=contrib-20260920t220851-bot-devlead-0001
+PASS schema: contrib-howl002-assurance-valid.yaml id=contrib-howl002-assurance-valid
+CHECK5_PASS=True
+EXIT: 0
+
+===== CHECK6 pytest tests/test_record_contribution.py =====
+CMD: python -m pytest -q tests/test_record_contribution.py
+CWD: /workspace/HowlFutureWorks-howl002
+START: 2026-09-20T22:08:57-04:00
+EXIT: 0
+--- stdout ---
+....                                                                     [100%]
+4 passed in 0.37s
+--- stderr ---
+END: 2026-09-20T22:08:57-04:00
+
+===== CHECK6 orgctl validate =====
+CMD: python tools/orgctl.py validate
+CWD: /workspace/HowlFutureWorks-howl002
+START: 2026-09-20T22:08:57-04:00
+EXIT: 0
+--- stdout ---
+VALIDATION PASSED
+--- stderr ---
+END: 2026-09-20T22:08:58-04:00
+
+===== CHECK6 make audit =====
+CMD: make audit
+CWD: /workspace/HowlFutureWorks-howl002
+START: 2026-09-20T22:08:58-04:00
+EXIT: 127
+--- stdout ---
+--- stderr ---
+environment: line 17: make: command not found
+END: 2026-09-20T22:08:58-04:00
+
+===== CHECK6 broader pytest =====
+CMD: python -m pytest -q
+CWD: /workspace/HowlFutureWorks-howl002
+START: 2026-09-20T22:08:58-04:00
+EXIT: 0
+--- stdout ---
+........................................................................ [ 96%]
+...                                                                      [100%]
+75 passed in 5.72s
+--- stderr ---
+END: 2026-09-20T22:09:04-04:00
+CHECK6_EC pytest_rc=0 validate=0 audit=127 pytest_all=0
+
+===== CHECK8 checkpoint code unchanged vs main =====
+CMD: git diff origin/main...HEAD -- tools/orgctl.py
+diff --git a/tools/orgctl.py b/tools/orgctl.py
+index 90d8551..f09754e 100755
+--- a/tools/orgctl.py
++++ b/tools/orgctl.py
+@@ -445,7 +445,7 @@ def propose_separation(args):
+ def record_contribution(args):
+     e=employee_by_id(args.employee_id)
+     if not e: raise SystemExit(f"unknown employee {args.employee_id}")
+-    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dT%H%M%S')}-{args.employee_id}"
++    now=datetime.now().astimezone(); cid=args.id or f"contrib-{now.strftime('%Y%m%dt%H%M%S')}-{args.employee_id}"
+     if not safe_id(cid): raise SystemExit("contribution id must be lowercase kebab-case")
+     p=ROOT/f"workforce/contributions/{cid}.yaml"
+     if p.exists(): raise SystemExit(f"contribution exists: {p.relative_to(ROOT)}")
+---
+CMD: git diff origin/main...HEAD -- tests/test_checkpoint.py
+--- functions mentioning checkpoint in orgctl (line refs) ---
+73:        pct=bud.get("defaults",{}).get("context_checkpoint_threshold_percent")
+75:            errors.append(f"policies/budgets.yaml defaults.context_checkpoint_threshold_percent must be an integer 50-90, got {pct}")
+77:        for key in ("checkpoint_chars","handoff_chars","position_knowledge_file_chars"):
+81:        if isinstance(ka.get("checkpoint_chars"),int) and isinstance(ka.get("handoff_chars"),int) and ka["checkpoint_chars"]>ka["handoff_chars"]:
+82:            errors.append("policies/budgets.yaml knowledge_artifacts.checkpoint_chars should not exceed handoff_chars")
+225:            limit=ka.get("checkpoint_chars")
+228:                if size>limit: errors.append(f"{p.relative_to(ROOT)} exceeds checkpoint_chars budget: {size}>{limit}")
+460:def checkpoint(args):
+500:    limit=(budgets.get("knowledge_artifacts") or {}).get("checkpoint_chars")
+503:            f"checkpoint exceeds checkpoint_chars budget: {len(text)}>{limit} chars; "
+577:    cp=sub.add_parser("checkpoint"); cp.add_argument('employee_id'); cp.add_argument('--reason',required=True); cp.add_argument('--stable',action='append',default=[]); cp.add_argument('--open-work',dest='open_work',action='append',default=[]); cp.add_argument('--decision',action='append',default=[]); cp.add_argument('--risk',action='append',default=[]); cp.add_argument('--source-ref',dest='source_ref',action='append',default=[]); cp.add_argument('--handoff-to',dest='handoff_to',default=None); cp.add_argument('--id')
+595:    if a.cmd=="checkpoint": checkpoint(a)
+
+===== CHECK8 pytest tests/test_checkpoint.py =====
+CMD: python -m pytest -q tests/test_checkpoint.py
+CWD: /workspace/HowlFutureWorks-howl002
+START: 2026-09-20T22:09:04-04:00
+EXIT: 0
+--- stdout ---
+..................................                                       [100%]
+34 passed in 4.97s
+--- stderr ---
+END: 2026-09-20T22:09:09-04:00
+
+===== CHECK8 checkpoint smoke --help =====
+CMD: python tools/orgctl.py checkpoint --help
+CWD: /workspace/hfw-howl002-cli-throwaway
+START: 2026-09-20T22:09:09-04:00
+EXIT: 0
+--- stdout ---
+usage: orgctl checkpoint [-h] --reason REASON [--stable STABLE]
+                         [--open-work OPEN_WORK] [--decision DECISION]
+                         [--risk RISK] [--source-ref SOURCE_REF]
+                         [--handoff-to HANDOFF_TO] [--id ID]
+                         employee_id
+
+positional arguments:
+  employee_id
+
+options:
+  -h, --help            show this help message and exit
+  --reason REASON
+  --stable STABLE
+  --open-work OPEN_WORK
+  --decision DECISION
+  --risk RISK
+  --source-ref SOURCE_REF
+  --handoff-to HANDOFF_TO
+  --id ID
+--- stderr ---
+END: 2026-09-20T22:09:09-04:00
+
+===== CHECK8 checkpoint minimal smoke =====
+CMD: python tools/orgctl.py checkpoint bot-devlead-0001 --reason assurance-verify-smoke --summary HOWL-002 checkpoint smoke
+CWD: /workspace/hfw-howl002-cli-throwaway
+START: 2026-09-20T22:09:09-04:00
+EXIT: 2
+--- stdout ---
+--- stderr ---
+usage: orgctl [-h]
+              {validate,about,list-bots,org-status,list-workforce,context,render-bot,render-employee,render-all,fingerprints,bootstrap-plan,scaffold-bot,propose-hire,propose-separation,employee-history,record-contribution,checkpoint} ...
+orgctl: error: unrecognized arguments: --summary HOWL-002 checkpoint smoke
+END: 2026-09-20T22:09:09-04:00
+
+===== CHECK8 checkpoint minimal smoke (valid reason) =====
+CMD: python tools/orgctl.py checkpoint bot-devlead-0001 --reason session_pause --stable 'HOWL-002 assurance verify' --open-work none --id howl002-assurance-cp-smoke
+CWD: /workspace/hfw-howl002-cli-throwaway
+START: 2026-09-20T22:09:16-04:00
+EXIT: 1
+--- stdout ---
+--- stderr ---
+reason must be one of ['context_budget', 'handoff', 'incident', 'manual', 'material_decision', 'material_discovery', 'periodic', 'provider_switch', 'reassignment', 'separation', 'session_end', 'task_complete']
+END: 2026-09-20T22:09:16-04:00
+trying reason=periodic
+EXIT: 0
+workforce/people/bot-devlead-0001/context/howl002-cp-periodic.yaml chars=271 limit=4000
+
+===== CHECK6 make audit recipe (manual; make binary missing) =====
+Note: 'make' not installed (exit 127). Running Makefile audit recipe steps directly.
+START: 2026-09-20T22:09:17-04:00
+validate EXIT=0
+VALIDATION PASSED
+pytest EXIT=0
+........................................................................ [ 96%]
+...                                                                      [100%]
+75 passed in 5.78s
+compileall EXIT=0
+git diff --check EXIT=0
+AUDIT_MANUAL_PASS=YES
+END: 2026-09-20T22:09:23-04:00
+
+===== Dev Lead handoff / reports search =====
+Found committed: evidence/work-items/HOWL-002/dev-lead-implementation.md
+Handoffs dirs under workforce/people/*/handoffs/ are empty (.gitkeep only)
+On main clone (not PR tip): reports/work-items/HOWL-002.json and product-definition may exist as untracked
+-rw-r--r-- 1 box box 2376 Sep 20 21:42 /workspace/HowlFutureWorks/reports/work-items/HOWL-002.json
+
+/workspace/HowlFutureWorks/reports/work-items/HOWL-002:
+total 12
+drwxr-xr-x 2 box box 4096 Sep 20 21:42 .
+drwxr-xr-x 3 box box 4096 Sep 20 21:42 ..
+-rw-r--r-- 1 box box 1489 Sep 20 21:42 product-definition.md
+total 12
+drwxr-xr-x 2 box box 4096 Sep 20 22:07 .
+drwxr-xr-x 3 box box 4096 Sep 20 22:07 ..
+-rw-r--r-- 1 box box 2864 Sep 20 22:07 dev-lead-implementation.md
+
+===== tip relation note =====
+Verification worktree HEAD: b7e55fc6c6d1ef751b825c3e26a57c344149e833
+Expected tip: b7e55fc6c6d1ef751b825c3e26a57c344149e833
+
+===== EVIDENCE PACK COMPLETE =====
+Path: /workspace/HowlFutureWorks/evidence/howl-002-assurance-verify-2026-09-20/
+END: 2026-09-20T22:09:41-04:00
+Main clone branch tip (NOT used for verification): a890886426a2666d852868415f3b4f04b0fe188b = a890886 (local commit ahead/aside of PR tip; untracked assurance files preserved)
+origin/pr-1 == b7e55fc: YES
+/workspace/HowlFutureWorks/evidence/howl-002-assurance-verify-2026-09-20/:
+total 48
+drwxr-xr-x 4 box box  4096 Sep 20 22:09 .
+drwxr-xr-x 4 box box  4096 Sep 20 22:07 ..
+-rw-r--r-- 1 box box  4762 Sep 20 22:09 SUMMARY.md
+-rw-r--r-- 1 box box 14360 Sep 20 22:09 commands.log
+drwxr-xr-x 2 box box  4096 Sep 20 22:08 excerpts
+-rw-r--r-- 1 box box   201 Sep 20 22:08 files-changed.txt
+drwxr-xr-x 2 box box  4096 Sep 20 22:08 samples
+-rw-r--r-- 1 box box    41 Sep 20 22:07 tip-sha.txt
+
+/workspace/HowlFutureWorks/evidence/howl-002-assurance-verify-2026-09-20/excerpts:
+total 12
+drwxr-xr-x 2 box box 4096 Sep 20 22:08 .
+drwxr-xr-x 4 box box 4096 Sep 20 22:09 ..
+-rw-r--r-- 1 box box 1015 Sep 20 22:08 auto-id-code.txt
+
+/workspace/HowlFutureWorks/evidence/howl-002-assurance-verify-2026-09-20/samples:
+total 16
+drwxr-xr-x 2 box box 4096 Sep 20 22:08 .
+drwxr-xr-x 4 box box 4096 Sep 20 22:09 ..
+-rw-r--r-- 1 box box  286 Sep 20 22:08 contrib-20260920t220851-bot-devlead-0001.yaml
+-rw-r--r-- 1 box box  277 Sep 20 22:08 contrib-howl002-assurance-valid.yaml
+Cleaned throwaway /workspace/hfw-howl002-cli-throwaway
+total 16
+drwxr-xr-x 2 box box 4096 Sep 20 22:08 .
+drwxr-xr-x 4 box box 4096 Sep 20 22:09 ..
+-rw-r--r-- 1 box box  286 Sep 20 22:08 contrib-20260920t220851-bot-devlead-0001.yaml
+-rw-r--r-- 1 box box  277 Sep 20 22:08 contrib-howl002-assurance-valid.yaml
+total 48
+drwxr-xr-x 4 box box  4096 Sep 20 22:09 .
+drwxr-xr-x 4 box box  4096 Sep 20 22:07 ..
+-rw-r--r-- 1 box box  4762 Sep 20 22:09 SUMMARY.md
+-rw-r--r-- 1 box box 15716 Sep 20 22:09 commands.log
+drwxr-xr-x 2 box box  4096 Sep 20 22:08 excerpts
+-rw-r--r-- 1 box box   201 Sep 20 22:08 files-changed.txt
+drwxr-xr-x 2 box box  4096 Sep 20 22:08 samples
+-rw-r--r-- 1 box box    41 Sep 20 22:09 tip-sha.txt
