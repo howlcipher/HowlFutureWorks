@@ -1,0 +1,63 @@
+{
+  "eval_id": "EVAL-D",
+  "kind": "cross-cut-edit",
+  "labels": [
+    "INITIAL BASELINE",
+    "LOW SAMPLE",
+    "NOT PERMANENT RANKING"
+  ],
+  "captured_at": "2026-09-21 11:22 EDT",
+  "runs": [
+    {
+      "executor": "claude",
+      "status": "completed",
+      "outcome": "pass",
+      "labels": [
+        "INITIAL BASELINE",
+        "LOW SAMPLE",
+        "NOT PERMANENT RANKING"
+      ],
+      "run_mode": "one_combined_isolated_session_A_through_E",
+      "workspace": "/tmp/howl-006-runs/claude (not committed)"
+    },
+    {
+      "executor": "codex",
+      "status": "completed",
+      "outcome": "pass",
+      "labels": [
+        "INITIAL BASELINE",
+        "LOW SAMPLE",
+        "NOT PERMANENT RANKING"
+      ],
+      "run_mode": "one_combined_isolated_session_A_through_E",
+      "workspace": "/tmp/howl-006-runs/codex (not committed)"
+    },
+    {
+      "executor": "agy",
+      "status": "completed",
+      "outcome": "pass",
+      "labels": [
+        "INITIAL BASELINE",
+        "LOW SAMPLE",
+        "NOT PERMANENT RANKING"
+      ],
+      "run_mode": "one_combined_isolated_session_A_through_E",
+      "workspace": "/tmp/howl-006-runs/agy (not committed)"
+    },
+    {
+      "executor": "astra",
+      "status": "mapped_to_codex",
+      "outcome": "pass",
+      "labels": [
+        "INITIAL BASELINE",
+        "LOW SAMPLE",
+        "NOT PERMANENT RANKING"
+      ],
+      "runtime_alias_of": "codex",
+      "note": "Owner clarification: Astra is Codex. Shares Codex EVAL evidence; no separate Astra API run."
+    }
+  ],
+  "scores_invented": false,
+  "cross_executor_fallback": false,
+  "quota_discipline": "one_combined_run_per_authenticated_runtime_max; astra_no_extra_burn"
+}

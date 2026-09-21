@@ -1,0 +1,134 @@
+{
+  "id": "HOWL-006",
+  "title": "Activate and baseline external executors",
+  "status": "open",
+  "phase": "baseline-evaluation",
+  "risk_tier": "R2",
+  "opened_on": "2026-09-20",
+  "owner_employee_id": "bot-engmgr-0001",
+  "assignee_employee_id": "bot-devlead-0001",
+  "problem": "Claude/Codex/AGY/Astra are registered available-if-configured with needs-local-eval; routing cannot make evidence-based specialist distinctions.",
+  "desired_outcome": "Accurate inventory of install/auth/tools; minimal representative baseline evidence; compact registry updates; prove SELF still preferred when appropriate; specialist only when measured value supports it. No fabricated rankings or quota burn.",
+  "non_goals": [
+    "permanent best-model declaration",
+    "quota exhaustion / large leaderboards",
+    "marketing rankings",
+    "production or destructive tests",
+    "risk policy changes",
+    "product feature work",
+    "credential broadening",
+    "new permanent Bots",
+    "raising context budgets as first fix",
+    "starting HOWL-007"
+  ],
+  "context_budget_preflight": {
+    "engineering-manager": {
+      "used": 17806,
+      "limit": 18000,
+      "headroom": 194
+    },
+    "dev-lead": {
+      "used": 13926,
+      "limit": 15000,
+      "headroom": 1074
+    },
+    "assurance": {
+      "used": 10896,
+      "limit": 14000,
+      "headroom": 3104
+    },
+    "auditor": {
+      "used": 10627,
+      "limit": 14000,
+      "headroom": 3373
+    },
+    "product": {
+      "used": 10051,
+      "limit": 12000,
+      "headroom": 1949
+    },
+    "rnd": {
+      "used": 10161,
+      "limit": 12000,
+      "headroom": 1839
+    },
+    "constraint": "no new always-load eval docs; registry stays compact; raw evidence referenced not embedded"
+  },
+  "baseline_main": "1fb6775",
+  "updated_at": "2026-09-21T15:25:55.998886+00:00",
+  "product_definition": "reports/work-items/HOWL-006/product-definition.md",
+  "em_acceptance": "reports/work-items/HOWL-006/em-acceptance.md",
+  "branch": "feat/howl-006-executor-baseline",
+  "pre_inventory": {
+    "claude": {
+      "installed": true,
+      "version": "2.1.278",
+      "auth": "authenticated"
+    },
+    "codex": {
+      "installed": true,
+      "version": "0.155.1",
+      "auth": "authenticated"
+    },
+    "agy": {
+      "installed": true,
+      "version": "1.2.7",
+      "auth": "authenticated"
+    },
+    "astra": {
+      "installed": true,
+      "version": "0.155.1",
+      "auth": "authenticated",
+      "runtime_alias_of": "codex",
+      "installation_status": "installed",
+      "reason": "Owner clarification: Astra is Codex; same CLI/runtime/auth; no separate install"
+    }
+  },
+  "implementation_notes": {
+    "runtime_inventory": "reports/work-items/HOWL-006/runtime-inventory.md",
+    "evals": "evals/howl-006/",
+    "route_proofs": "reports/work-items/HOWL-006/evidence/route-proofs.md",
+    "security_review": "reports/work-items/HOWL-006/security-review.md",
+    "registry": "routing/capability-registry.yaml"
+  },
+  "inventory": {
+    "claude": {
+      "installed": true,
+      "version": "2.1.278",
+      "auth": "authenticated"
+    },
+    "codex": {
+      "installed": true,
+      "version": "0.155.1",
+      "auth": "authenticated"
+    },
+    "agy": {
+      "installed": true,
+      "version": "1.2.7",
+      "auth": "authenticated"
+    },
+    "astra": {
+      "installed": true,
+      "version": "0.155.1",
+      "auth": "authenticated",
+      "runtime_alias_of": "codex",
+      "installation_status": "installed",
+      "reason": "Owner clarification: Astra is Codex; same CLI/runtime/auth; no separate install"
+    }
+  },
+  "auth_state_verified": {
+    "claude": "authenticated",
+    "codex": "authenticated",
+    "agy": "authenticated",
+    "astra": "alias_of_codex",
+    "verified_at": "2026-09-21T15:17:08.897126+00:00",
+    "notes": "Owner reported all logins set; EM confirmed via safe status/models commands only; no secrets recorded",
+    "astra_note": "Owner: Astra is Codex; not a separate install"
+  },
+  "owner_clarifications": [
+    {
+      "at": "2026-09-21T15:18:02.792014+00:00",
+      "note": "Astra is Codex \u2014 not a separate CLI; map Astra to Codex runtime/auth/evidence; do not install a distinct Astra binary"
+    }
+  ]
+}

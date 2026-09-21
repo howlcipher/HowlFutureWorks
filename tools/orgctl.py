@@ -266,13 +266,24 @@ def route_inspect(task_class, risk, required_tools=None, objective=None):
         if status not in ("available-if-configured", "available"):
             entry["eligible"] = False
             entry["reason"] = f"status={status}"
-        elif bench in (None, "needs-local-eval", "unknown"):
+        elif bench in (
+            None,
+            "needs-local-eval",
+            "unknown",
+            "blocked",
+            "partially-evaluated",
+            "stale",
+        ):
             entry["eligible"] = "uncertain"
-            entry["reason"] = "evidence-insufficient"
+            entry["reason"] = "evidence-insufficient" if bench != "blocked" else "blocked"
             uncertainty.append(eid)
-        else:
+        elif bench in ("evaluated", "baseline-evaluated"):
             entry["eligible"] = True
             entry["reason"] = "measured evidence present"
+        else:
+            entry["eligible"] = "uncertain"
+            entry["reason"] = f"unrecognized benchmark_status={bench}"
+            uncertainty.append(eid)
         eligible.append(entry)
     steps.append({"step": "filter_hard_constraints", "note": "tools/risk/privilege/howlframe/quota applied by operator against task envelope"})
     steps.append({"step": "assess_measured_fit", "profiles": eligible})

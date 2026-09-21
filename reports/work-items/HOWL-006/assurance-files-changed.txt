@@ -1,0 +1,85 @@
+=== files changed tip vs main 2026-09-21 11:29:25 EDT ===
+tip: 65ac49e0c3c91183d3768b424a98eb1859d3c6dd
+main: 1fb67757fb1ec3068b38f05e50480d5d0755c538
+A	evals/howl-006/EVAL-A/README.md
+A	evals/howl-006/EVAL-A/fixture/EXPECTED.md
+A	evals/howl-006/EVAL-A/fixture/broken_add.py
+A	evals/howl-006/EVAL-A/fixture/test_broken_add.py
+A	evals/howl-006/EVAL-A/result.json
+A	evals/howl-006/EVAL-B/README.md
+A	evals/howl-006/EVAL-B/fixture/PROMPT.md
+A	evals/howl-006/EVAL-B/fixture/buggy.py
+A	evals/howl-006/EVAL-B/result.json
+A	evals/howl-006/EVAL-C/README.md
+A	evals/howl-006/EVAL-C/fixture/PROMPT.md
+A	evals/howl-006/EVAL-C/fixture/insecure_demo.py
+A	evals/howl-006/EVAL-C/result.json
+A	evals/howl-006/EVAL-D/README.md
+A	evals/howl-006/EVAL-D/fixture/PROMPT.md
+A	evals/howl-006/EVAL-D/fixture/a.py
+A	evals/howl-006/EVAL-D/fixture/b.py
+A	evals/howl-006/EVAL-D/result.json
+A	evals/howl-006/EVAL-E/README.md
+A	evals/howl-006/EVAL-E/fixture/PROMPT.md
+A	evals/howl-006/EVAL-E/fixture/steps.md
+A	evals/howl-006/EVAL-E/result.json
+A	evals/howl-006/README.md
+A	reports/work-items/HOWL-006.json
+A	reports/work-items/HOWL-006/em-acceptance.md
+A	reports/work-items/HOWL-006/evidence/eval-run-summary.md
+A	reports/work-items/HOWL-006/evidence/route-proofs.md
+A	reports/work-items/HOWL-006/evidence/secret-scan.txt
+A	reports/work-items/HOWL-006/product-definition.md
+A	reports/work-items/HOWL-006/runtime-inventory.md
+A	reports/work-items/HOWL-006/security-review.md
+M	routing/capability-registry.yaml
+M	tests/test_executor_routing.py
+M	tools/orgctl.py
+
+=== stat ===
+ evals/howl-006/EVAL-A/README.md                    |  26 ++
+ evals/howl-006/EVAL-A/fixture/EXPECTED.md          |   1 +
+ evals/howl-006/EVAL-A/fixture/broken_add.py        |   3 +
+ evals/howl-006/EVAL-A/fixture/test_broken_add.py   |   4 +
+ evals/howl-006/EVAL-A/result.json                  |  63 +++
+ evals/howl-006/EVAL-B/README.md                    |  26 ++
+ evals/howl-006/EVAL-B/fixture/PROMPT.md            |   1 +
+ evals/howl-006/EVAL-B/fixture/buggy.py             |   4 +
+ evals/howl-006/EVAL-B/result.json                  |  67 ++++
+ evals/howl-006/EVAL-C/README.md                    |  26 ++
+ evals/howl-006/EVAL-C/fixture/PROMPT.md            |   1 +
+ evals/howl-006/EVAL-C/fixture/insecure_demo.py     |   5 +
+ evals/howl-006/EVAL-C/result.json                  |  63 +++
+ evals/howl-006/EVAL-D/README.md                    |  26 ++
+ evals/howl-006/EVAL-D/fixture/PROMPT.md            |   1 +
+ evals/howl-006/EVAL-D/fixture/a.py                 |   1 +
+ evals/howl-006/EVAL-D/fixture/b.py                 |   4 +
+ evals/howl-006/EVAL-D/result.json                  |  63 +++
+ evals/howl-006/EVAL-E/README.md                    |  26 ++
+ evals/howl-006/EVAL-E/fixture/PROMPT.md            |   1 +
+ evals/howl-006/EVAL-E/fixture/steps.md             |   1 +
+ evals/howl-006/EVAL-E/result.json                  |  63 +++
+ evals/howl-006/README.md                           |  19 +
+ reports/work-items/HOWL-006.json                   | 134 +++++++
+ reports/work-items/HOWL-006/em-acceptance.md       |  76 ++++
+ .../HOWL-006/evidence/eval-run-summary.md          |  13 +
+ .../work-items/HOWL-006/evidence/route-proofs.md   | 443 +++++++++++++++++++++
+ .../work-items/HOWL-006/evidence/secret-scan.txt   |   4 +
+ reports/work-items/HOWL-006/product-definition.md  |  77 ++++
+ reports/work-items/HOWL-006/runtime-inventory.md   |  41 ++
+ reports/work-items/HOWL-006/security-review.md     |  16 +
+ routing/capability-registry.yaml                   |  69 +++-
+ tests/test_executor_routing.py                     |  32 +-
+ tools/orgctl.py                                    |  17 +-
+ 34 files changed, 1396 insertions(+), 21 deletions(-)
+
+=== local dirty (not tip) ===
+## feat/howl-006-executor-baseline...origin/feat/howl-006-executor-baseline
+ M reports/work-items/HOWL-006.json
+?? reports/work-items/HOWL-006/assurance-ci.txt
+?? reports/work-items/HOWL-006/assurance-commands.log
+?? reports/work-items/HOWL-006/assurance-files-changed.txt
+?? reports/work-items/HOWL-006/assurance-orgctl-route.txt
+?? reports/work-items/HOWL-006/assurance-pytest.txt
+?? reports/work-items/HOWL-006/assurance-secret-scan.txt
+?? reports/work-items/HOWL-006/assurance-validate.txt

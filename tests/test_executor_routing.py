@@ -71,6 +71,9 @@ def test_registry_membership_includes_astra_and_prior_executors():
         assert ex["benchmark_status"] in {
             "needs-local-eval",
             "evaluated",
+            "baseline-evaluated",
+            "partially-evaluated",
+            "blocked",
             "unknown",
             "stale",
         }
@@ -134,8 +137,35 @@ def test_uncertainty_honesty_no_invented_scores():
     assert r.returncode == 0, r.stderr
     data = json.loads(r.stdout)
     assert data["model_invoke"] is False
+    # After HOWL-006 baseline-evaluated evidence, critical may select measured-fit
+    # without inventing scores/rankings. Cold-start "evidence-insufficient" remains
+    # when no measured evidence exists (see test_cold_start_without_baseline).
+    assert data["result"] in {"evidence-insufficient", "selected"}
+    joined = " ".join(data.get("rationale") or []).lower()
+    if data["result"] == "evidence-insufficient":
+        assert "invent" in joined or data.get("uncertainty")
+    else:
+        assert data["decision"] == "eligible_profile_by_measured_fit"
+        assert "loyalty" in joined or "ranking" in joined or "measured" in joined
+        # Honesty: no numeric scores invented in route payload
+        blob = json.dumps(data)
+        assert "score" not in blob.lower() or "invent" in joined
+
+
+def test_cold_start_without_baseline(repo_copy):
+    """With benchmarks blocked/needs-local-eval, critical stays evidence-insufficient."""
+    import yaml
+    reg_path = repo_copy / "routing" / "capability-registry.yaml"
+    reg = yaml.safe_load(reg_path.read_text())
+    for ex in reg["executors"]:
+        ex["benchmark_status"] = "needs-local-eval"
+    reg_path.write_text(yaml.safe_dump(reg, sort_keys=False))
+    r = run_orgctl("route", "--task-class", "critical", "--risk", "R4", "--json", cwd=repo_copy)
+    assert r.returncode == 0, r.stderr
+    data = json.loads(r.stdout)
+    assert data["model_invoke"] is False
     assert data["result"] == "evidence-insufficient"
-    assert "invent" in " ".join(data["rationale"]).lower() or data["uncertainty"]
+    assert "invent" in " ".join(data["rationale"]).lower() or data.get("uncertainty")
 
 
 def test_privilege_howlframe_recursive_defaults():

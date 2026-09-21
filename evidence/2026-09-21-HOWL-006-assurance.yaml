@@ -1,0 +1,63 @@
+work_item: HOWL-006
+role: assurance
+dual_hat: [qa, security]
+verdict: PASS_WITH_FINDINGS
+owner_complete_declared: false
+tip_sha: "65ac49e0c3c91183d3768b424a98eb1859d3c6dd"
+pr: "https://github.com/howlcipher/HowlFutureWorks/pull/5"
+branch: feat/howl-006-executor-baseline
+verified_at: "2026-09-21 11:30:20 EDT"
+worktree: /workspace/HowlFutureWorks
+preferred_worktree_absent: /workspace/HowlFutureWorks-howl006
+venv: /workspace/.venv-hfw
+merged: false
+howl_007_started: false
+checks:
+  1_runtime_inventory: PASS
+  2_no_secrets: PASS
+  3_eval_labels_bounded: PASS
+  4_no_silent_fallback: PASS
+  5_registry_matches_evidence: PASS
+  6_available_ne_preferred: PASS
+  7_orgctl_route: PASS
+  8_quota_cost_honest: PASS
+  9_howlframe_privilege_recursive: PASS
+  10_context_budgets: PASS_WITH_FINDING
+  11_validate_pytest_ci: PASS
+auth_enums:
+  claude: authenticated
+  codex: authenticated
+  agy: authenticated
+  astra: authenticated_via_codex_alias
+astra: {runtime_alias_of: codex, distinct_binary: false}
+gates:
+  orgctl_validate: PASS
+  pytest_passed: 99
+  secret_scan_hits: 0
+  gha_validate_3_11: success
+  gha_validate_3_13: success
+  gha_distribution: success
+budgets:
+  budgets_yaml_raised: false
+  context_yaml_limits_raised: false
+  engineering_manager: {used: 17828, limit: 18000, headroom: 172}
+  dev_lead: {used: 14916, limit: 15000, headroom: 84}
+  assurance: {used: 10898, limit: 14000, headroom: 3102}
+findings:
+  - online_always_load_headroom_compressed_to_84_registry_growth
+  - em_headroom_172_vs_devlead_claim_194
+  - preferred_worktree_absent
+  - executor_routing_md_needs_local_eval_doc_lag
+  - local_dirty_howl006_json_not_on_tip
+artifacts:
+  - reports/work-items/HOWL-006/assurance-report.md
+  - reports/work-items/HOWL-006/assurance-commands.log
+  - reports/work-items/HOWL-006/assurance-orgctl-route.txt
+  - reports/work-items/HOWL-006/assurance-pytest.txt
+  - reports/work-items/HOWL-006/assurance-validate.txt
+  - reports/work-items/HOWL-006/assurance-secret-scan.txt
+  - reports/work-items/HOWL-006/assurance-files-changed.txt
+  - reports/work-items/HOWL-006/assurance-ci.txt
+  - evidence/howl-006-assurance-verify-65ac49e/SUMMARY.md
+  - evidence/2026-09-21-HOWL-006-assurance.yaml
+  - security/reviews/HOWL-006-assurance-2026-09-21.md

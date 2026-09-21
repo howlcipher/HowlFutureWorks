@@ -1,0 +1,1 @@
+1) Create out.txt with text READY\n2) Append OK\n3) Print final contents\n
