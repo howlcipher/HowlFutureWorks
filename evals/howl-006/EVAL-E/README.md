@@ -6,26 +6,21 @@ Disposable HOWL-006 fixture. Not a leaderboard. Not marketing. Not production.
 
 ## Intent
 
-Trivial multi-step plan+verify in disposable sandbox (no long quota burn).
+See harness README. Fixture under `fixture/`.
 
-## Fixture
+## Run results (2026-09-21 11:22 EDT)
 
-- `fixture/` — minimal disposable inputs (safe to delete/regenerate)
-- No network-required secrets; no production paths
-
-## Run results (2026-09-21 00:01 EDT)
-
-| Executor | Run status | Score |
+| Executor | Run status | Outcome |
 |---|---|---|
-| claude | blocked:not_authenticated | n/a (not run) |
-| codex | blocked:not_authenticated | n/a (not run) |
-| agy | blocked:not_authenticated | n/a (not run) |
-| astra | blocked:not_installed | n/a (not run) |
+| claude | completed | pass |
+| codex | completed | pass |
+| agy | completed | pass |
+| astra | mapped_to_codex | pass |
 | SELF | not applicable (eval targets external executors) | n/a |
-
 
 ## Notes
 
-- Auth missing → honest `blocked:not_authenticated` (no fabricated pass/fail scores).
+- Authenticated runtimes Claude / Codex / AGY: one combined isolated session covering EVAL-A..E (quota discipline).
+- **Astra maps to Codex** (Owner clarification) — shares Codex outcome; no separate Astra install or API burn.
 - No silent cross-executor fallback (Claude fail ≠ Codex attributed as Claude).
-- Re-run after Owner-controlled auth; keep sample size minimal (quota discipline).
+- Labels apply to all outcomes: INITIAL BASELINE / LOW SAMPLE / NOT PERMANENT RANKING.

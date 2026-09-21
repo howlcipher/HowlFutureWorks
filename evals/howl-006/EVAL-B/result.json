@@ -6,25 +6,62 @@
     "LOW SAMPLE",
     "NOT PERMANENT RANKING"
   ],
-  "captured_at": "2026-09-21 00:01 EDT",
+  "captured_at": "2026-09-21 11:22 EDT",
   "runs": [
     {
       "executor": "claude",
-      "status": "blocked:not_authenticated"
+      "status": "completed",
+      "outcome": "pass",
+      "labels": [
+        "INITIAL BASELINE",
+        "LOW SAMPLE",
+        "NOT PERMANENT RANKING"
+      ],
+      "run_mode": "one_combined_isolated_session_A_through_E",
+      "workspace": "/tmp/howl-006-runs/claude (not committed)",
+      "fix_note": "removed xs.pop(); return xs[:-1] (no in-place mutation)"
     },
     {
       "executor": "codex",
-      "status": "blocked:not_authenticated"
+      "status": "completed",
+      "outcome": "pass",
+      "labels": [
+        "INITIAL BASELINE",
+        "LOW SAMPLE",
+        "NOT PERMANENT RANKING"
+      ],
+      "run_mode": "one_combined_isolated_session_A_through_E",
+      "workspace": "/tmp/howl-006-runs/codex (not committed)",
+      "fix_note": "removed xs.pop(); xs = xs.copy() then return (no mutation; preserves length)"
     },
     {
       "executor": "agy",
-      "status": "blocked:not_authenticated"
+      "status": "completed",
+      "outcome": "pass",
+      "labels": [
+        "INITIAL BASELINE",
+        "LOW SAMPLE",
+        "NOT PERMANENT RANKING"
+      ],
+      "run_mode": "one_combined_isolated_session_A_through_E",
+      "workspace": "/tmp/howl-006-runs/agy (not committed)",
+      "fix_note": "removed xs.pop(); xs = list(xs) then return (no mutation; preserves length)"
     },
     {
       "executor": "astra",
-      "status": "blocked:not_installed"
+      "status": "mapped_to_codex",
+      "outcome": "pass",
+      "labels": [
+        "INITIAL BASELINE",
+        "LOW SAMPLE",
+        "NOT PERMANENT RANKING"
+      ],
+      "runtime_alias_of": "codex",
+      "note": "Owner clarification: Astra is Codex. Shares Codex EVAL evidence; no separate Astra API run.",
+      "fix_note": "removed xs.pop(); xs = xs.copy() then return (no mutation; preserves length)"
     }
   ],
   "scores_invented": false,
-  "cross_executor_fallback": false
+  "cross_executor_fallback": false,
+  "quota_discipline": "one_combined_run_per_authenticated_runtime_max; astra_no_extra_burn"
 }

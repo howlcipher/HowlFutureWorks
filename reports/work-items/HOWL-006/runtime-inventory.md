@@ -1,6 +1,6 @@
 # HOWL-006 — Runtime inventory (non-secret)
 
-**Captured:** 2026-09-21 00:01 EDT  
+**Captured:** 2026-09-21 11:22 EDT  
 **Branch:** `feat/howl-006-executor-baseline`  
 **Probe rule:** record only `authenticated` | `not_authenticated` | `blocked` | `unknown`. No secrets/tokens/cookies/OTP.
 
@@ -9,39 +9,33 @@
 | Executor | Installed | Version | Auth status | Binary | Tool surface (non-secret) | Notes |
 |---|---|---|---|---|---|---|
 | SELF | n/a (persistent member path) | orgctl present | n/a | `python tools/orgctl.py` | `validate`, `route`, `render-*`, workforce ops | Deterministic; `model_invoke: false` on `route` |
-| Claude | yes | 2.1.278 (Claude Code) | **not_authenticated** (`loggedIn: false`) | `/home/box/.local/bin/claude` | CLI session, `-p` print, MCP config, allowed/disallowed tools (Bash/Edit/…), agents | `claude auth status` → loggedIn false |
-| Codex | yes | 0.155.1 (codex-cli) | **not_authenticated** | `/home/box/.local/bin/codex` | `exec`, `review`, `login`, `mcp`, `sandbox`, `doctor`, session mgmt | `codex login status` → Not logged in; doctor: no credentials |
-| AGY | yes | 1.2.7 | **not_authenticated** | `/home/box/.local/bin/agy` | print mode, models, mcp, plugins, agents, sandbox | `agy models` → sign-in required |
-| Astra | **no** | — | **n/a** | not on PATH | — | `installation_status: blocked` (see below) |
+| Claude | yes | 2.1.278 (Claude Code) | **authenticated** (`loggedIn: true`, `authMethod: claude.ai`) | `/home/box/.local/bin/claude` | CLI `-p` print, MCP, allowed/disallowed tools, agents | Owner-controlled auth on this box |
+| Codex | yes | 0.155.1 (codex-cli) | **authenticated** (ChatGPT login) | `/home/box/.local/bin/codex` | `exec`, `review`, `login`, `mcp`, `sandbox`, `doctor` | `codex login status` → Logged in using ChatGPT |
+| AGY | yes | 1.2.7 | **authenticated** (`agy models` lists models) | `/home/box/.local/bin/agy` | print mode, models, mcp, plugins, agents, sandbox | Models enumerable without sign-in prompt |
+| Astra | yes (via Codex) | 0.155.1 (Codex CLI) | **authenticated** (follows Codex) | same as Codex (`/home/box/.local/bin/codex`) | same as Codex | **Owner clarification:** Astra **is** Codex — not a separate CLI/binary. `runtime_alias_of: codex`. Do not install a distinct Astra package. |
 
-## Astra official install attempt
+## Astra mapping (Owner/EM clarification 2026-09-21)
 
-Attempted to establish the **official** install path for the Howl executor profile named `astra`.
-
-**Result:** `installation_status: blocked`
-
-**Reason:** The repository registers `astra` as an ephemeral coding executor alongside Claude/Codex/AGY, but does not name a vendor package. Public “Astra CLI” hits are ambiguous:
-
-1. DataStax **Astra CLI** (`docs.datastax.com/en/astra-cli`, `curl … ibm.biz/astra-cli`) — database/streaming ops, not an AI coding executor.
-2. **Open Astra** (`openastra.net`, `npm i -g @open-astra/astra`) — agent runtime; not confirmed as the Owner-intended Howl profile.
-
-Per HOWL-006: do **not** improvise mirrors or guess. Owner must designate the official binary/docs before install. No install was performed.
+- Astra is **not** a missing/blocked binary.
+- Astra maps to the **Codex** runtime (same install, auth, CLI version, tool surface).
+- Baseline EVAL evidence for Astra **shares** Codex EVAL-A..E results; explicit alias note in registry + results.
+- No separate Astra install was (or will be) pursued under this clarification.
 
 ## Unknowns (honest gaps)
 
-- Which product is Howl `astra` (Owner confirmation required).
-- Full per-executor tool catalogs / MCP sets after authentication (cannot enumerate authenticated tools without login).
-- Latency, quota_state, reliability, task success — **unknown** until authenticated EVAL runs.
-- Model versions behind each CLI after login — **unknown**.
-- Whether Owner desktop login will land on this shared box path vs a different machine.
+- Long-horizon reliability, quota_state trends, cost curves beyond this low-sample baseline.
+- Full per-executor MCP plugin catalogs beyond default CLI surfaces (not exhaustively enumerated).
+- Model-routing choices inside each CLI across future versions (versions recorded at capture time only).
 
 ## Auth probe summary (safe statuses only)
 
 | Executor | Status |
 |---|---|
-| claude | not_authenticated |
-| codex | not_authenticated |
-| agy | not_authenticated |
-| astra | blocked (not installed; official path unclear) |
+| claude | authenticated |
+| codex | authenticated |
+| agy | authenticated |
+| astra | authenticated (alias of Codex; same auth) |
 
-No eval scores invented. No silent cross-executor fallback.
+## Baseline eval note
+
+Minimal EVAL-A..E: **one combined isolated run per authenticated runtime** (Claude, Codex, AGY). Astra does not get a separate API burn — shares Codex outcomes. Labels: **INITIAL BASELINE / LOW SAMPLE / NOT PERMANENT RANKING**. No silent cross-executor fallback. No invented rankings.
