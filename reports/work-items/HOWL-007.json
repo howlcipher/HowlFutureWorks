@@ -1,0 +1,57 @@
+{
+  "id": "HOWL-007",
+  "title": "HowlBoard mission dependency visibility",
+  "status": "open",
+  "phase": "merge-ready",
+  "risk_tier": "R2",
+  "opened_on": "2026-09-21",
+  "owner_employee_id": "bot-engmgr-0001",
+  "assignee_employee_id": "bot-devlead-0001",
+  "target_repository": "https://github.com/howlcipher/howlboard",
+  "target_main_sha_at_open": "8037dd878553ad4fd11ef18faf28eaa62e96d21d",
+  "org_repository": "https://github.com/howlcipher/HowlFutureWorks",
+  "org_main_sha_at_open": "008a259a7259c24a031b32940fb15c7900479990",
+  "problem": "HowlBoard documents depends_on in the domain model but does not populate or render mission dependencies. Operators cannot see informational dependency links on missions.",
+  "desired_outcome": "Smallest useful vertical slice: optional depends_on IDs can be set via a supported input path, survive the mission API path, render safely in the shared mission view (app+demo), with tests and docs stating informational-only semantics. No execution ordering, authority gates, or HowlPlane scheduling.",
+  "non_goals": [
+    "automatic dependency execution ordering",
+    "cross-mission authority enforcement",
+    "cycle detection",
+    "HowlPlane scheduling",
+    "dependency completion gates",
+    "ChangeOps approval propagation",
+    "full graph visualization",
+    "raising HowlFutureWorks context budgets"
+  ],
+  "routing_policy": "Do not preselect SELF/Claude/Codex/AGY/Astra. EM classifies after Product AC using HOWL-005/006 routing. Astra=Codex alias.",
+  "context_compaction": {
+    "branch_commit": "eb48dc7",
+    "em_headroom_after": 3092,
+    "dev_lead_headroom_after": 5169,
+    "budgets_raised": false
+  },
+  "updated_at": "2026-09-21T16:55:03.272937+00:00",
+  "product_definition": "reports/work-items/HOWL-007/product-definition.md",
+  "em_acceptance": "reports/work-items/HOWL-007/em-acceptance.md",
+  "routing_decision": "routing/decision-records/HOWL-007.md",
+  "routing": {
+    "task_class": "bounded",
+    "risk_tier": "R2",
+    "selected": "SELF",
+    "eligible_not_selected": [
+      "claude",
+      "codex",
+      "agy"
+    ],
+    "astra": "alias_of_codex",
+    "orgctl": "SELF_preferred_unless_expected_value"
+  },
+  "howlboard_pr": "https://github.com/howlcipher/howlboard/pull/7",
+  "howlboard_tip": "eb86e95f40e7e794f338f33100814cb52967fe5c",
+  "assurance_verdict": "PASS",
+  "assurance_org_tip": "4f3a0f4aaa06cc7905e0c7a5765446e4a02bb6d5",
+  "auditor_verdict": "PASS WITH FINDINGS",
+  "auditor_medium": "Product/EM/routing docs were missing from remote tip 4f3a0f4; remediated on this commit",
+  "auditor_tip": "9bb11cb00f33cfbe4527f67122a8871eeb71451c",
+  "org_pr": "https://github.com/howlcipher/HowlFutureWorks/pull/6"
+}
