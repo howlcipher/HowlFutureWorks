@@ -1,0 +1,83 @@
+=== Runbook excerpts (non-secret) ===
+
+--- shared-computer boundary ---
+runbooks/github-publishing.md:9:- All Bots on this Owner account **share one computer** and therefore share GitHub authentication state.
+runbooks/github-publishing.md:10:- Technical ability to push is **not** organizational authorization.
+
+--- auth ≠ authorization ---
+10:- Technical ability to push is **not** organizational authorization.
+11:- Authorization comes from: HowlFutureWorks role + task envelope + risk/approval policy (+ Owner when required).
+
+--- CloudAgent fallback ---
+reports/work-items/HOWL-004.json:10:  "problem": "Dev Lead cannot natively push/PRs from shared Grok Bot computer; CloudAgent was required for HOWL-002/003 publication.",
+reports/work-items/HOWL-004.json:11:  "impact": "Ordinary approved feature-branch publish depends on CloudAgent; slows governance loop; blurs publish path.",
+reports/work-items/HOWL-004.json:15:    "native branch push + gh pr create without CloudAgent",
+reports/work-items/HOWL-004.json:19:    "CloudAgent remains optional fallback"
+runbooks/github-publishing.md:5:Authorized HowlFutureWorks members on the shared Grok Bot computer may publish **approved** work to feature branches and pull requests using native `git` / `gh`, without requiring CloudAgent for ordinary publication.
+runbooks/github-publishing.md:62:## Fallback
+runbooks/github-publishing.md:64:CloudAgent remains an authorized **publication fallback** when native GitHub access is unavailable (auth loss, credential helper broken, network/ACL issues).
+runbooks/github-publishing.md:66:When fallback is used, record in the work item / evidence:
+runbooks/github-publishing.md:70:- that CloudAgent was used as fallback only.
+reports/work-items/HOWL-004/product-definition.md:4:Authorized HowlFutureWorks Bots cannot publish approved feature branches and PRs from the shared Grok Bot computer using native `git`/`gh`. HOWL-002/003 required CloudAgent for publication.
+reports/work-items/HOWL-004/product-definition.md:7:Ordinary governed publish is slow and CloudAgent-dependent. Technical inability is confused with policy authority.
+reports/work-items/HOWL-004/product-definition.md:10:After Owner-authorized human authentication on the shared computer, an appropriately authorized member (typically Dev Lead under EM task envelope) can: create feature branch → commit → push → open/update PR **without CloudAgent**, while merge/main protection and HowlFrame remain unchanged. CloudAgent stays fallback only.
+
+--- no direct main ---
+5:Authorized HowlFutureWorks members on the shared Grok Bot computer may publish **approved** work to feature branches and pull requests using native `git` / `gh`, without requiring CloudAgent for ordinary publication.
+12:- Do **not** push to `main` merely because credentials work. Use feature branches and PRs.
+21:feature branch
+35:merge according to policy (not convenience push to main)
+64:CloudAgent remains an authorized **publication fallback** when native GitHub access is unavailable (auth loss, credential helper broken, network/ACL issues).
+
+=== Quoted excerpts for assurance ===
+
+QUOTE1 (shared computer):
+- All Bots on this Owner account **share one computer** and therefore share GitHub authentication state.
+- Technical ability to push is **not** organizational authorization.
+- Authorization comes from: HowlFutureWorks role + task envelope + risk/approval policy (+ Owner when required).
+- Do **not** push to `main` merely because credentials work. Use feature branches and PRs.
+- Do **not** put tokens, passwords, OTPs, cookies, or private keys in chat, Git, evidence, Bot memory, or logs.
+- Never run token-display commands (for example `gh auth token` or `gh auth status --show-token`) for evidence.
+
+## Normal flow
+
+QUOTE2 (normal flow ends with merge per policy):
+
+```
+approved work item
+      ↓
+feature branch
+      ↓
+commit (repo conventions)
+      ↓
+validation (orgctl / make validate / tests as applicable)
+      ↓
+git push -u origin <branch>
+      ↓
+gh pr create / gh pr edit
+      ↓
+Assurance
+      ↓
+Auditor / approvals as required
+      ↓
+merge according to policy (not convenience push to main)
+```
+
+## Safe status checks (non-secret)
+
+```bash
+
+QUOTE3 (CloudAgent fallback):
+6. If the environment can only store credentials in knowingly unprotected plaintext beyond GitHub CLI’s normal owner-restricted host config, **stop** and report `SECURE_CREDENTIAL_STORAGE_BLOCKED` to the Owner rather than weakening storage.
+
+## Fallback
+
+CloudAgent remains an authorized **publication fallback** when native GitHub access is unavailable (auth loss, credential helper broken, network/ACL issues).
+
+When fallback is used, record in the work item / evidence:
+
+- that native publish was attempted;
+- the non-secret error class;
+- that CloudAgent was used as fallback only.
+
+## Related

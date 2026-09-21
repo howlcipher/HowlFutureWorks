@@ -1,0 +1,40 @@
+schema: howlfutureworks.evidence.manifest/v1
+id: 2026-09-20-HOWL-004-assurance
+date: "2026-09-20"
+timezone: America/Detroit
+work_item: HOWL-004
+pr: https://github.com/howlcipher/HowlFutureWorks/pull/3
+branch: ops/howl-004-github-publishing
+tip_sha: 4d24315c50600d67272fc8d99575a7505cd38520
+base_sha: efab575f29c64c1b48c64b95f7e5fcf6cd2df32e
+role: assurance
+overall: PASS
+owner_complete: false
+product_code_modified: false
+push_or_commit: false
+checks:
+  "1_native_publication_tip_on_origin": PASS
+  "2_secret_scan_diff_clean": PASS
+  "3_runbook_shared_computer_and_auth_ne_authorization": PASS
+  "4_branch_pr_workflow_no_direct_main_convenience": PASS
+  "5_governance_cloudagent_fallback_retained": PASS
+  "6_deterministic_pytest_orgctl_stat": PASS
+artifacts:
+  evidence_dir: evidence/howl-004-assurance-verify-4d24315/
+  summary: evidence/howl-004-assurance-verify-4d24315/SUMMARY.md
+  commands_log: evidence/howl-004-assurance-verify-4d24315/commands.log
+  tip_sha: evidence/howl-004-assurance-verify-4d24315/tip-sha.txt
+  files_changed: evidence/howl-004-assurance-verify-4d24315/files-changed-vs-main.txt
+  secret_scan: evidence/howl-004-assurance-verify-4d24315/secret-scan.txt
+  runbook_excerpts: evidence/howl-004-assurance-verify-4d24315/runbook-excerpts.txt
+  workflow_notes: evidence/howl-004-assurance-verify-4d24315/workflow-notes.txt
+  audit_report: reports/audits/assurance-verification-HOWL-004-2026-09-20.md
+  security_review: security/reviews/HOWL-004-2026-09-20.md
+notes:
+  - tip 4d24315 confirmed on origin; PR #3 open base=main head=ops/howl-004-github-publishing
+  - authorship howlcipher; no Cursor Agent co-author trailer; PR claims native publish without CloudAgent
+  - secret scan CLEAN; pytest 78 passed; orgctl validate PASSED
+  - informational: pre-existing docs/PUBLISH_GITHUB.md has initial-bundle push to main (not HOWL-004 delta)
+  - make missing on verifier; orgctl via python tools/orgctl.py validate
+recommendation: PASS — proceed to owner merge decision; owner-complete not declared
+blockers: []

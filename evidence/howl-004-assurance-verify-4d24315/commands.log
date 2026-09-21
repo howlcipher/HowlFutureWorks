@@ -1,0 +1,39 @@
+# HOWL-004 Assurance verification commands.log
+# Date: 2026-09-20 America/Detroit (EDT)
+# Tip expected: 4d24315c50600d67272fc8d99575a7505cd38520
+# No tokens/keys/cookies printed. No product code modified. No push.
+
+# Setup
+cd /workspace/HowlFutureWorks
+git fetch origin ops/howl-004-github-publishing
+git rev-parse origin/ops/howl-004-github-publishing
+# → 4d24315c50600d67272fc8d99575a7505cd38520
+git worktree add /workspace/HowlFutureWorks-howl004 4d24315c50600d67272fc8d99575a7505cd38520
+cd /workspace/HowlFutureWorks-howl004
+
+# Check 1 — tip on origin + authorship + PR
+git ls-remote origin refs/heads/ops/howl-004-github-publishing
+git log -1 --format=fuller
+git log -1 --format='%B' | rg -i 'Co-authored-by|Cursor Agent|Generated-by' || echo none
+gh pr view 3 --repo howlcipher/HowlFutureWorks --json number,state,isDraft,baseRefName,headRefName,headRefOid,author,title,url
+# MCP pull_request_read get / get_commits / get_files for PR #3
+
+# Check 2 — secret scan (values never echoed)
+git diff --name-status origin/main...HEAD
+# pattern scan for gho_/ghp_/AKIA/PEM private-key header marker/cookie=/Authorization:/password=/token= assignments
+# → RESULT: CLEAN (see secret-scan.txt)
+
+# Check 3/5 — runbook excerpts
+rg -n -i 'share one computer|organizational authorization|CloudAgent|fallback|main' runbooks/github-publishing.md
+sed -n '9,16p;17,40p;60,72p' runbooks/github-publishing.md
+
+# Check 4 — workflow / no direct-main convenience in PR
+rg -n -i 'git push.*main|push -u origin main|convenience' runbooks/ github-publishing + work-items
+rg -n 'git push -u origin main' docs/PUBLISH_GITHUB.md  # pre-existing bootstrap only
+
+# Check 6 — deterministic
+git show --stat HEAD
+git diff --name-status origin/main...HEAD
+source /workspace/HowlFutureWorks/.venv/bin/activate
+pytest -q --tb=no   # 78 passed
+python tools/orgctl.py validate   # VALIDATION PASSED
