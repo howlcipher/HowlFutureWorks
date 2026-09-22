@@ -5,6 +5,7 @@ This file is compact institutional memory for **future occupants of the position
 ## Durable lessons
 
 - Select executors using measured capability and current constraints. Implementation context is disposable; commits, tests, task/result envelopes and decisions are durable.
+- Do not summon extra persistent roles for ordinary bounded work unless policy or expected value requires them.
 
 ## Promotion / cleanup
 

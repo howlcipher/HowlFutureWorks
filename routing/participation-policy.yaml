@@ -1,0 +1,153 @@
+version: 1
+# Persistent-role participation: demand-driven, capacity-aware.
+# Distinct from executor selection (SELF vs Claude/Codex/AGY) in selection-policy.yaml.
+# Full Product→EM→Dev Lead→Assurance→Auditor workflow remains a capability, not a ceremony.
+
+principles:
+  demand_driven: true
+  full_workflow_mandatory_by_default: false
+  role_existence_does_not_trigger_involvement: true
+  expected_value_over_ceremony: true
+  invent_participation_scores: forbidden
+  # Capacity optimization never weakens mandatory governance/safety.
+  precedence: mandatory_governance_and_safety_over_capacity_optimization
+  capacity_may_lower_assurance: false
+  capacity_may_bypass_approvals: false
+  capacity_may_downgrade_risk: false
+  capacity_may_authorize_unauthorized_executor: false
+
+# Activate a persistent role only when expected decision / implementation /
+# verification / audit / research / authority value exceeds coordination + usage cost.
+expected_value:
+  activate_when: meaningful_value_exceeds_coordination_and_usage_cost
+  value_kinds: [decision, implementation, verification, audit, research, authority]
+
+roles:
+  product:
+    use_when:
+      - requirements_ambiguous
+      - prioritization_needed
+      - acceptance_criteria_need_product_judgment
+      - competing_user_outcomes
+    do_not_require_for: obvious_maintenance_ceremony
+  engineering_manager:
+    owns: [coordination, prioritization, capacity, exception_management]
+    do_not_require_for: every_low_complexity_implementation_step
+    may_establish_policy_and_allow_direct_execution: true
+  dev_lead:
+    default_engineering_implementer: true
+    may_self_handle_when_sufficient: true
+    may_route_external_per_executor_routing: true
+    do_not_summon_other_roles_unless_value_or_policy: true
+  assurance:
+    use_when:
+      - risk_warrants_independent_verification
+      - security_boundary_involved
+      - meaningful_regression_surface
+      - product_ac_needs_independent_confirmation
+      - existing_policy_requires_verification
+      - implementation_confidence_insufficient
+    do_not_require_for: every_harmless_trivial_change
+  auditor:
+    reserve_for:
+      - consequential_or_high_risk_work
+      - milestone_verification
+      - policy_or_governance_changes
+      - disputed_findings
+      - important_organizational_proof
+      - explicit_independent_reconstruction_required
+    not_globally_mandatory: true
+    do_not_automatically_audit: ordinary_r1_r2_engineering
+  rnd:
+    use_when:
+      - genuine_uncertainty
+      - experiment_or_prototype
+      - hypothesis_testing
+      - technology_investigation
+      - comparative_exploration
+    not_globally_mandatory: true
+    do_not_require_for: routine_implementation
+
+# Defaults by task class. Risk policy and verification rules remain authoritative overlays.
+task_defaults:
+  trivial:
+    required_roles: [responsible]
+    product: not_required
+    engineering_manager: not_required
+    assurance: when_policy_or_security_boundary
+    auditor: not_required
+    rnd: not_required
+  simple:
+    required_roles: [responsible]
+    product: not_required
+    engineering_manager: not_required
+    assurance: optional_lightweight_when_valuable
+    auditor: not_required
+    rnd: not_required
+  bounded:
+    required_roles: [implementer]
+    implementer: dev-lead
+    product: when_requirements_need_judgment
+    engineering_manager: not_required_for_ordinary_steps
+    assurance: when_justified_or_required
+    auditor: not_default
+    rnd: not_required
+  complex:
+    required_roles: [implementer]
+    implementer: dev-lead
+    product: when_requirements_need_judgment
+    engineering_manager: likely
+    assurance: likely
+    auditor: when_governance_or_risk_requires
+    rnd: when_genuine_uncertainty
+  critical:
+    follow_risk_policy: true
+    product: as_applicable
+    engineering_manager: as_applicable
+    implementer: as_applicable
+    assurance: required_when_policy_requires_verification
+    auditor: when_governance_or_risk_requires
+    rnd: when_genuine_uncertainty
+    capacity_cannot_suppress_mandatory_controls: true
+
+# Operator-declared honest states only. Never invent percentages or scrape quotas.
+grok_capacity:
+  states: [healthy, constrained, scarce, exhausted, unknown]
+  semantics:
+    healthy: normal_demand_driven_participation
+    constrained: reduce_nonessential_grok_handoffs
+    scarce: reserve_for_material_persistent_judgment
+    exhausted: no_new_discretionary_grok_work_without_policy_owner_or_safety_need
+    unknown: conservative_do_not_assume_unlimited
+  affects: optional_participation_only
+  never_overrides:
+    - risk_approval
+    - owner_approval
+    - independent_verification
+    - security_review
+    - howlframe_enforcement
+    - child_privilege_limits
+    - secret_handling
+    - recursive_delegation_constraints
+    - production_authorization
+    - destructive_operation_controls
+
+# Risk overlays applied on top of task_defaults (fail closed).
+risk_overlays:
+  R3:
+    human_approval_required: true
+    assurance: when_verification_or_security_boundary
+  R4:
+    human_approval_required: true
+    assurance: required
+    auditor: when_governance_or_consequential
+  independent_verification_required:
+    assurance: required
+
+globally_mandatory:
+  product: false
+  auditor: false
+  rnd: false
+  assurance: false
+  engineering_manager: false
+  full_workflow: false

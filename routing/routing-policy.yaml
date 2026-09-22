@@ -5,6 +5,7 @@ canonical:
   selection: routing/selection-policy.yaml
   registry: routing/capability-registry.yaml
   fallback: routing/fallback-policy.yaml
+  participation: routing/participation-policy.yaml
 rules:
   provider_loyalty: forbidden
   permanent_ranking: forbidden
@@ -15,3 +16,6 @@ rules:
   complexity_does_not_override_risk: true
   quota_outage_may_lower_assurance: false
   prefer_least_cost_executor_meeting_quality_bar: true
+  demand_driven_persistent_participation: true
+  full_workflow_mandatory_by_default: false
+  capacity_may_lower_assurance: false

@@ -44,6 +44,7 @@ def test_routing_files_exist():
         "routing/capability-registry.yaml",
         "routing/routing-policy.yaml",
         "routing/fallback-policy.yaml",
+        "routing/participation-policy.yaml",
         "routing/README.md",
         "routing/decision-records/README.md",
         "routing/decision-records/TEMPLATE.md",

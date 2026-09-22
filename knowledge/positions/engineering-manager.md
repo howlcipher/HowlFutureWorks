@@ -5,6 +5,7 @@ This file is compact institutional memory for **future occupants of the position
 ## Durable lessons
 
 - Maintain desired/deployed organizational alignment; preserve staffing history; route authority changes through review rather than solving drift by expanding privileges.
+- Prefer the smallest persistent-role footprint that safely completes the work; capacity pressure never weakens mandatory controls.
 
 ## Promotion / cleanup
 
