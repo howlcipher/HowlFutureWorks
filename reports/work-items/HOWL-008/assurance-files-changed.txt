@@ -1,0 +1,29 @@
+howlboard tip 41a91af6a6432e0df4eeec03f0a93acdb09e3794 vs base cab020c (HOWL-007 merged)
+branch: feat/howl-008-dependency-navigation
+PR: https://github.com/howlcipher/howlboard/pull/8
+
+backend/contract_test.go
+docs/demo.howl
+docs/demo.js
+docs/domain_model.md
+docs/limitations.md
+docs/roadmap.md
+docs/style.css
+frontend/app.howl
+frontend/mission_view.howl
+frontend/styles.css
+scripts/test_docs.py
+
+stat:
+ backend/contract_test.go   | 135 ++++++++++-
+ docs/demo.howl             |  31 ++-
+ docs/demo.js               | 579 +++++++++++++++++++++++----------------------
+ docs/domain_model.md       |   2 +-
+ docs/limitations.md        |   7 +-
+ docs/roadmap.md            |  10 +-
+ docs/style.css             |  27 +++
+ frontend/app.howl          |  47 ++--
+ frontend/mission_view.howl |  12 +-
+ frontend/styles.css        |  20 ++
+ scripts/test_docs.py       |  21 ++
+ 11 files changed, 570 insertions(+), 321 deletions(-)

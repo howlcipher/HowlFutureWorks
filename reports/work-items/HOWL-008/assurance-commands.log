@@ -1,0 +1,41 @@
+# HOWL-008 Assurance verification commands log
+# When: 2026-09-21 13:23:45 EDT (America/Detroit)
+# Role: bot-assurance (independent; dual QA+Security)
+# Product tip: howlcipher/howlboard 41a91af6a6432e0df4eeec03f0a93acdb09e3794
+# Base: cab020c ; Branch: feat/howl-008-dependency-navigation ; PR: #8
+# Did NOT merge. Did NOT start HOWL-009. Did NOT print secrets. Did NOT re-pick executor.
+
+pwd / workspace inspection
+cd /workspace/howlboard
+git status   # clean on feat/howl-008-dependency-navigation
+git rev-parse HEAD   # 41a91af6a6432e0df4eeec03f0a93acdb09e3794
+git worktree list    # no dirty alternate WT needed
+git log --oneline cab020c..HEAD
+git diff --name-only cab020c..HEAD
+git diff cab020c..HEAD -- frontend/mission_view.howl frontend/app.howl docs/demo.howl \
+  docs/limitations.md docs/roadmap.md docs/domain_model.md scripts/test_docs.py backend/contract_test.go
+
+cd /workspace/HowlFutureWorks
+git fetch origin feat/howl-008-dependency-navigation
+# read product-definition.md em-acceptance.md dev-lead-implementation.md routing/decision-records/HOWL-008.md
+
+# Real artifact tests
+cd /workspace/howlboard/backend && go test ./...              # EXIT 0
+cd /workspace/howlboard/backend && go test -v ./...           # EXIT 0; HOWL-007 + HOWL-008 tests PASS
+cd /workspace/howlboard && python3 scripts/test_docs.py       # EXIT 0
+
+# CI
+gh pr checks 8 -R howlcipher/howlboard                       # Build... pass
+gh pr view 8 -R howlcipher/howlboard --json state,statusCheckRollup,headRefOid,title,url,mergeable
+# headRefOid == 41a91af6a6432e0df4eeec03f0a93acdb09e3794 ; conclusion SUCCESS
+
+# Secret scan (changed files only; private-key armor via split fragments — no contiguous header literal written)
+# RESULT: 0 hits
+
+# Org budgets
+git diff origin/main -- policies/budgets.yaml                # empty (identical)
+# bots/*/context.yaml budget_chars unchanged vs main (EM 18000 / DL 15000 / Assurance 14000 / Product 12000 / Auditor 14000)
+# HOWL-008.json context_budget_preflight.budgets_raised: false
+# no HOWL-009 work item present
+
+# Routing docs read (reconstruct SELF; no preference re-pick)

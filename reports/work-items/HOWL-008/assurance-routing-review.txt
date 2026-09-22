@@ -1,0 +1,32 @@
+HOWL-008 Assurance — routing reconstructability review
+Verified tip (howlboard): 41a91af6a6432e0df4eeec03f0a93acdb09e3794
+Org docs reviewed (read-only):
+  - reports/work-items/HOWL-008/product-definition.md
+  - reports/work-items/HOWL-008/em-acceptance.md
+  - routing/decision-records/HOWL-008.md
+  - reports/work-items/HOWL-008.json (routing block)
+
+CLAIM: SELF selected with evidence-based rationale (not preference re-pick); implementation stayed SELF (native publish).
+
+Reconstructability:
+1) Product definition AC17 + routing note: explicitly did NOT pre-pick SELF/Claude/Codex/AGY/Astra; EM routes after acceptance.
+2) EM acceptance classifies task_class=bounded, risk=R2, tools=HowlFrame/frontend/contract/docs/Git.
+3) orgctl probe recorded: route --task-class bounded --risk R2 --required-tool coding
+   → SELF_preferred_unless_expected_value; eligible if delegated: claude, codex, agy (astra=codex alias).
+4) SELF sufficiency re-evaluated (not automatic): in-repo mission-row pattern (data-mission-id + constant open_mission);
+   vertical extension of HOWL-007 surfaces; HOWL-007 cited as sufficiency evidence for HowlBoard HowlFrame shared-view
+   slices — explicitly NOT a standing "prefer SELF forever" rule.
+5) External expected value? Not established for this navigation/JSON-harden slice; HOWL-006 baselines low-sample;
+   quota unknown → treated constrained; policy requires EV to invoke external.
+6) Selection table: SELF SELECTED; Claude/Codex/AGY eligible-not-selected; Astra=Codex alias.
+7) Decision record HOWL-008.md: selected_executor: SELF; howl007_relationship: evidence_of_sufficiency_not_auto_rule;
+   verification_required: assurance_independent; reasons match EM acceptance.
+
+Implementation stayed SELF (evidence):
+- howlboard PR #8: native feat commit on feat/howl-008-dependency-navigation tip 41a91af6a6432e0df4eeec03f0a93acdb09e3794
+- Author/committer: howlcipher (William Elias) — native git/gh publish path per EM envelope
+- Surface: ordinary HowlFrame/Go/docs edits (mission_view.howl, app.howl, demo.howl, contract_test.go, docs, CSS)
+- No external executor invocation artifacts required; Dev Lead implementation note records SELF-routed
+- Assurance does NOT re-pick executor
+
+RESULT: PASS — SELF selection reconstructable from org docs as evidence-based; implementation consistent with SELF envelope.
