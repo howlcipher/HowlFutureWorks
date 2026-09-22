@@ -49,6 +49,17 @@ def workforce(): return load_yaml(ROOT/"workforce/roster.yaml") or {"employees":
 REQUIRED_EXECUTORS = ("claude", "codex", "agy", "astra")
 TASK_CLASS_IDS = ("trivial", "simple", "bounded", "complex", "critical")
 QUOTA_STATES = ("healthy", "constrained", "scarce", "exhausted", "unknown")
+PARTICIPATION_ROLE_KEYS = (
+    "responsible",
+    "implementer",
+    "product",
+    "engineering_manager",
+    "assurance",
+    "auditor",
+    "rnd",
+)
+# Statuses that capacity may defer (never "required").
+OPTIONAL_PARTICIPATION_STATUSES = frozenset({"conditional", "likely", "optional", "as_applicable"})
 
 
 def validate_routing(errors):
@@ -64,6 +75,7 @@ def validate_routing(errors):
         "routing/task-classes.yaml",
         "routing/routing-policy.yaml",
         "routing/fallback-policy.yaml",
+        "routing/participation-policy.yaml",
     ):
         if not (ROOT / rel).exists():
             errors.append(f"missing {rel}")
@@ -172,6 +184,8 @@ def validate_routing(errors):
     if rr.get("external_requires_expected_value") is not True:
         errors.append("routing: routing-policy external_requires_expected_value must be true")
 
+    validate_participation(errors, routing=routing)
+
     fb = fallback.get("fallback_behavior") or {}
     if fb.get("blind_retry") != "forbidden":
         errors.append("routing: fallback blind_retry must be forbidden")
@@ -203,7 +217,190 @@ def validate_routing(errors):
             errors.append(f"routing: possible secret material in {p.relative_to(ROOT)}")
 
 
-def route_inspect(task_class, risk, required_tools=None, objective=None):
+def _map_participation_token(token):
+    """Normalize policy tokens to explainable participation statuses."""
+    if token in (None,):
+        return "not_required"
+    if token is True or token == "required":
+        return "required"
+    if token in ("not_required", "not_default", "not_required_for_ordinary_steps"):
+        return "not_required"
+    if token in (
+        "when_justified_or_required",
+        "when_policy_or_security_boundary",
+        "when_requirements_need_judgment",
+        "when_governance_or_risk_requires",
+        "when_genuine_uncertainty",
+        "optional_lightweight_when_valuable",
+        "as_applicable",
+        "required_when_policy_requires_verification",
+        "when_verification_or_security_boundary",
+        "when_governance_or_consequential",
+        "conditional",
+    ):
+        return "conditional"
+    if token == "likely":
+        return "likely"
+    if token == "optional":
+        return "optional"
+    return "conditional"
+
+
+def participation_inspect(task_class, risk, grok_capacity="unknown", class_meta=None, participation=None):
+    """Deterministic persistent-role participation. Never invokes a model or scrapes quota."""
+    if grok_capacity not in QUOTA_STATES:
+        return {
+            "result": "invalid-input",
+            "errors": [f"unknown grok capacity state {grok_capacity}"],
+            "capacity_overrode_safety": False,
+        }
+    participation = participation if participation is not None else (
+        load_yaml(ROOT / "routing/participation-policy.yaml") or {}
+    )
+    classes = load_yaml(ROOT / "routing/task-classes.yaml") or {}
+    class_meta = class_meta if class_meta is not None else (
+        (classes.get("classes") or {}).get(task_class) or {}
+    )
+    defaults = (participation.get("task_defaults") or {}).get(task_class) or {}
+    overlays = participation.get("risk_overlays") or {}
+    capacity_cfg = participation.get("grok_capacity") or {}
+    semantics = (capacity_cfg.get("semantics") or {}).get(grok_capacity, "conservative")
+
+    roles = {}
+    rationale = [
+        f"task_class={task_class}",
+        f"risk_tier={risk}",
+        "demand-driven participation; full workflow is a capability not a ceremony",
+        "mandatory governance/safety controls outrank capacity optimization",
+    ]
+
+    if task_class in ("trivial", "simple"):
+        roles["responsible"] = "required"
+        roles["implementer"] = "not_required"
+        roles["product"] = _map_participation_token(defaults.get("product", "not_required"))
+        roles["engineering_manager"] = _map_participation_token(
+            defaults.get("engineering_manager", "not_required")
+        )
+        roles["assurance"] = _map_participation_token(defaults.get("assurance", "conditional"))
+        roles["auditor"] = _map_participation_token(defaults.get("auditor", "not_required"))
+        roles["rnd"] = _map_participation_token(defaults.get("rnd", "not_required"))
+        rationale.append(f"{task_class}: responsible role only by default")
+    elif task_class == "bounded":
+        roles["responsible"] = "not_required"
+        roles["implementer"] = "required"
+        roles["product"] = _map_participation_token(defaults.get("product", "conditional"))
+        roles["engineering_manager"] = _map_participation_token(
+            defaults.get("engineering_manager", "not_required")
+        )
+        roles["assurance"] = _map_participation_token(defaults.get("assurance", "conditional"))
+        roles["auditor"] = _map_participation_token(defaults.get("auditor", "not_required"))
+        roles["rnd"] = _map_participation_token(defaults.get("rnd", "not_required"))
+        rationale.append("bounded: implementer required; Assurance/Product conditional")
+    elif task_class == "complex":
+        roles["responsible"] = "not_required"
+        roles["implementer"] = "required"
+        roles["product"] = _map_participation_token(defaults.get("product", "conditional"))
+        roles["engineering_manager"] = _map_participation_token(
+            defaults.get("engineering_manager", "likely")
+        )
+        roles["assurance"] = _map_participation_token(defaults.get("assurance", "likely"))
+        roles["auditor"] = _map_participation_token(defaults.get("auditor", "conditional"))
+        roles["rnd"] = _map_participation_token(defaults.get("rnd", "conditional"))
+        rationale.append("complex: additional participation allowed when it adds value")
+    else:  # critical
+        roles["responsible"] = "not_required"
+        roles["implementer"] = "required"
+        roles["product"] = _map_participation_token(defaults.get("product", "conditional"))
+        roles["engineering_manager"] = _map_participation_token(
+            defaults.get("engineering_manager", "conditional")
+        )
+        roles["assurance"] = "required"
+        roles["auditor"] = _map_participation_token(defaults.get("auditor", "conditional"))
+        roles["rnd"] = _map_participation_token(defaults.get("rnd", "conditional"))
+        rationale.append("critical: follow risk policy; mandatory controls retained")
+
+    # Risk / verification overlays (fail closed — may only raise, never lower required).
+    risk_meta = overlays.get(risk) or {}
+    if risk_meta.get("assurance") == "required" or risk == "R4":
+        roles["assurance"] = "required"
+        rationale.append(f"risk overlay {risk}: Assurance required")
+    elif risk_meta.get("assurance") and roles.get("assurance") == "not_required":
+        roles["assurance"] = "conditional"
+        rationale.append(f"risk overlay {risk}: Assurance conditional")
+    if risk in ("R3", "R4"):
+        rationale.append(f"risk {risk}: human approval required per policies/approvals.yaml")
+    if class_meta.get("independent_verification") == "required":
+        roles["assurance"] = "required"
+        rationale.append("independent_verification required → Assurance required")
+    if task_class == "critical" and risk == "R4":
+        if roles.get("auditor") == "not_required":
+            roles["auditor"] = "conditional"
+        rationale.append("critical/R4: Auditor when governance or consequential work requires it")
+
+    # Capacity may defer optional participation only.
+    deferred = []
+    if grok_capacity in ("constrained", "scarce", "exhausted", "unknown"):
+        for role, status in list(roles.items()):
+            if status in OPTIONAL_PARTICIPATION_STATUSES:
+                # Keep Assurance/Auditor conditional markers when policy already elevated them
+                # to required; only defer truly optional/likely discretionary roles.
+                if status == "conditional" and role in ("assurance", "auditor") and risk in ("R3", "R4"):
+                    continue
+                if status == "conditional" and role == "assurance" and class_meta.get(
+                    "independent_verification"
+                ) in ("required", "preferred") and task_class in ("complex", "critical"):
+                    # preferred verification on complex stays conditional under capacity pressure
+                    # unless required; do not silently drop required paths.
+                    if class_meta.get("independent_verification") == "required":
+                        continue
+                if grok_capacity == "exhausted" or (
+                    grok_capacity in ("scarce", "constrained", "unknown")
+                    and status in ("likely", "optional", "as_applicable")
+                ):
+                    roles[role] = "deferred_optional"
+                    deferred.append(role)
+                elif grok_capacity in ("scarce",) and status == "conditional" and role in (
+                    "product",
+                    "rnd",
+                    "engineering_manager",
+                    "auditor",
+                ):
+                    # Scarce: defer discretionary ceremony roles; keep Assurance conditional.
+                    if role != "assurance":
+                        roles[role] = "deferred_optional"
+                        deferred.append(role)
+        if deferred:
+            rationale.append(
+                f"grok_capacity={grok_capacity} deferred optional roles: {', '.join(deferred)}"
+            )
+        rationale.append(f"grok_capacity semantics: {semantics}")
+    else:
+        rationale.append("grok_capacity=healthy: normal demand-driven participation")
+
+    # Exhausted: note external/SELF still eligible for execution; no new discretionary Grok.
+    execution_note = None
+    if grok_capacity == "exhausted":
+        execution_note = (
+            "no new discretionary Grok Bot work; use SELF or configured external executors "
+            "where routing policy permits; mandatory persistent roles still apply"
+        )
+        rationale.append(execution_note)
+
+    return {
+        "result": "selected",
+        "persistent_participation": roles,
+        "grok_capacity": grok_capacity,
+        "grok_capacity_semantics": semantics,
+        "deferred_optional_roles": deferred,
+        "capacity_overrode_safety": False,
+        "capacity_affects": "optional_participation_only",
+        "execution_capacity_note": execution_note,
+        "rationale": rationale,
+        "implementer_default": defaults.get("implementer", "dev-lead" if task_class not in ("trivial", "simple") else "responsible"),
+    }
+
+
+def route_inspect(task_class, risk, required_tools=None, objective=None, grok_capacity="unknown"):
     """Deterministic routing inspection. Never invokes a model."""
     required_tools = required_tools or []
     out = {
@@ -214,6 +411,7 @@ def route_inspect(task_class, risk, required_tools=None, objective=None):
         "risk_tier": risk,
         "required_tools": required_tools,
         "objective": objective,
+        "grok_capacity": grok_capacity,
     }
     if task_class not in TASK_CLASS_IDS:
         out["result"] = "invalid-input"
@@ -223,15 +421,38 @@ def route_inspect(task_class, risk, required_tools=None, objective=None):
         out["result"] = "invalid-input"
         out["errors"] = [f"unknown risk tier {risk}"]
         return out
+    if grok_capacity not in QUOTA_STATES:
+        out["result"] = "invalid-input"
+        out["errors"] = [f"unknown grok capacity state {grok_capacity}"]
+        return out
 
     classes = load_yaml(ROOT / "routing/task-classes.yaml") or {}
     selection = load_yaml(ROOT / "routing/selection-policy.yaml") or {}
     registry = load_yaml(ROOT / "routing/capability-registry.yaml") or {}
+    participation_pol = load_yaml(ROOT / "routing/participation-policy.yaml") or {}
     class_meta = (classes.get("classes") or {}).get(task_class) or {}
     principles = selection.get("principles") or {}
 
+    part = participation_inspect(
+        task_class, risk, grok_capacity=grok_capacity,
+        class_meta=class_meta, participation=participation_pol,
+    )
+    out["persistent_participation"] = part.get("persistent_participation")
+    out["participation_rationale"] = part.get("rationale")
+    out["capacity_overrode_safety"] = False
+    out["deferred_optional_roles"] = part.get("deferred_optional_roles") or []
+    out["grok_capacity_semantics"] = part.get("grok_capacity_semantics")
+    if part.get("execution_capacity_note"):
+        out["execution_capacity_note"] = part["execution_capacity_note"]
+
     steps = []
     steps.append({"step": "classify_task_class_and_risk", "task_class": task_class, "risk_tier": risk})
+    steps.append({
+        "step": "select_persistent_participation",
+        "demand_driven": True,
+        "capacity_overrode_safety": False,
+        "roles": part.get("persistent_participation"),
+    })
 
     default = class_meta.get("default_executor", "SELF")
     self_preferred = principles.get("self_preferred_when_sufficient") is True
@@ -244,6 +465,8 @@ def route_inspect(task_class, risk, required_tools=None, objective=None):
             "external delegation requires expected value",
             "merely having an executor installed is not a reason to invoke it",
         ]
+        if grok_capacity == "exhausted":
+            rationale.append("grok exhausted: SELF remains eligible; no discretionary Grok handoffs")
         steps.append({"step": "decide_self_vs_delegate", "decision": decision})
         out.update({
             "result": "selected",
@@ -302,6 +525,8 @@ def route_inspect(task_class, risk, required_tools=None, objective=None):
         elif task_class == "bounded":
             decision = "SELF_or_owner_configured_known_capable"
             rationale.append(str(cold.get("bounded")))
+        if grok_capacity == "exhausted":
+            rationale.append("grok exhausted: prefer SELF or configured external path; mandatory controls unchanged")
         steps.append({"step": "prefer_least_resource_intensive_sufficient", "skipped": True, "reason": "evidence-insufficient"})
         out.update({
             "result": "evidence-insufficient" if decision == "evidence-insufficient" else "selected",
@@ -326,6 +551,8 @@ def route_inspect(task_class, risk, required_tools=None, objective=None):
         decision = "SELF_preferred_unless_expected_value"
     else:
         decision = "eligible_profile_by_measured_fit"
+    if grok_capacity in ("scarce", "exhausted") and task_class == "bounded":
+        decision = "SELF_preferred_unless_expected_value"
     steps.append({"step": "prefer_least_resource_intensive_sufficient", "policy": True})
     steps.append({"step": "apply_quality_over_cost_when_failure_material", "policy": True})
     steps.append({
@@ -334,14 +561,17 @@ def route_inspect(task_class, risk, required_tools=None, objective=None):
         or (selection.get("verification") or {}).get("critical_requires_independent") is True
         and task_class == "critical",
     })
+    rationale = [
+        "choose by measured fit not loyalty/rankings",
+        "prefer least-resource-intensive sufficient executor",
+        "quality over cost when failure material",
+    ]
+    if grok_capacity == "exhausted":
+        rationale.append("grok exhausted: SELF/external executors eligible; discretionary persistent Grok deferred")
     out.update({
         "result": "selected",
         "decision": decision,
-        "rationale": [
-            "choose by measured fit not loyalty/rankings",
-            "prefer least-resource-intensive sufficient executor",
-            "quality over cost when failure material",
-        ],
+        "rationale": rationale,
         "eligible_profiles": eligible,
         "selection_steps": steps + [{"step": "record_rationale_or_evidence_insufficient"}],
         "independent_verification": class_meta.get("independent_verification", "not_required"),
@@ -349,6 +579,83 @@ def route_inspect(task_class, risk, required_tools=None, objective=None):
         "external_requires_expected_value": external_requires_ev,
     })
     return out
+
+
+def validate_participation(errors, routing=None):
+    """Demand-driven participation policy invariants."""
+    pp_path = ROOT / "routing/participation-policy.yaml"
+    if not pp_path.exists():
+        errors.append("missing routing/participation-policy.yaml")
+        return
+    try:
+        part = load_yaml(pp_path) or {}
+        routing = routing if routing is not None else (load_yaml(ROOT / "routing/routing-policy.yaml") or {})
+    except Exception as e:
+        errors.append(f"participation load: {e}")
+        return
+
+    principles = part.get("principles") or {}
+    if principles.get("demand_driven") is not True:
+        errors.append("participation: principles.demand_driven must be true")
+    if principles.get("full_workflow_mandatory_by_default") is not False:
+        errors.append("participation: full_workflow_mandatory_by_default must be false")
+    if principles.get("capacity_may_lower_assurance") is not False:
+        errors.append("participation: capacity_may_lower_assurance must be false")
+    if principles.get("capacity_may_bypass_approvals") is not False:
+        errors.append("participation: capacity_may_bypass_approvals must be false")
+    if principles.get("capacity_may_downgrade_risk") is not False:
+        errors.append("participation: capacity_may_downgrade_risk must be false")
+    if principles.get("capacity_may_authorize_unauthorized_executor") is not False:
+        errors.append("participation: capacity_may_authorize_unauthorized_executor must be false")
+    prec = principles.get("precedence")
+    if prec != "mandatory_governance_and_safety_over_capacity_optimization":
+        errors.append(
+            "participation: precedence must be mandatory_governance_and_safety_over_capacity_optimization"
+        )
+
+    gc = part.get("grok_capacity") or {}
+    states = gc.get("states") or []
+    if set(states) != set(QUOTA_STATES):
+        errors.append(f"participation: grok_capacity.states must be exactly {list(QUOTA_STATES)}")
+    if gc.get("affects") != "optional_participation_only":
+        errors.append("participation: grok_capacity.affects must be optional_participation_only")
+    never = set(gc.get("never_overrides") or [])
+    for req in (
+        "risk_approval",
+        "owner_approval",
+        "independent_verification",
+        "security_review",
+        "howlframe_enforcement",
+    ):
+        if req not in never:
+            errors.append(f"participation: grok_capacity.never_overrides missing {req}")
+
+    defaults = part.get("task_defaults") or {}
+    for cid in TASK_CLASS_IDS:
+        if cid not in defaults:
+            errors.append(f"participation: task_defaults missing {cid}")
+    crit = defaults.get("critical") or {}
+    if crit.get("follow_risk_policy") is not True:
+        errors.append("participation: critical.follow_risk_policy must be true")
+    if crit.get("capacity_cannot_suppress_mandatory_controls") is not True:
+        errors.append("participation: critical.capacity_cannot_suppress_mandatory_controls must be true")
+
+    global_m = part.get("globally_mandatory") or {}
+    for role in ("product", "auditor", "rnd", "full_workflow"):
+        if global_m.get(role) is not False:
+            errors.append(f"participation: globally_mandatory.{role} must be false")
+
+    rr = routing.get("rules") or {}
+    if rr.get("demand_driven_persistent_participation") is not True:
+        errors.append("routing: demand_driven_persistent_participation must be true")
+    if rr.get("full_workflow_mandatory_by_default") is not False:
+        errors.append("routing: full_workflow_mandatory_by_default must be false")
+    if rr.get("capacity_may_lower_assurance") is not False:
+        errors.append("routing: capacity_may_lower_assurance must be false")
+
+    canon = routing.get("canonical") or {}
+    if canon.get("participation") != "routing/participation-policy.yaml":
+        errors.append("routing: canonical.participation must reference routing/participation-policy.yaml")
 
 
 def validate():
@@ -892,6 +1199,12 @@ def main():
     rt.add_argument("--risk",required=True,choices=sorted(RISKS))
     rt.add_argument("--required-tool",action="append",default=[],dest="required_tools")
     rt.add_argument("--objective",default=None)
+    rt.add_argument(
+        "--grok-capacity",
+        default="unknown",
+        choices=list(QUOTA_STATES),
+        help="operator-declared persistent Grok capacity (never scraped; default unknown)",
+    )
     rt.add_argument("--json",action="store_true",help="emit JSON instead of YAML")
     a=ap.parse_args()
     if a.cmd=="validate": raise SystemExit(validate())
@@ -912,7 +1225,9 @@ def main():
     if a.cmd=="record-contribution": record_contribution(a)
     if a.cmd=="checkpoint": checkpoint(a)
     if a.cmd=="route":
-        result=route_inspect(a.task_class,a.risk,a.required_tools,a.objective)
+        result=route_inspect(
+            a.task_class,a.risk,a.required_tools,a.objective,grok_capacity=a.grok_capacity
+        )
         if a.json:
             print(json.dumps(result,indent=2,sort_keys=False))
         else:

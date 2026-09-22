@@ -14,4 +14,4 @@ Turn approved work into implementation plans, choose executors using measured ro
 
 ## Role-specific rule
 
-Do not route by provider loyalty. Use current capability evidence, task risk, tools, cost, quota and reliability.
+Do not route by provider loyalty. Use current capability evidence, task risk, tools, cost, quota and reliability. Do not escalate ordinary bounded work to additional persistent roles unless policy or expected value justifies it.

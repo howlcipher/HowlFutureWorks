@@ -14,6 +14,47 @@ sources of truth live under `routing/`.
 Persistent members handle ordinary work themselves. External executors are used
 only when expected benefit materially justifies delegation.
 
+## Demand-driven persistent participation
+
+The full workflow Product → Engineering Manager → Dev Lead → Assurance → Auditor
+remains a **capability**, not a mandatory ceremony for every work item.
+
+Machine source: `routing/participation-policy.yaml`.
+
+**Who participates organizationally** is decided before **who executes** (SELF vs
+external). Inspect both with:
+
+`python tools/orgctl.py route --task-class bounded --risk R2 --grok-capacity scarce`
+
+### Defaults (complexity class)
+
+| Class | Default footprint |
+|-------|-------------------|
+| trivial / simple | Responsible role only; normally no Product/Auditor/R&D |
+| bounded | Implementer (Dev Lead); Assurance when justified or required |
+| complex | Implementer + likely EM/Assurance; Product when judgment needed |
+| critical | Follow risk/approval/verification policy; capacity cannot suppress gates |
+
+### Grok capacity (operator-declared)
+
+States: `healthy` | `constrained` | `scarce` | `exhausted` | `unknown`.
+
+Never invent percentages or scrape undocumented quotas. Default inspection state is
+`unknown` (conservative). Capacity may reduce **optional** persistent-role handoffs
+only. It may **never** lower assurance, bypass approvals, downgrade risk, or
+authorize an unauthorized executor.
+
+Precedence: **mandatory governance/safety controls > capacity optimization**.
+
+### Examples
+
+- Routine typo → one responsible member
+- Small bug → Dev Lead (+ Assurance if warranted)
+- Product ambiguity → Product + relevant engineering
+- Security-sensitive change → required Assurance/approvals regardless of capacity
+- Research uncertainty → R&D
+- Major milestone → full workflow when justified
+
 ## Self vs delegate
 
 1. Classify task class (`routing/task-classes.yaml`) and risk tier (`policies/risk-tiers.yaml`).
@@ -22,7 +63,7 @@ only when expected benefit materially justifies delegation.
 4. Merely having an executor installed is not a reason to invoke it.
 5. Deterministic operations should not unnecessarily invoke an AI executor.
 
-Inspect with: `python tools/orgctl.py route --task-class simple --risk R1`.
+Inspect with: `python tools/orgctl.py route --task-class simple --risk R1 --grok-capacity unknown`.
 
 ## Task classes vs risk
 
@@ -59,9 +100,12 @@ normalizing multi-model fan-out of the same prompt.
 
 Allowed: `healthy` | `constrained` | `scarce` | `exhausted` | `unknown`.
 
+Applies to both ephemeral executor quota (selection-policy) and persistent Grok Bot
+capacity (participation-policy). Same honest labels; never invent usage %.
+
 - **unknown** → conservative (treat like constrained); no invented usage %.
-- **scarce** → reserve high-capability capacity for tasks where it changes outcome.
-- **exhausted** → no new external spend without an Owner-approved path.
+- **scarce** → reserve high-capability / persistent judgment capacity for material outcomes.
+- **exhausted** → no new external spend without an Owner-approved path; no new discretionary Grok role work.
 - Quota/outage never lowers assurance or approvals.
 
 ## Profiles and credentials
@@ -124,6 +168,6 @@ Significant delegated work only: `routing/decision-records/`. Not for trivial/SE
 ## Related files
 
 - `routing/selection-policy.yaml`, `task-classes.yaml`, `capability-registry.yaml`
-- `routing/routing-policy.yaml`, `fallback-policy.yaml`
+- `routing/routing-policy.yaml`, `fallback-policy.yaml`, `participation-policy.yaml`
 - `policies/risk-tiers.yaml`, `tool-access.yaml`, `approvals.yaml`, `budgets.yaml`
 - `CHARTER.md` §7 (constitutional intent; operational detail lives in `routing/`)
