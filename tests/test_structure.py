@@ -81,13 +81,18 @@ def test_founders_have_hire_events_and_durable_context_dirs():
         assert (base/"reviews").exists()
 
 
-def test_context_always_load_paths_exist():
+def test_context_retrieval_paths_exist():
+    policy=y("policies/runtime-contract.yaml")
     for bot in y("bots/manifest.yaml")["bots"]:
         bid=bot["id"]
         ctx=y(f"bots/{bid}/context.yaml")
-        for rel in ctx.get("always_load",[]):
-            assert "*" not in rel, f"always_load cannot be a wildcard: {bid} {rel}"
-            assert (ROOT/rel).exists(), f"{bid} context points to missing {rel}"
+        assert ctx["schema_version"] == 2 and "always_load" not in ctx
+        assert ctx["retrieve_when"], bid
+        for trigger,sources in ctx["retrieve_when"].items():
+            assert trigger in policy["triggers"], (bid,trigger)
+            for rel in sources+policy["triggers"][trigger]["required_sources"]:
+                found=any(ROOT.glob(rel.rstrip("/"))) if "*" in rel else (ROOT/rel).exists()
+                assert found, f"{bid} trigger {trigger} points to missing {rel}"
 
 
 def test_organizer_is_not_self_escalating():
@@ -173,19 +178,17 @@ def test_position_knowledge_exists_and_is_in_context():
         kp=ROOT/f"knowledge/positions/{bid}.md"
         assert kp.exists(), kp
         ctx=y(f"bots/{bid}/context.yaml")
-        assert str(kp.relative_to(ROOT)) in ctx["always_load"]
-        assert isinstance(ctx.get("budget_chars"),int) and ctx["budget_chars"] >= 2000
+        assert ctx["position_knowledge"] == str(kp.relative_to(ROOT))
+        assert isinstance(ctx.get("standing_budget_chars"),int) and ctx["standing_budget_chars"] >= 2000
 
 
 def test_rendered_contexts_fit_declared_budgets():
+    import sys; sys.path.insert(0,str(ROOT/"tools")); import orgctl
+    ceiling=y("policies/budgets.yaml")["agent_runtime"]["standing_context_max_chars"]
     for bot in y("bots/manifest.yaml")["bots"]:
         bid=bot["id"]; ctx=y(f"bots/{bid}/context.yaml")
-        total=0
-        for rel in ctx["always_load"]:
-            total += len((ROOT/rel).read_text())
-        for name in ["instructions.md","capabilities.yaml","boundaries.yaml"]:
-            total += len((ROOT/f"bots/{bid}/{name}").read_text())
-        assert total <= ctx["budget_chars"], (bid,total,ctx["budget_chars"])
+        total=len(orgctl.format_runtime_contract(orgctl.compile_runtime_contract(bid)))
+        assert total <= ctx["standing_budget_chars"] <= ceiling, (bid,total,ctx["standing_budget_chars"])
 
 
 def test_employee_profiles_and_position_manifest_have_schemas():
@@ -248,7 +251,10 @@ def test_howlfutureworks_identity_is_canonical():
 def test_all_position_contexts_include_organization_identity():
     for bot in y("bots/manifest.yaml")["bots"]:
         ctx=y(f"bots/{bot['id']}/context.yaml")
-        assert "organization.yaml" in ctx["always_load"]
+        assert "organization.yaml" in ctx["retrieve_when"]["role_detail"]
+        import sys; sys.path.insert(0,str(ROOT/"tools")); import orgctl
+        text=orgctl.format_runtime_contract(orgctl.compile_runtime_contract(bot["id"]))
+        assert text.startswith("# HowlFutureWorks Runtime Contract:")
 
 
 def test_platform_offboarding_safeguards_are_explicit():

@@ -315,15 +315,27 @@ def test_checkpoint_prints_path_chars_and_limit_on_success(repo_copy):
     assert f"limit={limit}" in r.stdout
 
 
-def test_validate_fails_when_bot_always_load_missing_memory_or_budgets_policy(repo_copy):
+def test_validate_fails_when_checkpoint_trigger_missing_memory_or_budgets_policy(repo_copy):
+    pp = repo_copy / "policies" / "runtime-contract.yaml"
+    pol = yaml.safe_load(pp.read_text())
+    srcs = pol["triggers"]["knowledge_checkpoint"]["required_sources"]
+    pol["triggers"]["knowledge_checkpoint"]["required_sources"] = [x for x in srcs if x != "policies/memory.yaml"]
+    pp.write_text(yaml.safe_dump(pol, sort_keys=False))
+    r = run_orgctl(repo_copy, "validate")
+    assert r.returncode != 0
+    assert "knowledge_checkpoint" in r.stdout
+    assert "policies/memory.yaml" in r.stdout
+
+
+def test_validate_fails_when_bot_lacks_knowledge_checkpoint_trigger(repo_copy):
     ctxp = repo_copy / "bots" / "dev-lead" / "context.yaml"
     ctx = yaml.safe_load(ctxp.read_text())
-    ctx["always_load"] = [x for x in ctx["always_load"] if x != "policies/memory.yaml"]
+    del ctx["retrieve_when"]["knowledge_checkpoint"]
     ctxp.write_text(yaml.safe_dump(ctx, sort_keys=False))
     r = run_orgctl(repo_copy, "validate")
     assert r.returncode != 0
     assert "dev-lead" in r.stdout
-    assert "policies/memory.yaml" in r.stdout
+    assert "knowledge_checkpoint" in r.stdout
 
 
 def test_validate_fails_when_context_checkpoint_threshold_percent_out_of_range(repo_copy):

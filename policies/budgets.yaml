@@ -14,3 +14,37 @@ guidance:
   position_knowledge_entry_chars: 2500
   decision_summary_chars: 5000
   incident_summary_chars: 8000
+# Runtime Context v2: provider-neutral efficiency policy for persistent runtimes
+# (Grok Bot and any other provider). Limits are escalation points, not hard stops:
+# reaching one requires deliberate retrieval, delegation, or escalation, never
+# abandoning legitimate work or weakening governance.
+agent_runtime:
+  standing_context_max_chars: 6000
+  token_estimate_chars_per_token: 4
+  limits_are_escalation_points_not_hard_stops: true
+  exploration:
+    initial_source_reads_max: 6
+    broad_repo_scan_default: forbidden
+    reread_known_unchanged_sources: avoid
+  planning:
+    initial_planning_passes_max: 1
+    replans_per_work_item_max: 1
+  retries:
+    same_failure_class_max: 1
+    blind_retry: forbidden
+  communication:
+    progress_updates: exceptions_only
+    completion_summary_chars: 1500
+  delegation:
+    decide_by: expected_value
+    prefer_external_executor_for:
+    - multi_file_implementation
+    - repeated_test_fix_cycles
+    - broad_repository_refactor
+    - implementation_heavy_work
+    - large_code_generation
+  circuit_breaker:
+    repeated_same_failure: 2
+    no_progress_attempts: 1
+    unexpected_usage_spike: true
+    runbook: runbooks/circuit-breaker.md

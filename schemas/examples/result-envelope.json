@@ -6,5 +6,12 @@
   },
   "evidence": [
     "evidence:validation"
-  ]
+  ],
+  "efficiency": {
+    "standing_context_chars": 5803,
+    "context_sources_loaded": 3,
+    "delegated": true,
+    "retries": 0,
+    "no_progress_attempts": 0
+  }
 }

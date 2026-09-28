@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://howlcipher.github.io/howl-future-works/schemas/position-context.schema.json",
+  "title": "Position Runtime Context (v2)",
+  "description": "Per-position inputs to the compiled runtime contract. Standing context is compiled, not concatenated; detailed sources are retrieved via retrieve_when triggers.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "standing_budget_chars",
+    "execution_profile",
+    "position_knowledge",
+    "retrieve_when"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "standing_budget_chars": {
+      "type": "integer",
+      "minimum": 2000
+    },
+    "execution_profile": {
+      "type": "string",
+      "enum": ["coordinator", "implementer", "verifier", "auditor", "advisor"]
+    },
+    "position_knowledge": {
+      "type": "string",
+      "pattern": "^knowledge/positions/[a-z0-9-]+\\.md$"
+    },
+    "retrieve_when": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uniqueItems": true
+      }
+    }
+  }
+}

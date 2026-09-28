@@ -9,7 +9,7 @@ For any task, do **not** load the whole repository by default.
 1. Read this file.
 2. Read `organization.yaml` for canonical identity and naming.
 3. Read the smallest role/Bot context relevant to the task.
-4. Follow that Bot's `context.yaml` to load only required policy/docs.
+4. Use that position's compiled runtime contract (`orgctl render-bot`) and its `retrieve_when` triggers to load only required policy/docs.
 5. Read `CHARTER.md` only when constitutional interpretation is required.
 6. Retrieve additional runbooks/policies on demand.
 

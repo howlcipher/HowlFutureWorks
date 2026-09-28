@@ -7,8 +7,8 @@ This document replaces a giant one-off bootstrap prompt. A normal CLI AI can use
 1. Validate repo: `python tools/orgctl.py validate`.
 2. Inspect persistent positions: `python tools/orgctl.py list-bots`.
 3. Inspect current/former workforce: `python tools/orgctl.py list-workforce`.
-4. Render position bundles: `python tools/orgctl.py render-all`.
-5. Render current employee continuity/onboarding bundles as needed with `python tools/orgctl.py render-employee <employee-id>`.
+4. Render compiled position runtime contracts: `python tools/orgctl.py render-all`. Check sizes with `python tools/orgctl.py context-report`.
+5. Only when onboarding, replacing, or moving a worker between providers, render its continuity bundle with `python tools/orgctl.py render-employee <employee-id>`. Continuity bundles are never routine per-task context.
 6. Re-verify `docs/GROK_PLATFORM_NOTES.md`, then inventory current live Grok Bots and platform capabilities.
 7. Map each live Bot to one workforce employee ID; do not use display names as stable identity.
 8. Compare deployed config to the employee's position definition and expected fingerprint.
@@ -25,4 +25,4 @@ The Engineering Manager/Organizer owns reconciliation and may propose hires, sep
 
 If the live Grok deployment is lost, rebuild positions from `bots/`, staff them from `workforce/roster.yaml`, then restore only curated employee/context/handoff knowledge. Do not reconstruct the organization from old chat transcripts.
 
-Persistent positions always load `policies/memory.yaml` and `policies/budgets.yaml`; checkpoint durable knowledge with `python tools/orgctl.py checkpoint` before a provider or session transition that would otherwise lose it.
+Every persistent position's runtime contract carries the `knowledge_checkpoint` trigger, which retrieves `policies/memory.yaml` and `policies/budgets.yaml`. Checkpoint durable knowledge with `python tools/orgctl.py checkpoint` before a provider or session transition that would otherwise lose it.

@@ -12,7 +12,7 @@ The repository is **desired organizational state**. Live Grok Bots are a deploye
 2. Read `AGENTS.md` if you are a CLI coding/automation agent.
 3. Read `CHARTER.md` for constitutional rules.
 4. Run `python tools/orgctl.py about` to confirm organization identity, then `python tools/orgctl.py validate`.
-5. Run `python tools/orgctl.py render-all` to build compact position context bundles under `build/bots/`.
+5. Run `python tools/orgctl.py render-all` to compile each position's standing runtime contract under `build/bots/`, and `python tools/orgctl.py context-report` to see sizes against budgets (see `docs/CONTEXT_STRATEGY.md`).
 6. Run `python tools/orgctl.py org-status` to see filled/vacant positions and current staff.
 7. Run `python tools/orgctl.py list-workforce` to inspect current staff and preserved alumni.
 8. Use `python tools/orgctl.py employee-history <employee-id>` when investigating a worker's tenure.

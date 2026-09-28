@@ -40,6 +40,36 @@
     "usage": {
       "type": "object"
     },
+    "efficiency": {
+      "type": "object",
+      "description": "Optional Runtime Context v2 efficiency signals (METRICS.md). Balanced with quality/security; never optimized alone.",
+      "additionalProperties": false,
+      "properties": {
+        "standing_context_chars": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "context_sources_loaded": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "delegated": {
+          "type": "boolean"
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "no_progress_attempts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "context_growth_chars": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
     "recommended_next_action": {
       "type": "string"
     },
