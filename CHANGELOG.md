@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **HowlPlane-first execution** (ADR 0006). Delegated implementation uses HowlPlane. Small bounded work stays SELF. Plane failure is not a governance bypass. Repair recursion is one tracked objective, then stop. Improvement requires evidence and cannot expand authority.
+- Add `routing/execution-substrate.yaml` and `runbooks/howlplane-recovery.md`. Routing policy, selection, fallback, and participation now keep participation, SELF-vs-delegate, and HowlPlane executor selection as three decisions.
+- Add the `execution_orchestration` retrieval trigger for the coordinator and implementer profiles. Standing-context budgets are unchanged.
+- `orgctl route` reports `execution_substrate`. `orgctl validate` checks the substrate structurally.
+- Result-envelope `efficiency` may record substrate, executor, failovers, persistent participation, interventions, repair tasks, and improvement work.
+
 - **Runtime Context v2** (ADR 0005). Persistent positions receive a compiled, provider-neutral runtime contract instead of concatenated source files. The canonical documents are unchanged and are retrieved by trigger.
 - Add `policies/runtime-contract.yaml` (canonical state, invariants with IDs and sources, execution profiles, task lifecycle, communication rules, the retrieval-trigger vocabulary, required triggers, and continuity rules).
 - Add `agent_runtime` efficiency policy to `policies/budgets.yaml`: standing-context ceiling, token-estimate ratio, exploration, planning, retry, communication, delegation and circuit-breaker limits. These are escalation points, not hard stops.

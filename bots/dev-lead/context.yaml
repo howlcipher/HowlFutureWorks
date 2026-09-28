@@ -13,6 +13,7 @@ retrieve_when:
   evidence_verification: [schemas/result-envelope.schema.json]
   external_action: []
   executor_selection: [routing/, docs/EXECUTOR_ROUTING.md, schemas/task-envelope.schema.json]
+  execution_orchestration: []
   production_change: []
   incident_response: [runbooks/]
   role_detail: [AGENTS.md, organization.yaml, roles/dev-lead.md]

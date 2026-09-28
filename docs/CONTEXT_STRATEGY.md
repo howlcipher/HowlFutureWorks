@@ -35,7 +35,7 @@ The v1 keys `always_load`, `load_on_demand` and `budget_chars` are rejected by `
 
 ## Retrieval triggers
 
-Triggers name *when* to read *which* authoritative source: `authority_question`, `risk_classification`, `knowledge_checkpoint`, `evidence_verification`, `external_action`, `staffing_change`, `executor_selection`, `bot_definition_change`, `production_change`, `security_review`, `incident_response`, `role_detail`, `domain_reference`. Retrieval is conservative. When unsure whether a trigger applies to a consequential action, retrieve. A missing required policy or approval fails closed.
+Triggers name *when* to read *which* authoritative source: `authority_question`, `risk_classification`, `knowledge_checkpoint`, `evidence_verification`, `external_action`, `staffing_change`, `executor_selection`, `execution_orchestration`, `bot_definition_change`, `production_change`, `security_review`, `incident_response`, `role_detail`, `domain_reference`. `execution_orchestration` is required on the coordinator and implementer profiles and loads `routing/execution-substrate.yaml`, `docs/EXECUTOR_ROUTING.md`, and `runbooks/howlplane-recovery.md` instead of preloading HowlPlane documentation. Retrieval is conservative. When unsure whether a trigger applies to a consequential action, retrieve. A missing required policy or approval fails closed.
 
 ## Checkpoint-and-reset lifecycle
 

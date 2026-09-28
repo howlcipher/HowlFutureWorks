@@ -1,0 +1,65 @@
+{
+  "id": "HOWL-010",
+  "title": "HowlPlane-first execution and governed self-improvement",
+  "status": "open",
+  "phase": "assurance",
+  "risk_tier": "R2",
+  "priority": "high",
+  "opened_on": "2026-09-28",
+  "owner": "engineering-manager",
+  "owner_employee_id": "bot-engmgr-0001",
+  "org_repository": "https://github.com/howlcipher/HowlFutureWorks",
+  "org_main_sha_at_open": "d44525a01df48fdda7fb5e96a89e8ea297fef683",
+  "branch": "feat/howlplane-first-execution",
+  "predecessor": "HOWL-009",
+  "problem": "Delegated implementation could still be described as a persistent Bot calling a raw provider CLI. HowlPlane already had Factory, work, orchestrate, routing, failover, evidence, and self/ecosystem targets, but HowlFutureWorks did not make that the normal path or define a governed recovery when Plane itself failed.",
+  "desired_outcome": "Implementation-heavy delegated work uses HowlPlane. Small bounded work stays SELF. Plane failure does not bypass HowlFrame or policy. Repair is one tracked objective. Improvement requires evidence and cannot expand authority. Runtime Context v2 budgets stay intact.",
+  "architecture": "Owner → HowlFutureWorks classifies → SELF or HowlPlane → HowlFrame and authority controls → executor selected by HowlPlane → evidence → HowlBoard / Git / checkpoint.",
+  "scope": [
+    "routing/execution-substrate.yaml and runbooks/howlplane-recovery.md",
+    "routing policy, selection, fallback, participation, and executor-routing docs",
+    "execution_orchestration retrieval trigger on coordinator and implementer profiles",
+    "orgctl route execution_substrate field and structural validation",
+    "optional result-envelope efficiency signals",
+    "ADR 0006"
+  ],
+  "acceptance_criteria": [
+    "Delegated implementation substrate is howlplane and raw executor CLI is not_normalized",
+    "Trivial and simple route decisions remain SELF",
+    "Bounded work stays SELF unless delegation is justified, and that path is HOWLPLANE",
+    "Recovery applies only to the orchestration layer and must preserve HowlFrame, risk, approvals, credentials, scope, evidence, verification, retries, and production controls",
+    "HowlPlane is an eligible repair target and repair recursion is one objective then checkpoint-stop-escalate",
+    "Improvement requires evidence; an unsupported model opinion is insufficient",
+    "Self-improvement may_not includes authority, approvals, risk, production, credentials, assurance, audit, HowlFrame, evidence, auto-merge, and unreviewed policy change",
+    "Standing context remains within existing efficiency budgets",
+    "orgctl validate, render-all, context-report, and tests pass",
+    "No HowlPlane code change unless a concrete gap required it"
+  ],
+  "risk": "R2 organizational routing and context retrieval. No authority, credential, production, or risk-ceiling change.",
+  "rollback": "Revert this change. Prior SELF-vs-delegate routing remains valid. No live credential or production state is modified.",
+  "dependencies": ["HOWL-009"],
+  "non_goals": [
+    "Re-implementing HowlPlane Factory, routing, failover, or evidence",
+    "Raising Runtime Context v2 standing-context budgets",
+    "A second executor runner for when every HowlPlane entrypoint is down",
+    "Live Grok redeployment"
+  ],
+  "evidence": [
+    "reports/work-items/HOWL-010/implementation.md",
+    "adr/0006-howlplane-first-execution.md"
+  ],
+  "context_budget": {
+    "engineering-manager": {"before": 5803, "after": 5924, "limit": 6000},
+    "product": {"before": 3913, "after": 3913, "limit": 5000},
+    "rnd": {"before": 4006, "after": 4006, "limit": 5000},
+    "dev-lead": {"before": 4989, "after": 4968, "limit": 5000},
+    "assurance": {"before": 4379, "after": 4379, "limit": 5500},
+    "auditor": {"before": 3970, "after": 3970, "limit": 5500},
+    "budgets_raised": false,
+    "howlplane_modified": false
+  },
+  "implementation_path": "SELF coordination in HowlFutureWorks; HowlPlane CLI inspected, not modified",
+  "independent_verification": "required; Assurance not yet performed",
+  "product_definition": null,
+  "implementation_report": "reports/work-items/HOWL-010/implementation.md"
+}

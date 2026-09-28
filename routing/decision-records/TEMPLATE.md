@@ -4,7 +4,8 @@
 - Work item:
 - Task class: trivial | simple | bounded | complex | critical
 - Risk tier: R0–R4
-- Decision: SELF | delegate:<executor-id>
+- Decision: SELF | HOWLPLANE then executor:<executor-id>
+- Substrate: SELF | HOWLPLANE | governed recovery (orchestration only)
 - Expected value / why not SELF:
 - Eligible profiles considered:
 - Hard constraints (tools/risk/quota/privilege):

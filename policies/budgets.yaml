@@ -37,6 +37,8 @@ agent_runtime:
     completion_summary_chars: 1500
   delegation:
     decide_by: expected_value
+    delegated_substrate: howlplane
+    raw_executor_cli: not_normalized
     prefer_external_executor_for:
     - multi_file_implementation
     - repeated_test_fix_cycles

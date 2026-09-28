@@ -6,6 +6,7 @@ canonical:
   registry: routing/capability-registry.yaml
   fallback: routing/fallback-policy.yaml
   participation: routing/participation-policy.yaml
+  execution_substrate: routing/execution-substrate.yaml
 rules:
   provider_loyalty: forbidden
   permanent_ranking: forbidden
@@ -16,6 +17,9 @@ rules:
   complexity_does_not_override_risk: true
   quota_outage_may_lower_assurance: false
   prefer_least_cost_executor_meeting_quality_bar: true
+  delegated_implementation_substrate: howlplane
+  raw_executor_cli: not_normalized
+  howlplane_failure_is_governance_bypass: false
   demand_driven_persistent_participation: true
   full_workflow_mandatory_by_default: false
   capacity_may_lower_assurance: false

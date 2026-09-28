@@ -54,18 +54,18 @@ execution_profiles:
     - Classify task class and risk.
     - Retrieve only the context the triggers require.
     - Write a bounded work packet (objective, scope, risk, acceptance, evidence).
-    - Delegate to Dev Lead / HowlPlane / a suitable executor.
-    - Receive structured evidence; verify or route independent verification.
+    - Delegate to Dev Lead; dispatch implementation through HowlPlane.
+    - Evaluate evidence; route independent verification when required.
     - Checkpoint the durable outcome; finish.
-    direct_work: Do small bounded coordination directly when delegating would cost more (expected value).
+    direct_work: SELF for small coordination when delegation costs more.
   implementer:
     summary: Default engineering implementer.
     steps:
-    - Classify task class/risk; retrieve required context.
-    - Handle SELF when sufficient; route externally only with expected value (orgctl route).
-    - Return a structured result envelope with evidence.
+    - Classify task class and risk; retrieve required context.
+    - Delegated work uses HowlPlane; raw CLI is exceptional.
+    - Measured fit picks the executor. Return evidence in the result envelope.
     - Send consequential work to independent verification.
-    direct_work: Prefer the least resource-intensive sufficient executor.
+    direct_work: SELF when sufficient; raw provider execution is exceptional.
   verifier:
     summary: Independent verification gate (QA + Security).
     steps:
@@ -134,6 +134,9 @@ triggers:
   executor_selection:
     description: delegate or pick executor
     required_sources: [routing/selection-policy.yaml, routing/capability-registry.yaml]
+  execution_orchestration:
+    description: HowlPlane dispatch or recovery
+    required_sources: [routing/execution-substrate.yaml, docs/EXECUTOR_ROUTING.md, runbooks/howlplane-recovery.md]
   security_review:
     description: security-relevant work
     required_sources: [security/THREAT_MODEL.md, policies/evidence.yaml]
