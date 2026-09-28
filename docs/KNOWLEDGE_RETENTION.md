@@ -34,6 +34,10 @@ See `docs/INSTITUTIONAL_MEMORY.md` for the full promotion ladder and successor-c
 
 A checkpoint, position-knowledge entry, or ADR is written once and read by every future session/worker that needs it. Do not re-derive or re-explain something already recorded — reference it (`ADR-000N`, `knowledge/positions/<id>.md`, a commit or report path) instead of restating it.
 
+## Checkpoint and reset
+
+After a work item is verified and its durable items are checkpointed, task-local conversation history is disposable and should not be carried into unrelated work. See the lifecycle in `docs/CONTEXT_STRATEGY.md` and `task_lifecycle` in `policies/runtime-contract.yaml`.
+
 ## Numeric budgets
 
 Canonical numeric limits live in `policies/budgets.yaml` (`knowledge_artifacts.*`, `guidance.*`, `defaults.context_checkpoint_threshold_percent`) and in `organization.yaml` (`employee_continuity_budget_chars`). This document does not restate those numbers — read the policy files for current values.

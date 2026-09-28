@@ -709,32 +709,12 @@ def validate():
             if bot.get("staffing_authority") not in {"owner","engineering-manager"}: errors.append(f"invalid staffing_authority for {bid}")
             for rel in [f"bots/{bid}/instructions.md",f"bots/{bid}/context.yaml",f"bots/{bid}/boundaries.yaml"]:
                 if not (ROOT/rel).exists(): errors.append(f"missing {rel}")
-            ctxp=ROOT/f"bots/{bid}/context.yaml"
-            if ctxp.exists():
-                ctx=load_yaml(ctxp) or {}
-                always=ctx.get("always_load",[])
-                for req_policy in ("policies/memory.yaml","policies/budgets.yaml"):
-                    if req_policy not in always:
-                        errors.append(f"{bid} context.yaml always_load missing {req_policy}")
-                kp=ROOT/f"knowledge/positions/{bid}.md"
-                pkf_limit=ka.get("position_knowledge_file_chars")
-                if kp.exists() and isinstance(pkf_limit,int):
-                    size=len(kp.read_text())
-                    if size>pkf_limit:
-                        errors.append(f"knowledge/positions/{bid}.md exceeds position_knowledge_file_chars: {size}>{pkf_limit}")
-                budget=ctx.get("budget_chars")
-                if not isinstance(budget,int) or budget<2000:
-                    errors.append(f"{bid} context budget_chars must be an integer >= 2000")
-                estimated=0
-                for rel in ctx.get("always_load",[]):
-                    if "*" in rel: errors.append(f"{bid} always_load cannot contain wildcard: {rel}")
-                    elif not (ROOT/rel).exists(): errors.append(f"{bid} context missing {rel}")
-                    elif (ROOT/rel).is_file(): estimated += len((ROOT/rel).read_text())
-                for name in ["instructions.md","capabilities.yaml","boundaries.yaml"]:
-                    q=ROOT/f"bots/{bid}/{name}"
-                    if q.exists(): estimated += len(q.read_text())
-                if isinstance(budget,int) and estimated>budget:
-                    errors.append(f"{bid} always-load context exceeds budget: {estimated}>{budget} chars")
+            kp=ROOT/f"knowledge/positions/{bid}.md"
+            pkf_limit=ka.get("position_knowledge_file_chars")
+            if kp.exists() and isinstance(pkf_limit,int):
+                size=len(kp.read_text())
+                if size>pkf_limit:
+                    errors.append(f"knowledge/positions/{bid}.md exceeds position_knowledge_file_chars: {size}>{pkf_limit}")
             bp=ROOT/f"bots/{bid}/boundaries.yaml"
             if bp.exists():
                 bounds=load_yaml(bp) or {}
@@ -742,6 +722,12 @@ def validate():
                 if bounds.get("self_authority_change")!="forbidden": errors.append(f"self authority change must be forbidden for {bid}")
         if len(ids)!=len(set(ids)): errors.append("duplicate position/bot ids")
     except Exception as e: errors.append(f"manifest: {e}")
+
+    # Runtime Context v2: compiled standing contracts and retrieval triggers.
+    try:
+        validate_runtime_contracts(errors)
+    except Exception as e:
+        errors.append(f"runtime contract validation: {e}")
 
     # Workforce current state and durable records.
     emps=[]; eids=[]; profiles={}
@@ -892,35 +878,324 @@ def list_workforce(include_departed=True):
         print(f"{e['employee_id']:<23} {e.get('status','?'):<15} {e.get('position_id','?'):<22} {e.get('display_name','')}")
 
 
+# Runtime Context v2 (policies/runtime-contract.yaml, docs/CONTEXT_STRATEGY.md).
+# Standing context is a compiled contract; detailed sources are retrieved per trigger.
+RUNTIME_POLICY="policies/runtime-contract.yaml"
+REQUIRED_RUNTIME_INVARIANTS=(
+    "owner_final_authority","no_self_escalation","fail_closed_approvals","exact_approval_binding",
+    "untrusted_external_content","independent_verification","evidence_required","no_secrets",
+    "memory_non_authoritative","reversible_scoped_actions","refresh_before_consequential","retrieve_on_trigger",
+)
+# Minimum authoritative sources a trigger must always retrieve (cannot be removed by policy edits).
+REQUIRED_TRIGGER_SOURCES={
+    "authority_question":("CHARTER.md","policies/approvals.yaml"),
+    "risk_classification":("policies/risk-tiers.yaml",),
+    "knowledge_checkpoint":("policies/memory.yaml","policies/budgets.yaml"),
+    "evidence_verification":("policies/evidence.yaml",),
+}
+LEGACY_CONTEXT_KEYS=("always_load","load_on_demand","budget_chars")
+# Boundary flags already stated by a rendered invariant; still validated structurally.
+BOUNDARIES_COVERED_BY_INVARIANTS={
+    "self_authority_change":"no_self_escalation",
+    "fail_closed_on_missing_required_approval":"fail_closed_approvals",
+    "secrets_in_prompt":"no_secrets",
+}
+
+
+def _md_sections(text):
+    """Split Markdown into [(h2 heading, body)] preserving order."""
+    out=[]; head=None; buf=[]
+    for line in text.splitlines():
+        if line.startswith("## "):
+            if head is not None: out.append((head,"\n".join(buf).strip()))
+            head=line[3:].strip(); buf=[]
+        elif head is not None:
+            buf.append(line)
+    if head is not None: out.append((head,"\n".join(buf).strip()))
+    return out
+
+
+def _flag_text(key):
+    return key.removeprefix("can_").replace("_"," ")
+
+
+def compile_runtime_contract(bot, base=None):
+    """Pure, deterministic compilation of a position's standing runtime contract.
+
+    Reads position definition + shared runtime policy only. Never reads employee
+    continuity material (workforce/people/); that is render-employee's job.
+    """
+    base=base or ROOT/f"bots/{bot}"
+    if not base.exists(): raise SystemExit(f"unknown position {bot}")
+    ctx=load_yaml(base/"context.yaml") or {}
+    policy=load_yaml(ROOT/RUNTIME_POLICY) or {}
+    runtime=(load_yaml(ROOT/"policies/budgets.yaml") or {}).get("agent_runtime") or {}
+    org=organization()
+    pos=next((b for b in manifest().get("bots",[]) if b.get("id")==bot),{})
+    bounds=load_yaml(base/"boundaries.yaml") or {}
+    caps=load_yaml(base/"capabilities.yaml") or {}
+    ip=base/"instructions.md"
+    role_rules=[(h,b) for h,b in _md_sections(ip.read_text() if ip.exists() else "") if h.lower()!="invariants" and b]
+    lessons=""
+    kp=ROOT/str(ctx.get("position_knowledge",""))
+    if ctx.get("position_knowledge") and kp.is_file():
+        lessons=next((b for h,b in _md_sections(kp.read_text()) if h.lower()=="durable lessons"),"")
+    profile_id=ctx.get("execution_profile")
+    ptriggers=policy.get("triggers") or {}
+    triggers=[]
+    for name,extras in (ctx.get("retrieve_when") or {}).items():
+        meta=ptriggers.get(name) or {}
+        sources=[]
+        for src in list(meta.get("required_sources") or [])+list(extras or []):
+            if src not in sources: sources.append(src)
+        triggers.append({"name":name,"description":meta.get("description",""),"sources":sources})
+    return {
+        "organization":{"display_name":org.get("display_name"),"purpose":org.get("purpose"),"provider_neutral":bool(policy.get("provider_neutral"))},
+        "position":{"id":bot,"name":pos.get("name",bot),"role":pos.get("role"),"risk_ceiling":bounds.get("risk_ceiling")},
+        "execution_profile_id":profile_id,
+        "execution_profile":(policy.get("execution_profiles") or {}).get(profile_id) or {},
+        "canonical_state":list(policy.get("canonical_state") or []),
+        "invariants":list(policy.get("invariants") or []),
+        "boundaries":{k:v for k,v in bounds.items() if k not in ("bot_id","risk_ceiling")},
+        "capabilities":{k:v for k,v in caps.items() if k!="bot_id"},
+        "role_rules":role_rules,
+        "runtime_limits":runtime,
+        "task_lifecycle":policy.get("task_lifecycle") or {},
+        "communication":policy.get("communication") or {},
+        "triggers":triggers,
+        "position_lessons":lessons,
+        "position_knowledge":ctx.get("position_knowledge"),
+        "continuity":policy.get("continuity") or {},
+        "standing_budget_chars":ctx.get("standing_budget_chars"),
+    }
+
+
+def format_runtime_contract(c):
+    """Deterministic Markdown projection of a compiled contract (no timestamps)."""
+    p=c["position"]; o=c["organization"]; prof=c["execution_profile"]; rl=c["runtime_limits"]
+    L=[f"# {o['display_name']} Runtime Contract: {p['name']}",""]
+    role="" if p["role"]==p["id"] else f" (role `{p['role']}`)"
+    L.append(f"Position `{p['id']}`{role}. Risk ceiling: {p['risk_ceiling']}. Profile: {c['execution_profile_id']}.")
+    L.append("Compiled, provider-neutral; the Git sources below are authoritative.")
+    L+=["","## Canonical state"]+[f"- {s}" for s in c["canonical_state"]]
+    L+=["","## Invariants"]+[f"- {i['text']}" for i in c["invariants"]]
+    b=c["boundaries"]; caps=c["capabilities"]
+    L+=["","## Authority"]
+    extra={k:v for k,v in b.items() if k not in BOUNDARIES_COVERED_BY_INVARIANTS}
+    if extra: L.append("- Boundaries: "+"; ".join(f"{k.replace('_',' ')}={'yes' if v is True else 'no' if v is False else v}" for k,v in extra.items())+".")
+    may=[_flag_text(k) for k,v in caps.items() if v is True]
+    maynot=[_flag_text(k) for k,v in caps.items() if v is False]
+    if may: L.append("- May: "+", ".join(may)+".")
+    if maynot: L.append("- May not: "+", ".join(maynot)+".")
+    L.append("- Above risk ceiling or approval needed: stop, request approval, fail closed.")
+    L+=["","## Role"]
+    for h,body in c["role_rules"]:
+        L.append(f"- {h}: "+" ".join(body.split()))
+    L+=["",f"## Execution ({c['execution_profile_id']})",prof.get("summary","")]
+    L+=[f"{n}. {s}" for n,s in enumerate(prof.get("steps") or [],1)]
+    if prof.get("direct_work"): L.append(f"Direct work: {prof['direct_work']}")
+    dele=rl.get("delegation") or {}
+    if c["execution_profile_id"] in ("coordinator","implementer") and dele.get("prefer_external_executor_for"):
+        L.append(f"Prefer delegation ({dele.get('decide_by','expected_value').replace('_',' ')}) for: "+", ".join(x.replace('_',' ') for x in dele["prefer_external_executor_for"])+".")
+    ex=rl.get("exploration") or {}; pl=rl.get("planning") or {}; rt=rl.get("retries") or {}; cb=rl.get("circuit_breaker") or {}
+    L.append(
+        "Limits (escalate, not hard stops): "
+        f"initial reads <= {ex.get('initial_source_reads_max')}; broad repo scan {ex.get('broad_repo_scan_default')}; "
+        f"plan passes {pl.get('initial_planning_passes_max')}, replans <= {pl.get('replans_per_work_item_max')}; "
+        f"same-failure retries <= {rt.get('same_failure_class_max')}, blind retry {rt.get('blind_retry')}; "
+        f"circuit breaker: {cb.get('repeated_same_failure')} repeated failures, {cb.get('no_progress_attempts')} no-progress attempt, or usage spike."
+    )
+    tl=c["task_lifecycle"]
+    L+=["","## Task lifecycle and checkpoint"," -> ".join(tl.get("steps") or [])]
+    L.append("Persist only: "+", ".join(x.replace('_',' ') for x in tl.get("persist") or [])+f". Chain-of-thought: {tl.get('store_chain_of_thought')}.")
+    cm=c["communication"]; comm=rl.get("communication") or {}
+    L+=["","## Communication",f"Progress updates: {cm.get('progress_updates','').replace('_',' ')}. Report when: "+"; ".join(cm.get("report_when") or [])+f". Completion summary <= {comm.get('completion_summary_chars')} chars."]
+    L+=["","## Retrieve when"]+[f"- {t['name']} ({t['description']}): "+", ".join(t["sources"]) for t in c["triggers"]]
+    if c["position_lessons"]:
+        L+=["",f"## Position lessons ({c['position_knowledge']})",c["position_lessons"]]
+    cont=c["continuity"]
+    L+=["","## Continuity",f"Employee history/handoffs are not standing context; `orgctl {cont.get('employee_continuity_only_via','render-employee')}` only for: "+", ".join(x.replace('_',' ') for x in cont.get("employee_continuity_use") or [])+"."]
+    return "\n".join(L)+"\n"
+
+
+def contract_guarantee_errors(c):
+    """Structural checks that a compiled contract carries required guarantees."""
+    errs=[]; bid=c["position"]["id"]
+    if c["position"].get("risk_ceiling") not in RISKS: errs.append(f"{bid} runtime contract lacks valid risk ceiling")
+    if not c["organization"].get("display_name"): errs.append(f"{bid} runtime contract lacks organization identity")
+    if not c["organization"].get("provider_neutral"): errs.append(f"{bid} runtime contract must be provider-neutral")
+    ids={i.get("id") for i in c["invariants"] if isinstance(i,dict)}
+    for req in REQUIRED_RUNTIME_INVARIANTS:
+        if req not in ids: errs.append(f"{bid} runtime contract missing invariant {req}")
+    if c["boundaries"].get("self_authority_change")!="forbidden": errs.append(f"{bid} runtime contract must forbid self authority change")
+    if c["boundaries"].get("fail_closed_on_missing_required_approval") is not True: errs.append(f"{bid} runtime contract must fail closed on missing required approval")
+    if c["capabilities"].get("can_self_escalate") is not False: errs.append(f"{bid} runtime contract must set can_self_escalate false")
+    if not c["canonical_state"]: errs.append(f"{bid} runtime contract lacks canonical state rules")
+    if not c["execution_profile"].get("steps"): errs.append(f"{bid} runtime contract lacks execution profile steps")
+    if c["task_lifecycle"].get("store_chain_of_thought")!="forbidden": errs.append(f"{bid} runtime contract must forbid storing chain-of-thought")
+    if not c["task_lifecycle"].get("persist"): errs.append(f"{bid} runtime contract lacks checkpoint persistence rules")
+    if c["continuity"].get("standing_context_includes_employee_history") is not False: errs.append(f"{bid} runtime contract must exclude employee history")
+    names={t["name"]:t for t in c["triggers"]}
+    for trig,srcs in REQUIRED_TRIGGER_SOURCES.items():
+        if trig not in names: errs.append(f"{bid} runtime contract missing required trigger {trig}")
+        else:
+            for s in srcs:
+                if s not in names[trig]["sources"]: errs.append(f"{bid} trigger {trig} missing required source {s}")
+    return errs
+
+
+def _source_exists(rel):
+    if "*" in rel: return any(ROOT.glob(rel.rstrip("/")))
+    return (ROOT/rel).exists()
+
+
+def validate_runtime_contracts(errors):
+    """Runtime Context v2 invariants: policy, per-position context, compiled output."""
+    pp=ROOT/RUNTIME_POLICY
+    if not pp.exists():
+        errors.append(f"missing {RUNTIME_POLICY}"); return
+    policy=load_yaml(pp) or {}
+    budgets=load_yaml(ROOT/"policies/budgets.yaml") or {}
+    memory=load_yaml(ROOT/"policies/memory.yaml") or {}
+    approvals=load_yaml(ROOT/"policies/approvals.yaml") or {}
+    rt=budgets.get("agent_runtime") or {}
+
+    # Shared policy.
+    if policy.get("provider_neutral") is not True: errors.append("runtime-contract: provider_neutral must be true")
+    inv=policy.get("invariants") or []
+    ids=[i.get("id") for i in inv if isinstance(i,dict)]
+    if len(ids)!=len(set(ids)): errors.append("runtime-contract: duplicate invariant ids")
+    for req in REQUIRED_RUNTIME_INVARIANTS:
+        if req not in ids: errors.append(f"runtime-contract: missing required invariant {req}")
+    for i in inv:
+        if not isinstance(i,dict) or not i.get("text") or not i.get("source"):
+            errors.append(f"runtime-contract: invariant needs id/text/source: {i}"); continue
+        if not (ROOT/i["source"]).exists(): errors.append(f"runtime-contract: invariant {i.get('id')} source missing {i['source']}")
+    if memory.get("rules",{}).get("bot_memory_is_authoritative") is not False:
+        errors.append("runtime-contract: policies/memory.yaml bot_memory_is_authoritative must be false")
+    if approvals.get("rules",{}).get("fail_closed_if_required_approval_unavailable") is not True:
+        errors.append("runtime-contract: approvals fail_closed_if_required_approval_unavailable must be true")
+    ptrig=policy.get("triggers") or {}
+    for name,meta in ptrig.items():
+        for src in (meta or {}).get("required_sources") or []:
+            if not _source_exists(src): errors.append(f"runtime-contract: trigger {name} source missing {src}")
+    for name,srcs in REQUIRED_TRIGGER_SOURCES.items():
+        have=set(((ptrig.get(name) or {}).get("required_sources")) or [])
+        for s in srcs:
+            if s not in have: errors.append(f"runtime-contract: trigger {name} must require {s}")
+    req=policy.get("required_triggers") or {}
+    all_req=list(req.get("all_positions") or [])
+    for name in REQUIRED_TRIGGER_SOURCES:
+        if name not in all_req: errors.append(f"runtime-contract: required_triggers.all_positions missing {name}")
+    by_cap=req.get("by_capability") or {}
+    for name in all_req+list(by_cap.values()):
+        if name not in ptrig: errors.append(f"runtime-contract: required trigger {name} not defined")
+    tl=policy.get("task_lifecycle") or {}
+    if tl.get("store_chain_of_thought")!="forbidden": errors.append("runtime-contract: task_lifecycle.store_chain_of_thought must be forbidden")
+    if tl.get("discard_task_local_history_after_checkpoint") is not True: errors.append("runtime-contract: task_lifecycle.discard_task_local_history_after_checkpoint must be true")
+    cont=policy.get("continuity") or {}
+    if cont.get("standing_context_includes_employee_history") is not False: errors.append("runtime-contract: continuity.standing_context_includes_employee_history must be false")
+    forbidden_prefixes=tuple(cont.get("forbidden_retrieval_prefixes") or ())
+    if "workforce/people/" not in forbidden_prefixes: errors.append("runtime-contract: continuity.forbidden_retrieval_prefixes must include workforce/people/")
+    profiles=policy.get("execution_profiles") or {}
+
+    # Efficiency policy.
+    max_chars=rt.get("standing_context_max_chars")
+    if not isinstance(max_chars,int) or max_chars<2000: errors.append("budgets: agent_runtime.standing_context_max_chars must be an integer >= 2000")
+    cpt=rt.get("token_estimate_chars_per_token")
+    if not isinstance(cpt,int) or cpt<=0: errors.append("budgets: agent_runtime.token_estimate_chars_per_token must be a positive integer")
+    retry=(rt.get("retries") or {}).get("same_failure_class_max")
+    cap=(budgets.get("defaults") or {}).get("max_retries_per_failure_class")
+    if not isinstance(retry,int) or retry<0 or (isinstance(cap,int) and retry>cap):
+        errors.append(f"budgets: agent_runtime.retries.same_failure_class_max must be an integer 0..{cap} (defaults.max_retries_per_failure_class)")
+    if (rt.get("retries") or {}).get("blind_retry")!="forbidden": errors.append("budgets: agent_runtime.retries.blind_retry must be forbidden")
+    if (rt.get("exploration") or {}).get("broad_repo_scan_default")!="forbidden": errors.append("budgets: agent_runtime.exploration.broad_repo_scan_default must be forbidden")
+    if rt.get("limits_are_escalation_points_not_hard_stops") is not True: errors.append("budgets: agent_runtime.limits_are_escalation_points_not_hard_stops must be true")
+    continuity_budget=organization().get("employee_continuity_budget_chars")
+
+    # Per position.
+    for bot in manifest().get("bots",[]):
+        bid=bot.get("id"); ctxp=ROOT/f"bots/{bid}/context.yaml"
+        if not ctxp.exists(): continue
+        ctx=load_yaml(ctxp) or {}
+        legacy=[k for k in LEGACY_CONTEXT_KEYS if k in ctx]
+        if legacy:
+            errors.append(f"{bid} context.yaml uses legacy v1 context schema ({', '.join(legacy)}); migrate to retrieve_when")
+            continue
+        before=len(errors)
+        validate_instance(ctx,ROOT/"schemas/position-context.schema.json",f"bots/{bid}/context.yaml",errors)
+        if len(errors)>before: continue
+        if ctx["execution_profile"] not in profiles: errors.append(f"{bid} unknown execution_profile {ctx['execution_profile']}")
+        if ctx["position_knowledge"]!=f"knowledge/positions/{bid}.md": errors.append(f"{bid} position_knowledge must be knowledge/positions/{bid}.md")
+        elif not (ROOT/ctx["position_knowledge"]).is_file(): errors.append(f"{bid} missing {ctx['position_knowledge']}")
+        budget=ctx["standing_budget_chars"]
+        if isinstance(max_chars,int) and budget>max_chars: errors.append(f"{bid} standing_budget_chars exceeds agent_runtime.standing_context_max_chars: {budget}>{max_chars}")
+        if isinstance(continuity_budget,int) and budget>=continuity_budget: errors.append(f"{bid} standing_budget_chars must be below employee_continuity_budget_chars")
+        rw=ctx["retrieve_when"]
+        for name,srcs in rw.items():
+            if name not in ptrig: errors.append(f"{bid} unknown retrieval trigger {name}")
+            for src in srcs:
+                if src.startswith("/") or ".." in src.split("/"): errors.append(f"{bid} trigger {name} path must be repo-relative: {src}")
+                elif forbidden_prefixes and src.startswith(forbidden_prefixes): errors.append(f"{bid} trigger {name} may not retrieve continuity/build material: {src}")
+                elif not _source_exists(src): errors.append(f"{bid} trigger {name} source missing {src}")
+        for name in all_req:
+            if name not in rw: errors.append(f"{bid} retrieve_when missing required trigger {name}")
+        caps=load_yaml(ROOT/f"bots/{bid}/capabilities.yaml") or {}
+        for flag,name in by_cap.items():
+            if caps.get(flag) is True and name not in rw: errors.append(f"{bid} has {flag} but retrieve_when lacks {name}")
+        try:
+            contract=compile_runtime_contract(bid)
+            errors.extend(contract_guarantee_errors(contract))
+            size=len(format_runtime_contract(contract))
+            if size>budget: errors.append(f"{bid} runtime contract exceeds standing_budget_chars: {size}>{budget} chars")
+        except SystemExit as e: errors.append(str(e))
+
+
 def context(bot):
     p=ROOT/f"bots/{bot}/context.yaml"
     if not p.exists(): raise SystemExit(f"unknown position {bot}")
-    data=load_yaml(p) or {}
-    print(f"budget_chars: {data.get('budget_chars','unset')}")
-    for k in ("always_load","load_on_demand"):
-        print(f"{k}:")
-        for x in data.get(k,[]): print(f"  - {x}")
+    c=compile_runtime_contract(bot)
+    print(f"standing_budget_chars: {c['standing_budget_chars']}")
+    print(f"standing: build/bots/{bot}.md (compiled by render-bot)")
+    print(f"execution_profile: {c['execution_profile_id']}")
+    print(f"position_knowledge: {c['position_knowledge']}")
+    print("retrieve_when:")
+    for t in c["triggers"]:
+        print(f"  {t['name']}:")
+        for s in t["sources"]: print(f"    - {s}")
 
 
 def render_bot(bot, proposal=False):
     base=ROOT/(f"bots/proposals/{bot}" if proposal else f"bots/{bot}")
-    if not base.exists(): raise SystemExit(f"unknown position {bot}")
-    ctx=load_yaml(base/"context.yaml") or {}
-    parts=[f"# Rendered Position Bundle: {bot}\n"]
-    for rel in ctx.get("always_load",[]):
-        p=ROOT/rel
-        if p.is_file(): parts.append(f"\n---\n## SOURCE: {rel}\n\n{p.read_text()}\n")
-    for name in ["instructions.md","capabilities.yaml","boundaries.yaml"]:
-        p=base/name
-        if p.exists(): parts.append(f"\n---\n## SOURCE: {p.relative_to(ROOT)}\n\n{p.read_text()}\n")
-    bundle="".join(parts)
-    budget=ctx.get("budget_chars")
-    if isinstance(budget,int) and len(bundle)>budget:
+    contract=compile_runtime_contract(bot,base)
+    bundle=format_runtime_contract(contract)
+    budget=contract["standing_budget_chars"]
+    if not isinstance(budget,int):
+        raise SystemExit(f"{bot} context.yaml lacks standing_budget_chars (Runtime Context v2)")
+    if len(bundle)>budget:
         raise SystemExit(f"rendered context for {bot} exceeds budget: {len(bundle)}>{budget} chars")
     out=ROOT/f"build/bots/{bot}.md"; out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text(bundle)
     digest=hashlib.sha256(out.read_bytes()).hexdigest()
     print(f"{out.relative_to(ROOT)} sha256={digest}")
+
+
+def context_report(as_json=False):
+    cpt=((load_yaml(ROOT/"policies/budgets.yaml") or {}).get("agent_runtime") or {}).get("token_estimate_chars_per_token",4)
+    rows=[]
+    for b in manifest().get("bots",[]):
+        c=compile_runtime_contract(b["id"]); text=format_runtime_contract(c); budget=c["standing_budget_chars"]
+        rows.append({
+            "position":b["id"],"status":b.get("status"),"chars":len(text),"bytes":len(text.encode()),
+            "approx_tokens":-(-len(text)//cpt),"budget_chars":budget,
+            "budget_percent":round(100*len(text)/budget,1) if isinstance(budget,int) and budget else None,
+            "triggers":len(c["triggers"]),"retrievable_sources":sum(len(t["sources"]) for t in c["triggers"]),
+        })
+    if as_json:
+        print(json.dumps({"token_estimate":f"ceil(chars/{cpt})","positions":rows},indent=2)); return
+    print(f"POSITION               CHARS BYTES ~TOKENS BUDGET  USED%  TRIGGERS SOURCES   (tokens ~= chars/{cpt})")
+    for r in rows:
+        print(f"{r['position']:<22} {r['chars']:<5} {r['bytes']:<5} {r['approx_tokens']:<7} {r['budget_chars']:<7} {r['budget_percent']:<6} {r['triggers']:<8} {r['retrievable_sources']}")
 
 
 def render_all():
@@ -993,7 +1268,9 @@ def scaffold_bot(args):
     dst.mkdir(parents=True)
     (dst/"README.md").write_text(f"# {args.name}\n\nCandidate persistent **position** proposal. Not active or staffed until reviewed.\n")
     (dst/"instructions.md").write_text(f"# Operating instructions\n\n## Purpose\n\n{args.purpose.strip()}\n\n## Invariants\n\n- Follow AGENTS.md and policy.\n- Do not self-escalate.\n- Return evidence and handoffs.\n")
-    dump_yaml({"budget_chars":12000,"always_load":["AGENTS.md","organization.yaml",f"roles/{args.role}.md","policies/risk-tiers.yaml"],"load_on_demand":["CHARTER.md","knowledge/company/","runbooks/","workforce/"]},dst/"context.yaml")
+    dump_yaml({"schema_version":2,"standing_budget_chars":5000,"execution_profile":"advisor","position_knowledge":f"knowledge/positions/{args.id}.md","retrieve_when":{
+        "authority_question":[],"risk_classification":[],"knowledge_checkpoint":["knowledge/company/"],"evidence_verification":[],"external_action":[],
+        "incident_response":["runbooks/"],"role_detail":["AGENTS.md","organization.yaml",f"roles/{args.role}.md"]}},dst/"context.yaml")
     dump_yaml({"bot_id":args.id,"can_delegate":False,"can_modify_bot_definitions":False,"can_propose_policy_changes":True,"can_self_escalate":False},dst/"capabilities.yaml")
     dump_yaml({"bot_id":args.id,"risk_ceiling":args.risk,"secrets_in_prompt":"forbidden","self_authority_change":"forbidden","fail_closed_on_missing_required_approval":True},dst/"boundaries.yaml")
     dump_yaml({"bot_id":args.id,"skills":[]},dst/"skills.yaml")
@@ -1171,7 +1448,7 @@ def about():
 
 def bootstrap_plan():
     print("1 validate repository and workforce records")
-    print("2 render active position bundles and current employee continuity bundles")
+    print("2 render compiled position runtime contracts; render employee continuity bundles only for onboarding/handoff")
     print("3 inventory live Grok roster/configuration and map live IDs to workforce employees")
     print("4 compare desired positions + workforce vs deployed fingerprints")
     print("5 auto-reconcile only within existing authority")
@@ -1188,6 +1465,7 @@ def main():
     r=sub.add_parser("render-bot"); r.add_argument("bot")
     re=sub.add_parser("render-employee"); re.add_argument("employee_id")
     sub.add_parser("render-all"); sub.add_parser("fingerprints"); sub.add_parser("bootstrap-plan")
+    cr=sub.add_parser("context-report",help="standing runtime-contract size per position"); cr.add_argument("--json",action="store_true")
     s=sub.add_parser("scaffold-bot"); s.add_argument("id"); s.add_argument("--name",required=True); s.add_argument("--role",required=True); s.add_argument("--risk",default="R1"); s.add_argument("--purpose",required=True)
     h=sub.add_parser("propose-hire"); h.add_argument('employee_id'); h.add_argument('--name',required=True); h.add_argument('--position',required=True); h.add_argument('--manager',required=True); h.add_argument('--provider',default='grok-bot'); h.add_argument('--predecessor'); h.add_argument('--generation',type=int)
     sp=sub.add_parser("propose-separation"); sp.add_argument('employee_id'); sp.add_argument('--type',required=True); sp.add_argument('--reason',required=True)
@@ -1217,6 +1495,7 @@ def main():
     if a.cmd=="render-employee": render_employee(a.employee_id)
     if a.cmd=="employee-history": employee_history(a.employee_id)
     if a.cmd=="render-all": render_all()
+    if a.cmd=="context-report": context_report(a.json)
     if a.cmd=="fingerprints": fingerprints()
     if a.cmd=="bootstrap-plan": bootstrap_plan()
     if a.cmd=="scaffold-bot": scaffold_bot(a)

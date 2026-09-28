@@ -1,0 +1,56 @@
+{
+  "id": "HOWL-009",
+  "title": "Runtime Context v2: compiled runtime contracts for persistent Bots",
+  "status": "open",
+  "phase": "assurance",
+  "risk_tier": "R2",
+  "priority": "high",
+  "opened_on": "2026-09-28",
+  "owner": "engineering-manager",
+  "owner_employee_id": "bot-engmgr-0001",
+  "org_repository": "https://github.com/howlcipher/HowlFutureWorks",
+  "org_main_sha_at_open": "439f8238a99a21a87f83fa1ed7f780539b19ddd8",
+  "branch": "feat/runtime-context-v2",
+  "predecessor": "HOWL-008",
+  "problem": "orgctl render-bot built standing Bot context by concatenating every always_load file plus instructions, capabilities and boundaries, so the same invariants were repeated across many sources and standing context ran from about 9.9k to 15.4k chars per position before any task context.",
+  "desired_outcome": "Persistent positions receive a compact, provider-neutral compiled runtime contract with retrieval triggers; canonical sources remain authoritative in Git; governance invariants are validated structurally; efficiency is measurable.",
+  "evidence": [
+    "reports/work-items/HOWL-009/implementation.md",
+    "adr/0005-runtime-context-v2.md"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Engineering Manager standing context <= 6,000 chars; product/rnd/dev-lead <= 5,000; assurance/auditor <= 5,500",
+    "Standing context is compiled, not concatenated source files",
+    "Required invariants, risk ceiling, fail-closed, memory non-authoritativeness, evidence/verification and checkpoint rules are machine-validated",
+    "Retrieval triggers exist and every previously loaded source remains reachable",
+    "Employee continuity is excluded from routine runtime context",
+    "Context size is measurable via orgctl context-report",
+    "orgctl validate, render-all and make audit pass",
+    "No approval, verification, evidence, authority or risk-ceiling requirement is weakened"
+  ],
+  "nonfunctional_requirements": [
+    "provider-neutral",
+    "deterministic rendering",
+    "no canonical policy or knowledge deletion",
+    "no context budget increases"
+  ],
+  "non_goals": [
+    "collecting runtime efficiency telemetry",
+    "live Grok Bot redeployment",
+    "version bump"
+  ],
+  "context_budget_preflight": {
+    "engineering-manager": {"before": 15370, "after": 5803, "limit": 6000},
+    "product": {"before": 9939, "after": 3913, "limit": 5000},
+    "rnd": {"before": 10049, "after": 4006, "limit": 5000},
+    "dev-lead": {"before": 10331, "after": 4989, "limit": 5000},
+    "assurance": {"before": 10784, "after": 4379, "limit": 5500},
+    "auditor": {"before": 10515, "after": 3970, "limit": 5500},
+    "budgets_raised": false
+  },
+  "implementation_path": "external executor (Claude Code) at Owner request",
+  "independent_verification": "required; Assurance not yet performed",
+  "product_definition": null,
+  "implementation_report": "reports/work-items/HOWL-009/implementation.md"
+}

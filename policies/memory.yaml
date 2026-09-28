@@ -35,4 +35,5 @@ promotion:
     safe to retain, and unlikely to go stale quickly.
   prefer_reference_over_duplication: true
 numeric_budgets_defined_in: policies/budgets.yaml
+task_lifecycle_defined_in: policies/runtime-contract.yaml
 knowledge_retention_guide: docs/KNOWLEDGE_RETENTION.md

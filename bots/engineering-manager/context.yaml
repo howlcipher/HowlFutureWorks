@@ -1,25 +1,20 @@
-budget_chars: 18000
-always_load:
-- AGENTS.md
-- organization.yaml
-- policies/memory.yaml
-- policies/budgets.yaml
-- ORG.md
-- roles/engineering-manager.md
-- bots/engineering-manager/boundaries.yaml
-- policies/risk-tiers.yaml
-- policies/approvals.yaml
-- policies/agent-spawning.yaml
-- policies/workforce.yaml
-- knowledge/positions/engineering-manager.md
-load_on_demand:
-- workforce/roster.yaml
-- CHARTER.md
-- routing/
-- runbooks/
-- reports/
-- bots/*/
-- policies/production-access.yaml
-- docs/WORKFORCE_LIFECYCLE.md
-- docs/KNOWLEDGE_RETENTION.md
-- knowledge/company/
+# Runtime Context v2 (schema: schemas/position-context.schema.json).
+# Standing context is the compiled runtime contract (orgctl render-bot); every
+# source below is retrieved only when its trigger applies. Triggers named in
+# policies/runtime-contract.yaml also contribute their required_sources.
+schema_version: 2
+standing_budget_chars: 6000
+execution_profile: coordinator
+position_knowledge: knowledge/positions/engineering-manager.md
+retrieve_when:
+  authority_question: []
+  risk_classification: []
+  knowledge_checkpoint: [knowledge/company/]
+  evidence_verification: [reports/]
+  external_action: []
+  staffing_change: [workforce/roster.yaml]
+  executor_selection: [routing/, policies/agent-spawning.yaml]
+  bot_definition_change: [bots/*/]
+  production_change: []
+  incident_response: [runbooks/]
+  role_detail: [AGENTS.md, organization.yaml, roles/engineering-manager.md]

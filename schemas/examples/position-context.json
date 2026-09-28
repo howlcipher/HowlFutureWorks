@@ -1,0 +1,13 @@
+{
+  "schema_version": 2,
+  "standing_budget_chars": 5000,
+  "execution_profile": "advisor",
+  "position_knowledge": "knowledge/positions/product.md",
+  "retrieve_when": {
+    "authority_question": ["CHARTER.md", "policies/approvals.yaml"],
+    "risk_classification": ["policies/risk-tiers.yaml"],
+    "knowledge_checkpoint": ["policies/memory.yaml", "policies/budgets.yaml", "docs/KNOWLEDGE_RETENTION.md"],
+    "evidence_verification": ["policies/evidence.yaml"],
+    "external_action": ["policies/external-actions.yaml"]
+  }
+}

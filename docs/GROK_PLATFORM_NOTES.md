@@ -18,6 +18,12 @@ These are **platform facts and deployment notes**, not constitutional policy. Re
 - Consequential actions such as sending, publishing, purchasing, deleting, permission changes and production changes should stay behind approval boundaries.
 - Public Bot templates expose shared configuration such as identity, description, skills and routines. Never publish a HowlFutureWorks Bot template without explicit approval and a review for secrets, internal URLs, customer data, private infrastructure references and other sensitive configuration.
 
+## Deployment notes for Runtime Context v2
+
+- Use the compiled `build/bots/<position>.md` runtime contract as the Bot's standing instructions. It is provider-neutral, so the same file serves other runtimes.
+- Do not paste whole policy files into Bot instructions. The contract's `Retrieve when` index tells the Bot which repository sources to read for each trigger.
+- Prefer one conversation per work item. Checkpoint durable outcomes into the repository, then start fresh rather than growing one conversation indefinitely.
+
 ## Official references
 
 - https://docs.x.ai/grok-bot/bots

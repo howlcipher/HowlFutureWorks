@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- **Runtime Context v2** (ADR 0005). Persistent positions receive a compiled, provider-neutral runtime contract instead of concatenated source files. The canonical documents are unchanged and are retrieved by trigger.
+- Add `policies/runtime-contract.yaml` (canonical state, invariants with IDs and sources, execution profiles, task lifecycle, communication rules, the retrieval-trigger vocabulary, required triggers, and continuity rules).
+- Add `agent_runtime` efficiency policy to `policies/budgets.yaml`: standing-context ceiling, token-estimate ratio, exploration, planning, retry, communication, delegation and circuit-breaker limits. These are escalation points, not hard stops.
+- Migrate `bots/*/context.yaml` to `schema_version: 2` (`standing_budget_chars`, `execution_profile`, `position_knowledge`, `retrieve_when`) with `schemas/position-context.schema.json`. Legacy `always_load`, `load_on_demand` and `budget_chars` are rejected.
+- `orgctl render-bot` compiles the contract. `orgctl validate` checks invariants, triggers, sources, continuity isolation and budgets structurally. `orgctl context` shows triggers. The new `orgctl context-report [--json]` measures standing size.
+- Add an optional `efficiency` object to the result envelope and efficiency signals to `METRICS.md`.
+- Standing context (chars): engineering-manager 15,370 → 5,803; product 9,939 → 3,913; rnd 10,049 → 4,006; dev-lead 10,331 → 4,989; assurance 10,784 → 4,379; auditor 10,515 → 3,970.
+
 ## 0.4.1 - 2026-09-20
 
 - Add a durable-knowledge-retention principle to `policies/memory.yaml`: use conversations for disposable working context, use durable repository records for knowledge another session/provider/worker would otherwise rediscover ("write once, retrieve many").

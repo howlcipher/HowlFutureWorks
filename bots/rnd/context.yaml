@@ -1,18 +1,17 @@
-budget_chars: 12000
-always_load:
-- AGENTS.md
-- organization.yaml
-- policies/memory.yaml
-- policies/budgets.yaml
-- roles/rnd.md
-- rnd/README.md
-- policies/risk-tiers.yaml
-- policies/network.yaml
-- templates/experiment.md
-- knowledge/positions/rnd.md
-load_on_demand:
-- CHARTER.md
-- product/
-- security/THREAT_MODEL.md
-- routing/
-- knowledge/company/
+# Runtime Context v2 (schema: schemas/position-context.schema.json).
+# Standing context is the compiled runtime contract (orgctl render-bot); every
+# source below is retrieved only when its trigger applies. Triggers named in
+# policies/runtime-contract.yaml also contribute their required_sources.
+schema_version: 2
+standing_budget_chars: 5000
+execution_profile: advisor
+position_knowledge: knowledge/positions/rnd.md
+retrieve_when:
+  authority_question: []
+  risk_classification: []
+  knowledge_checkpoint: [knowledge/company/]
+  evidence_verification: []
+  external_action: [policies/network.yaml]
+  security_review: []
+  role_detail: [AGENTS.md, organization.yaml, roles/rnd.md]
+  domain_reference: [rnd/README.md, templates/experiment.md, product/, routing/]

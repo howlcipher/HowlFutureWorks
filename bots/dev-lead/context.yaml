@@ -1,26 +1,19 @@
-budget_chars: 15000
-always_load:
-- AGENTS.md
-- organization.yaml
-- policies/memory.yaml
-- policies/budgets.yaml
-- roles/dev-lead.md
-- routing/README.md
-- policies/risk-tiers.yaml
-- knowledge/positions/dev-lead.md
-load_on_demand:
-- schemas/result-envelope.schema.json
-- schemas/task-envelope.schema.json
-- routing/capability-registry.yaml
-- CHARTER.md
-- roles/software-architect.md
-- runbooks/
-- evals/
-- knowledge/company/
-- docs/EXECUTOR_ROUTING.md
-- routing/fallback-policy.yaml
-- routing/routing-policy.yaml
-- routing/decision-records/
-- EVALS.md
-- routing/task-classes.yaml
-- routing/selection-policy.yaml
+# Runtime Context v2 (schema: schemas/position-context.schema.json).
+# Standing context is the compiled runtime contract (orgctl render-bot); every
+# source below is retrieved only when its trigger applies. Triggers named in
+# policies/runtime-contract.yaml also contribute their required_sources.
+schema_version: 2
+standing_budget_chars: 5000
+execution_profile: implementer
+position_knowledge: knowledge/positions/dev-lead.md
+retrieve_when:
+  authority_question: []
+  risk_classification: []
+  knowledge_checkpoint: [knowledge/company/]
+  evidence_verification: [schemas/result-envelope.schema.json]
+  external_action: []
+  executor_selection: [routing/, docs/EXECUTOR_ROUTING.md, schemas/task-envelope.schema.json]
+  production_change: []
+  incident_response: [runbooks/]
+  role_detail: [AGENTS.md, organization.yaml, roles/dev-lead.md]
+  domain_reference: [roles/software-architect.md, evals/, EVALS.md]

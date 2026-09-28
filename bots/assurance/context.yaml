@@ -1,18 +1,18 @@
-budget_chars: 14000
-always_load:
-- AGENTS.md
-- organization.yaml
-- policies/memory.yaml
-- policies/budgets.yaml
-- roles/qa.md
-- roles/security.md
-- security/THREAT_MODEL.md
-- policies/risk-tiers.yaml
-- policies/evidence.yaml
-- knowledge/positions/assurance.md
-load_on_demand:
-- CHARTER.md
-- security/abuse-cases/
-- schemas/evidence.schema.json
-- runbooks/security-incident.md
-- knowledge/company/
+# Runtime Context v2 (schema: schemas/position-context.schema.json).
+# Standing context is the compiled runtime contract (orgctl render-bot); every
+# source below is retrieved only when its trigger applies. Triggers named in
+# policies/runtime-contract.yaml also contribute their required_sources.
+schema_version: 2
+standing_budget_chars: 5500
+execution_profile: verifier
+position_knowledge: knowledge/positions/assurance.md
+retrieve_when:
+  authority_question: []
+  risk_classification: []
+  knowledge_checkpoint: [knowledge/company/]
+  evidence_verification: [schemas/evidence.schema.json, roles/qa.md]
+  external_action: []
+  executor_selection: []
+  security_review: [roles/security.md, security/abuse-cases/]
+  incident_response: [runbooks/security-incident.md]
+  role_detail: [AGENTS.md, organization.yaml, roles/qa.md, roles/security.md]
