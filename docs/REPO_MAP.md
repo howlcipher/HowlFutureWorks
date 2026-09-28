@@ -21,7 +21,7 @@ This is a semantic map, not a generated file listing. Use `git ls-files` when an
 
 - `policies/` — machine-readable risk, approvals, credentials, access, budgets (including `agent_runtime` efficiency), workforce and change policy; `policies/runtime-contract.yaml` defines the compiled runtime contract and retrieval triggers.
 - `schemas/` — JSON Schema contracts plus validated examples.
-- `routing/` — task classes, selection policy, capability registry, fallback, decision records.
+- `routing/` — task classes, selection policy, HowlPlane execution substrate, capability registry, fallback, decision records.
 - `runbooks/` — repeatable operational, security, staffing and recovery procedures.
 - `security/` — threat model, abuse-case, regression-test and review areas.
 

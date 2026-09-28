@@ -1,0 +1,214 @@
+version: 1
+# HowlPlane-first execution. Three decisions stay separate:
+# 1. which persistent roles participate (participation-policy.yaml)
+# 2. SELF or delegated implementation (selection-policy.yaml)
+# 3. if delegated, which executor HowlPlane selects
+# Expected value still decides delegation. HowlPlane is the normal substrate
+# once delegation is justified, not the path for every trivial operation.
+
+decisions:
+  - persistent_role_participation
+  - self_or_delegated_implementation
+  - executor_selected_by_howlplane
+
+rules:
+  self_preferred_when_sufficient: true
+  external_requires_expected_value: true
+  delegated_implementation_substrate: howlplane
+  raw_executor_cli: not_normalized
+  howlplane_failure_is_governance_bypass: false
+  plane_defect_requires_prior_classification: true
+  executor_failure_is_plane_defect: false
+  unsupported_model_opinion_is_improvement_evidence: false
+
+paths:
+  SELF:
+    use_when:
+      - reading_a_small_authoritative_file
+      - classification
+      - prioritization
+      - writing_a_bounded_task
+      - evaluating_evidence
+      - small_organizational_update
+      - trivial_deterministic_operation
+    rule: orchestration_cost_exceeds_execution
+  HOWLPLANE:
+    use_when:
+      - multi_file_implementation
+      - feature_development
+      - refactoring
+      - repository_migration
+      - repeated_test_fix_cycles
+      - complex_debugging
+      - sustained_code_generation
+      - provider_failover_benefit
+      - durable_execution_state_required
+    rule: normal_substrate_for_delegated_implementation
+
+# Interfaces observed from `howlplane --help` / subcommand help (howlplane 0.1.0, 2026-09-28).
+# Re-verify with --help before adding a command. Do not invent entrypoints.
+verified_interfaces:
+  cli: howlplane
+  version_observed: "0.1.0"
+  observed_on: "2026-09-28"
+  commands:
+    - howlplane work
+    - howlplane orchestrate
+    - howlplane route
+    - howlplane doctor
+    - howlplane agents doctor
+    - howlplane factory doctor
+    - howlplane factory start
+    - howlplane factory run
+    - howlplane factory run-once
+    - howlplane factory status
+    - howlplane factory resume
+    - howlplane factory retry
+    - howlplane verify
+    - howlplane record
+    - howlplane authority show
+    - howlplane resume
+  default_delegated_commands:
+    - howlplane work
+    - howlplane orchestrate
+    - howlplane factory start
+    - howlplane factory run
+    - howlplane factory run-once
+  factory_target_values: [repo, self, ecosystem]
+  not_a_default_path: raw_provider_cli
+
+work_state:
+  git: desired_organizational_and_product_state
+  howlboard: authoritative_work_state
+  howlplane: authoritative_execution_state
+  grok_conversation: disposable_working_context
+  durable_outside_conversation:
+    - execution_failures
+    - reroutes
+    - repair_work
+    - blocked_work
+    - improvement_opportunities
+    - executor_outcomes
+
+recovery:
+  applies_to: orchestration_layer_only
+  conditions:
+    - howlplane_unavailable
+    - factory_will_not_start
+    - confirmed_howlplane_software_defect
+    - corrupted_unrecoverable_orchestration_state
+    - missing_required_howlplane_capability
+    - bootstrap_or_recovery_of_howlplane
+  must_preserve:
+    - howlframe
+    - risk_ceilings
+    - approvals
+    - credential_boundaries
+    - task_scope
+    - evidence
+    - independent_verification
+    - bounded_retries
+    - production_controls
+  howlplane_failure_is_governance_bypass: false
+  raw_executor_cli: forbidden
+  when_one_governed_entrypoint_still_works: use_that_entrypoint
+  when_no_governed_entrypoint_works: checkpoint_stop_escalate
+  runbook: runbooks/howlplane-recovery.md
+
+failure_classes:
+  - provider_authentication
+  - quota_capacity
+  - configuration
+  - task_specific_failure
+  - executor_failure
+  - routing_defect
+  - orchestration_defect
+  - state_recovery_defect
+  - howlplane_software_defect
+classify_before_declaring_plane_defect: true
+executor_failure_is_plane_defect: false
+
+repair:
+  definition: required_capability_broken_or_materially_malfunctioning
+  may_preempt_because_execution_is_impaired: true
+  eligible_targets: [howlplane]
+  mechanism: one_tracked_work_item
+  plane_self_target: self
+  recursion:
+    max_repair_objectives_per_failure: 1
+    unbounded_recursive_repair: forbidden
+    if_governed_repair_path_fails: checkpoint_stop_escalate
+
+improvement:
+  definition: system_works_and_repeated_evidence_supports_a_change
+  follows_normal_prioritization: true
+  requires_evidence: true
+  unsupported_model_opinion: insufficient
+  eligible_targets:
+    - howlplane
+    - howlframe
+    - howlchangeops
+    - howlboard
+    - howlproof
+    - howlinstinct
+    - routing_policy
+    - provider_adapters
+    - skills
+    - routines
+    - runbooks
+    - verification_tooling
+    - context_retrieval
+  signals:
+    - repeated_provider_misrouting
+    - excessive_retries
+    - poor_failover
+    - repeated_no_repository_change
+    - false_success_classification
+    - repeated_manual_intervention
+    - unnecessary_context_loading
+    - high_persistent_bot_usage
+    - avoidable_persistent_runtime_usage
+    - stale_capability_evidence
+    - poor_checkpoint_behavior
+    - resume_or_recovery_defects
+    - recurring_orchestration_failures
+  loop:
+    - observation
+    - evidence
+    - significance
+    - tracked_work_item
+    - governed_implementation
+    - verification
+    - merge
+    - measure
+
+self_improvement:
+  within_existing_authority: true
+  may_increase: [capability, reliability, efficiency, quality]
+  may_not:
+    - increase_authority
+    - reduce_approvals
+    - lower_risk_classification
+    - grant_production_access
+    - broaden_credentials
+    - weaken_assurance
+    - weaken_audit
+    - bypass_howlframe
+    - suppress_evidence
+    - consequential_auto_merge
+    - change_policy_without_required_review
+
+efficiency_signals:
+  record_in: schemas/result-envelope.schema.json#/properties/efficiency
+  fields:
+    - execution_substrate
+    - executor_selected
+    - retries
+    - failovers
+    - no_progress_attempts
+    - persistent_grok_participation
+    - context_sources_loaded
+    - human_interventions
+    - accepted
+    - plane_repair_tasks
+    - improvement_work_items

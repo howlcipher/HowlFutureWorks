@@ -76,6 +76,7 @@ def validate_routing(errors):
         "routing/routing-policy.yaml",
         "routing/fallback-policy.yaml",
         "routing/participation-policy.yaml",
+        "routing/execution-substrate.yaml",
     ):
         if not (ROOT / rel).exists():
             errors.append(f"missing {rel}")
@@ -203,6 +204,8 @@ def validate_routing(errors):
     if ta.get("child_worker_may_exceed_parent_scope") is not False:
         errors.append("routing: tool-access child_worker_may_exceed_parent_scope must be false")
 
+    validate_execution_substrate(errors, routing=routing, selection=selection, fallback=fallback)
+
     # No secrets-looking keys in routing YAML values (heuristic).
     import re as _re
     secretish = _re.compile(r"(?i)(api[_-]?key|secret|password|token|begin\s+private)")
@@ -215,6 +218,220 @@ def validate_routing(errors):
             if "forbidden" in raw and "secret" in raw.lower():
                 continue
             errors.append(f"routing: possible secret material in {p.relative_to(ROOT)}")
+
+
+# Structural execution-substrate requirements (HOWL-010). English wording is not the check.
+REQUIRED_EXECUTION_DECISIONS = (
+    "persistent_role_participation",
+    "self_or_delegated_implementation",
+    "executor_selected_by_howlplane",
+)
+REQUIRED_RECOVERY_CONDITIONS = (
+    "howlplane_unavailable",
+    "factory_will_not_start",
+    "confirmed_howlplane_software_defect",
+    "corrupted_unrecoverable_orchestration_state",
+    "missing_required_howlplane_capability",
+    "bootstrap_or_recovery_of_howlplane",
+)
+REQUIRED_RECOVERY_PRESERVE = (
+    "howlframe",
+    "risk_ceilings",
+    "approvals",
+    "credential_boundaries",
+    "task_scope",
+    "evidence",
+    "independent_verification",
+    "bounded_retries",
+    "production_controls",
+)
+REQUIRED_FAILURE_CLASSES = (
+    "provider_authentication",
+    "quota_capacity",
+    "configuration",
+    "task_specific_failure",
+    "executor_failure",
+    "routing_defect",
+    "orchestration_defect",
+    "state_recovery_defect",
+    "howlplane_software_defect",
+)
+REQUIRED_SELF_IMPROVEMENT_DENIALS = (
+    "increase_authority",
+    "reduce_approvals",
+    "lower_risk_classification",
+    "grant_production_access",
+    "broaden_credentials",
+    "weaken_assurance",
+    "weaken_audit",
+    "bypass_howlframe",
+    "suppress_evidence",
+    "consequential_auto_merge",
+    "change_policy_without_required_review",
+)
+REQUIRED_PLANE_COMMANDS = (
+    "howlplane factory start",
+    "howlplane factory run",
+    "howlplane factory run-once",
+    "howlplane factory status",
+    "howlplane work",
+    "howlplane route",
+)
+
+
+def validate_execution_substrate(errors, routing=None, selection=None, fallback=None):
+    """HowlPlane-first execution without treating Plane failure as a governance bypass."""
+    path = ROOT / "routing/execution-substrate.yaml"
+    if not path.exists():
+        errors.append("missing routing/execution-substrate.yaml")
+        return
+    sub = load_yaml(path) or {}
+    rules = sub.get("rules") or {}
+    routing = routing if routing is not None else (load_yaml(ROOT / "routing/routing-policy.yaml") or {})
+    selection = selection if selection is not None else (load_yaml(ROOT / "routing/selection-policy.yaml") or {})
+    fallback = fallback if fallback is not None else (load_yaml(ROOT / "routing/fallback-policy.yaml") or {})
+
+    if list(sub.get("decisions") or []) != list(REQUIRED_EXECUTION_DECISIONS):
+        errors.append("execution-substrate: decisions must be participation, SELF-or-delegate, then HowlPlane executor selection")
+    for key, expected in (
+        ("self_preferred_when_sufficient", True),
+        ("external_requires_expected_value", True),
+        ("delegated_implementation_substrate", "howlplane"),
+        ("raw_executor_cli", "not_normalized"),
+        ("howlplane_failure_is_governance_bypass", False),
+        ("executor_failure_is_plane_defect", False),
+        ("unsupported_model_opinion_is_improvement_evidence", False),
+    ):
+        if rules.get(key) != expected:
+            errors.append(f"execution-substrate: rules.{key} must be {expected!r}")
+
+    rr = routing.get("rules") or {}
+    for key, expected in (
+        ("delegated_implementation_substrate", "howlplane"),
+        ("raw_executor_cli", "not_normalized"),
+        ("howlplane_failure_is_governance_bypass", False),
+    ):
+        if rr.get(key) != expected:
+            errors.append(f"routing-policy: rules.{key} must be {expected!r}")
+    if (routing.get("canonical") or {}).get("execution_substrate") != "routing/execution-substrate.yaml":
+        errors.append("routing-policy: canonical.execution_substrate must point at routing/execution-substrate.yaml")
+    principles = selection.get("principles") or {}
+    if principles.get("delegated_substrate") != "howlplane":
+        errors.append("selection-policy: principles.delegated_substrate must be howlplane")
+    if principles.get("raw_executor_cli") != "not_normalized":
+        errors.append("selection-policy: principles.raw_executor_cli must be not_normalized")
+    delegation = ((load_yaml(ROOT / "policies/budgets.yaml") or {}).get("agent_runtime") or {}).get("delegation") or {}
+    if delegation.get("delegated_substrate") != "howlplane":
+        errors.append("budgets: agent_runtime.delegation.delegated_substrate must be howlplane")
+    if delegation.get("raw_executor_cli") != "not_normalized":
+        errors.append("budgets: agent_runtime.delegation.raw_executor_cli must be not_normalized")
+    orch = fallback.get("orchestration_failure") or {}
+    if orch.get("executor_fallback_is_orchestration_bypass") is not False:
+        errors.append("fallback: executor fallback must not be an orchestration bypass")
+    if orch.get("howlplane_failure_is_governance_bypass") is not False:
+        errors.append("fallback: howlplane failure must not be a governance bypass")
+
+    recovery = sub.get("recovery") or {}
+    if recovery.get("applies_to") != "orchestration_layer_only":
+        errors.append("execution-substrate: recovery.applies_to must be orchestration_layer_only")
+    if set(recovery.get("conditions") or []) != set(REQUIRED_RECOVERY_CONDITIONS):
+        errors.append("execution-substrate: recovery.conditions drifted from the required set")
+    if set(recovery.get("must_preserve") or []) != set(REQUIRED_RECOVERY_PRESERVE):
+        errors.append("execution-substrate: recovery.must_preserve drifted from the required set")
+    if recovery.get("howlplane_failure_is_governance_bypass") is not False:
+        errors.append("execution-substrate: recovery must not treat Plane failure as a governance bypass")
+    if recovery.get("raw_executor_cli") != "forbidden":
+        errors.append("execution-substrate: recovery raw_executor_cli must be forbidden")
+    if recovery.get("when_no_governed_entrypoint_works") != "checkpoint_stop_escalate":
+        errors.append("execution-substrate: recovery without a governed entrypoint must checkpoint, stop, and escalate")
+    runbook = recovery.get("runbook")
+    if not runbook or not (ROOT / runbook).exists():
+        errors.append(f"execution-substrate: recovery runbook missing {runbook}")
+
+    if set(sub.get("failure_classes") or []) != set(REQUIRED_FAILURE_CLASSES):
+        errors.append("execution-substrate: failure_classes drifted from the required set")
+    if sub.get("executor_failure_is_plane_defect") is not False:
+        errors.append("execution-substrate: executor_failure_is_plane_defect must be false")
+
+    repair = sub.get("repair") or {}
+    rec = repair.get("recursion") or {}
+    if "howlplane" not in (repair.get("eligible_targets") or []):
+        errors.append("execution-substrate: repair.eligible_targets must include howlplane")
+    if repair.get("mechanism") != "one_tracked_work_item":
+        errors.append("execution-substrate: repair.mechanism must be one_tracked_work_item")
+    if rec.get("max_repair_objectives_per_failure") != 1:
+        errors.append("execution-substrate: repair recursion must allow only one objective per failure")
+    if rec.get("unbounded_recursive_repair") != "forbidden":
+        errors.append("execution-substrate: unbounded_recursive_repair must be forbidden")
+    if rec.get("if_governed_repair_path_fails") != "checkpoint_stop_escalate":
+        errors.append("execution-substrate: a failed repair path must checkpoint, stop, and escalate")
+
+    improvement = sub.get("improvement") or {}
+    if improvement.get("requires_evidence") is not True:
+        errors.append("execution-substrate: improvement.requires_evidence must be true")
+    if improvement.get("unsupported_model_opinion") != "insufficient":
+        errors.append("execution-substrate: unsupported model opinion must be insufficient for improvement")
+    if improvement.get("follows_normal_prioritization") is not True:
+        errors.append("execution-substrate: improvement must follow normal prioritization")
+    if "howlplane" not in (improvement.get("eligible_targets") or []):
+        errors.append("execution-substrate: improvement.eligible_targets must include howlplane")
+    loop = improvement.get("loop") or []
+    for step in ("observation", "evidence", "tracked_work_item", "verification", "measure"):
+        if step not in loop:
+            errors.append(f"execution-substrate: improvement.loop missing {step}")
+
+    denial = set((sub.get("self_improvement") or {}).get("may_not") or [])
+    if set(REQUIRED_SELF_IMPROVEMENT_DENIALS) != denial:
+        errors.append("execution-substrate: self_improvement.may_not drifted from the required set")
+    if (sub.get("self_improvement") or {}).get("within_existing_authority") is not True:
+        errors.append("execution-substrate: self_improvement must stay within existing authority")
+
+    work = sub.get("work_state") or {}
+    for key, expected in (
+        ("git", "desired_organizational_and_product_state"),
+        ("howlboard", "authoritative_work_state"),
+        ("howlplane", "authoritative_execution_state"),
+        ("grok_conversation", "disposable_working_context"),
+    ):
+        if work.get(key) != expected:
+            errors.append(f"execution-substrate: work_state.{key} must be {expected}")
+
+    interfaces = sub.get("verified_interfaces") or {}
+    commands = set(interfaces.get("commands") or [])
+    for cmd in REQUIRED_PLANE_COMMANDS:
+        if cmd not in commands:
+            errors.append(f"execution-substrate: verified_interfaces.commands missing {cmd}")
+    defaults = interfaces.get("default_delegated_commands") or []
+    if any(cmd.split()[0] != "howlplane" for cmd in defaults):
+        errors.append("execution-substrate: default delegated commands must be howlplane entrypoints")
+    if "raw_provider_cli" in defaults or interfaces.get("not_a_default_path") != "raw_provider_cli":
+        errors.append("execution-substrate: raw provider CLI must not be a default delegated path")
+    if "self" not in (interfaces.get("factory_target_values") or []):
+        errors.append("execution-substrate: factory target values must include self")
+
+
+def execution_substrate_for(task_class, decision):
+    """Execution path for a routing decision. Does not select a provider CLI."""
+    sub = load_yaml(ROOT / "routing/execution-substrate.yaml") or {}
+    rules = sub.get("rules") or {}
+    view = {
+        "decisions": list(sub.get("decisions") or []),
+        "raw_executor_cli": rules.get("raw_executor_cli", "not_normalized"),
+        "howlplane_failure_is_governance_bypass": rules.get("howlplane_failure_is_governance_bypass", False),
+    }
+    if task_class in ("trivial", "simple") or decision == "SELF":
+        view.update({"path": "SELF", "orchestration": "none"})
+        return view
+    if decision in ("SELF_preferred_unless_expected_value", "SELF_or_owner_configured_known_capable"):
+        view.update({"path": "SELF_unless_delegated", "when_delegated": "HOWLPLANE", "orchestration": "howlplane"})
+        return view
+    view.update({
+        "path": "HOWLPLANE",
+        "when_delegated": "HOWLPLANE",
+        "orchestration": "howlplane",
+        "executor_selection": "howlplane",
+    })
+    return view
 
 
 def _map_participation_token(token):
@@ -476,7 +693,7 @@ def route_inspect(task_class, risk, required_tools=None, objective=None, grok_ca
             "independent_verification": class_meta.get("independent_verification", "not_required"),
             "uncertainty": None,
         })
-        return out
+        return _finish_route(out, task_class)
 
     # Hard constraints / eligibility from registry
     eligible = []
@@ -544,7 +761,7 @@ def route_inspect(task_class, risk, required_tools=None, objective=None, grok_ca
             "external_requires_expected_value": external_requires_ev,
             "recursive_delegation_default": (selection.get("recursive_delegation") or {}).get("default"),
         })
-        return out
+        return _finish_route(out, task_class)
 
     # Measured evidence present for at least one profile — still prefer least resource / SELF when sufficient
     if self_preferred and task_class in ("bounded",):
@@ -578,6 +795,25 @@ def route_inspect(task_class, risk, required_tools=None, objective=None, grok_ca
         "uncertainty": None,
         "external_requires_expected_value": external_requires_ev,
     })
+    return _finish_route(out, task_class)
+
+
+def _finish_route(out, task_class):
+    """Attach the execution substrate. Provider choice stays inside HowlPlane when delegated."""
+    view = execution_substrate_for(task_class, out.get("decision"))
+    out["execution_substrate"] = view
+    if view.get("path") != "SELF":
+        steps = list(out.get("selection_steps") or [])
+        dispatch = {
+            "step": "dispatch_delegated_work_through_howlplane",
+            "substrate": view.get("when_delegated", "HOWLPLANE"),
+        }
+        if not any(isinstance(s, dict) and s.get("step") == dispatch["step"] for s in steps):
+            if steps and isinstance(steps[-1], dict) and steps[-1].get("step") == "record_rationale_or_evidence_insufficient":
+                steps.insert(-1, dispatch)
+            else:
+                steps.append(dispatch)
+            out["selection_steps"] = steps
     return out
 
 
@@ -995,7 +1231,9 @@ def format_runtime_contract(c):
     L+=[f"{n}. {s}" for n,s in enumerate(prof.get("steps") or [],1)]
     if prof.get("direct_work"): L.append(f"Direct work: {prof['direct_work']}")
     dele=rl.get("delegation") or {}
-    if c["execution_profile_id"] in ("coordinator","implementer") and dele.get("prefer_external_executor_for"):
+    # The long prefer-list is coordinator standing context only. Implementers retrieve it
+    # (budgets.yaml / execution-substrate.yaml) so Dev Lead stays inside the efficiency target.
+    if c["execution_profile_id"] == "coordinator" and dele.get("prefer_external_executor_for"):
         L.append(f"Prefer delegation ({dele.get('decide_by','expected_value').replace('_',' ')}) for: "+", ".join(x.replace('_',' ') for x in dele["prefer_external_executor_for"])+".")
     ex=rl.get("exploration") or {}; pl=rl.get("planning") or {}; rt=rl.get("retries") or {}; cb=rl.get("circuit_breaker") or {}
     L.append(
@@ -1036,6 +1274,14 @@ def contract_guarantee_errors(c):
     if not c["task_lifecycle"].get("persist"): errs.append(f"{bid} runtime contract lacks checkpoint persistence rules")
     if c["continuity"].get("standing_context_includes_employee_history") is not False: errs.append(f"{bid} runtime contract must exclude employee history")
     names={t["name"]:t for t in c["triggers"]}
+    if c["execution_profile_id"] in ("coordinator","implementer"):
+        orch=names.get("execution_orchestration")
+        if not orch:
+            errs.append(f"{bid} runtime contract missing execution_orchestration trigger")
+        else:
+            for s in ("routing/execution-substrate.yaml","docs/EXECUTOR_ROUTING.md","runbooks/howlplane-recovery.md"):
+                if s not in orch["sources"]:
+                    errs.append(f"{bid} execution_orchestration missing required source {s}")
     for trig,srcs in REQUIRED_TRIGGER_SOURCES.items():
         if trig not in names: errs.append(f"{bid} runtime contract missing required trigger {trig}")
         else:
@@ -1143,6 +1389,8 @@ def validate_runtime_contracts(errors):
         caps=load_yaml(ROOT/f"bots/{bid}/capabilities.yaml") or {}
         for flag,name in by_cap.items():
             if caps.get(flag) is True and name not in rw: errors.append(f"{bid} has {flag} but retrieve_when lacks {name}")
+        if ctx["execution_profile"] in ("coordinator","implementer") and "execution_orchestration" not in rw:
+            errors.append(f"{bid} retrieve_when missing execution_orchestration")
         try:
             contract=compile_runtime_contract(bid)
             errors.extend(contract_guarantee_errors(contract))

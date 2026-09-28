@@ -1,6 +1,7 @@
 version: 1
 # Persistent-role participation: demand-driven, capacity-aware.
-# Distinct from executor selection (SELF vs Claude/Codex/AGY) in selection-policy.yaml.
+# Decision 1 of 3. Decision 2 is SELF vs delegated implementation.
+# Decision 3, which executor, belongs to HowlPlane (routing/execution-substrate.yaml).
 # Full Product→EM→Dev Lead→Assurance→Auditor workflow remains a capability, not a ceremony.
 
 principles:

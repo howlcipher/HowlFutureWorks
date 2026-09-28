@@ -12,7 +12,9 @@ sources of truth live under `routing/`.
 | **Ephemeral executors** (Claude, Codex, AGY, Astra, …) | Bounded implementation via HowlFrame adapters; disposable context |
 
 Persistent members handle ordinary work themselves. External executors are used
-only when expected benefit materially justifies delegation.
+only when expected benefit materially justifies delegation. Once it does,
+HowlPlane is the normal execution substrate. A Grok Bot calling a raw
+Codex/Claude/AGY CLI is not the default implementation path.
 
 ## Demand-driven persistent participation
 
@@ -21,8 +23,13 @@ remains a **capability**, not a mandatory ceremony for every work item.
 
 Machine source: `routing/participation-policy.yaml`.
 
-**Who participates organizationally** is decided before **who executes** (SELF vs
-external). Inspect both with:
+Organizational routing is three decisions, kept separate:
+
+1. Which persistent roles participate (`routing/participation-policy.yaml`).
+2. Whether implementation is SELF or delegated (`routing/selection-policy.yaml`).
+3. If delegated, which executor HowlPlane selects (`howlplane route`, Factory, or `howlplane work`).
+
+Inspect participation and the SELF-or-delegate decision with:
 
 `python tools/orgctl.py route --task-class bounded --risk R2 --grok-capacity scarce`
 
@@ -64,6 +71,39 @@ Precedence: **mandatory governance/safety controls > capacity optimization**.
 5. Deterministic operations should not unnecessarily invoke an AI executor.
 
 Inspect with: `python tools/orgctl.py route --task-class simple --risk R1 --grok-capacity unknown`.
+
+`orgctl route` reports an `execution_substrate`. Trivial and simple work stays `SELF`. Bounded work stays SELF unless expected value justifies delegation, and that delegated path is `HOWLPLANE`. Complex and critical delegated work is `HOWLPLANE`. The field does not name a provider CLI.
+
+## HowlPlane substrate
+
+Machine source: `routing/execution-substrate.yaml`. Procedure when Plane is unhealthy: `runbooks/howlplane-recovery.md`. Coordinator and implementer positions retrieve both through the `execution_orchestration` trigger rather than preloading them.
+
+| Situation | Path |
+|---|---|
+| Small bounded judgment or coordination | SELF |
+| Implementation-heavy delegated work | `howlplane work`, `howlplane orchestrate`, or `howlplane factory start` / `run` / `run-once` |
+| Which provider | `howlplane route` or Factory routing, from measured fit |
+| Evidence | `howlplane verify`, `howlplane record`, plus the result envelope |
+| HowlPlane itself needs a tracked repair | `howlplane factory run --target self` when a governed entrypoint still works |
+| Wider evidence-backed ecosystem work | `howlplane factory run --target ecosystem`, under normal prioritization |
+
+These commands are the HowlPlane 0.1.0 interfaces recorded in `verified_interfaces`. Re-check `--help` before treating a new flag as supported.
+
+## Governed recovery
+
+Executor failover (`routing/fallback-policy.yaml`) is not permission to skip HowlPlane governance, and a HowlPlane failure is not permission to skip HowlFrame, risk ceilings, approvals, credentials, task scope, evidence, independent verification, bounded retries, or production controls.
+
+Bypass, when a condition in `execution-substrate.yaml` `recovery.conditions` is confirmed, applies only to the orchestration layer. If one governed entrypoint still runs, use it. If none does, checkpoint, stop, and escalate. Raw provider CLIs stay forbidden.
+
+Classify the failure before opening a Plane repair. An executor, quota, auth, or task failure is not a HowlPlane software defect.
+
+## Repair and improvement
+
+Repair is a required capability that is broken. It may be prioritized because execution is impaired. One failure produces one tracked repair. If that repair path fails, checkpoint, stop, and escalate. Do not repair the repair mechanism.
+
+Improvement is a system that works, with repeated evidence that it can be cheaper, faster, safer, more reliable, or more efficient. It follows normal prioritization. An unsupported model opinion is not evidence.
+
+Self-improvement stays inside existing authority. It may not increase authority, reduce approvals, lower risk classification, grant production access, broaden credentials, weaken Assurance or audit, bypass HowlFrame, suppress evidence, auto-merge consequential changes, or change policy without the required review.
 
 ## Task classes vs risk
 
@@ -167,6 +207,7 @@ Significant delegated work only: `routing/decision-records/`. Not for trivial/SE
 
 ## Related files
 
+- `routing/execution-substrate.yaml`, `runbooks/howlplane-recovery.md`
 - `routing/selection-policy.yaml`, `task-classes.yaml`, `capability-registry.yaml`
 - `routing/routing-policy.yaml`, `fallback-policy.yaml`, `participation-policy.yaml`
 - `policies/risk-tiers.yaml`, `tool-access.yaml`, `approvals.yaml`, `budgets.yaml`

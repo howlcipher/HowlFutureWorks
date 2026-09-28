@@ -29,7 +29,7 @@ For any task, do **not** load the whole repository by default.
 
 ## Executor routing
 
-Persistent members handle ordinary work themselves. External executors only when expected benefit justifies it. Choose by measured fit, not loyalty or rankings. See `routing/`.
+Three separate decisions: which roles participate, whether the work is SELF or delegated, and — only if delegated — which executor HowlPlane selects. Persistent members do small bounded work themselves. Implementation-heavy delegated work uses HowlPlane (`routing/execution-substrate.yaml`). Raw executor CLIs are not the default path. A HowlPlane failure does not bypass HowlFrame, risk, approvals, evidence, or verification. Choose by measured fit, not loyalty or rankings. See `routing/`.
 
 Persistent-role participation is demand-driven. Activate roles only when they add required decision, implementation, verification, audit, research, or authority value; never weaken mandatory governance or safety controls to conserve capacity.
 
@@ -47,10 +47,14 @@ Engineering Manager owns position configuration and workforce lifecycle within p
 
 ## Desired state vs deployed state
 
-- Git = desired organization.
+- Git = desired organization and product state.
 - Grok Bot live configuration = deployed organization.
-- HowlBoard/HowlPlane = authoritative work/execution state.
+- HowlBoard = authoritative work state.
+- HowlPlane = authoritative execution state.
+- A Grok conversation = disposable working context.
 - `reports/` = summarized institutional record, not the primary work queue.
+
+Execution failures, reroutes, repairs, blocked work, improvement opportunities, and executor outcomes are recorded in HowlPlane, HowlBoard, or Git.
 
 If live state differs from Git, produce a drift report and reconcile toward Git unless the live change was explicitly authorized and should be imported back through review.
 

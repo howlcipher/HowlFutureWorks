@@ -13,3 +13,7 @@ steps:
   - classify_failure
   - bounded_retry_if_eligible
   - select_eligible_alternative_or_escalate
+orchestration_failure:
+  source: routing/execution-substrate.yaml
+  executor_fallback_is_orchestration_bypass: false
+  howlplane_failure_is_governance_bypass: false

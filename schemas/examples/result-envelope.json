@@ -12,6 +12,10 @@
     "context_sources_loaded": 3,
     "delegated": true,
     "retries": 0,
-    "no_progress_attempts": 0
+    "no_progress_attempts": 0,
+    "execution_substrate": "HOWLPLANE",
+    "failovers": 0,
+    "plane_repair_tasks": 0,
+    "improvement_work_items": 0
   }
 }

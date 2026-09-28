@@ -14,6 +14,7 @@ retrieve_when:
   external_action: []
   staffing_change: [workforce/roster.yaml]
   executor_selection: [routing/, policies/agent-spawning.yaml]
+  execution_orchestration: []
   bot_definition_change: [bots/*/]
   production_change: []
   incident_response: [runbooks/]

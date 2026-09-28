@@ -67,6 +67,36 @@
         "context_growth_chars": {
           "type": "integer",
           "minimum": 0
+        },
+        "execution_substrate": {
+          "type": "string",
+          "enum": ["SELF", "HOWLPLANE", "governed_recovery"]
+        },
+        "executor_selected": {
+          "type": "string"
+        },
+        "failovers": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "persistent_grok_participation": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "human_interventions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "plane_repair_tasks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "improvement_work_items": {
+          "type": "integer",
+          "minimum": 0
         }
       }
     },
