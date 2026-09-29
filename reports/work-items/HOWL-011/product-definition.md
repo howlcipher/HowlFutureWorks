@@ -1,15 +1,14 @@
 # HOWL-011 — Product definition
 
-**Status:** Implementation in flight (2026-09-29). Owner prioritized remote status publish + admit path. Factory is running on local host tallgeese. Plane PR https://github.com/howlcipher/howlplane/pull/123 is open, awaiting Dev Lead (Motoko) review, then host merge and publish.  
+**Status:** Implementation in flight (2026-09-29). Owner prioritized remote status publish + admit path. Factory is running on local host tallgeese. Plane PR https://github.com/howlcipher/howlplane/pull/123 is squash-merged to howlplane main (`c2abe920aa4ef1ee52f8f28a375df8041bac59d4`). Host publish on tallgeese is the remaining gate.  
 **Owner:** bot-engmgr-0001  
 **Risk:** R2  
 **Predecessor:** HOWL-010
 
-## Implementation in flight
+## Plane PR merged; host publish remains
 
-- Plane code is in flight on `howlcipher/howlplane` PR #123: https://github.com/howlcipher/howlplane/pull/123 (cloud agent https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2). The PR is open, awaiting Dev Lead review.
-- Reviewer: Dev Lead (Motoko, `bot-devlead-0001`).
-- After that PR merges, the merge and the first status publish run on the Factory host: `howlplane factory status --publish` writes `factory/status/remote-snapshot.json`. See `runbooks/howlplane-remote-observation.md`.
+- howlplane PR #123 is squash-merged to main: https://github.com/howlcipher/howlplane/pull/123 (`c2abe920aa4ef1ee52f8f28a375df8041bac59d4`; cloud agent https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2).
+- Remaining gate: the first status publish on the Factory host (tallgeese): `howlplane factory status --publish` writes `factory/status/remote-snapshot.json`. See `runbooks/howlplane-remote-observation.md`.
 - Admit path: an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`.
 - This repository does not install HowlPlane in Grok and does not compete with howlplane PR #122.
 
