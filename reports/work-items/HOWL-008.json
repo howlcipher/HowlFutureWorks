@@ -1,8 +1,8 @@
 {
   "id": "HOWL-008",
   "title": "Navigable informational mission dependencies",
-  "status": "open",
-  "phase": "assurance",
+  "status": "closed",
+  "phase": "merged",
   "risk_tier": "R2",
   "opened_on": "2026-09-21",
   "owner_employee_id": "bot-engmgr-0001",
@@ -41,7 +41,7 @@
     "budgets_raised": false
   },
   "routing_note": "EM classifies after Product AC using live HOWL-005/006 policy; HOWL-007 SELF success is evidence not a rule; Astra=Codex alias.",
-  "updated_at": "2026-09-21T17:21:23.383058+00:00",
+  "updated_at": "2026-09-29T14:02:12Z",
   "product_definition": "reports/work-items/HOWL-008/product-definition.md",
   "em_acceptance": "reports/work-items/HOWL-008/em-acceptance.md",
   "routing_decision": "routing/decision-records/HOWL-008.md",
@@ -64,5 +64,12 @@
   "howlboard_tip": "41a91af6a6432e0df4eeec03f0a93acdb09e3794",
   "howlboard_base": "cab020c",
   "implementation_path": "SELF",
-  "org_evidence_tip": "35e1c33"
+  "org_evidence_tip": "35e1c33",
+  "closed_at": "2026-09-29T14:02:12Z",
+  "howlboard_merged_at": "2026-09-29T14:01:55Z",
+  "howlboard_merge_commit": "9a136dd9a575fbfb928ffa4929c3c14c36e68711",
+  "assurance_verdict": "PASS",
+  "assurance_report": "reports/work-items/HOWL-008/assurance-report.md",
+  "em_merge_decision": "merged; Assurance PASS on tip 41a91af; auditor not_required for bounded R2 per participation-policy; CI SUCCESS; no competing Factory campaign",
+  "completion_note": "HowlBoard PR #8 merged to main 9a136dd on 2026-09-29. Navigable informational depends_on live."
 }

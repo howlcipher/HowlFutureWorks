@@ -1,8 +1,8 @@
 {
   "id": "HOWL-007",
   "title": "HowlBoard mission dependency visibility",
-  "status": "open",
-  "phase": "merge-ready",
+  "status": "closed",
+  "phase": "merged",
   "risk_tier": "R2",
   "opened_on": "2026-09-21",
   "owner_employee_id": "bot-engmgr-0001",
@@ -30,7 +30,7 @@
     "dev_lead_headroom_after": 5169,
     "budgets_raised": false
   },
-  "updated_at": "2026-09-21T16:55:03.272937+00:00",
+  "updated_at": "2026-09-29T14:02:12Z",
   "product_definition": "reports/work-items/HOWL-007/product-definition.md",
   "em_acceptance": "reports/work-items/HOWL-007/em-acceptance.md",
   "routing_decision": "routing/decision-records/HOWL-007.md",
@@ -53,5 +53,8 @@
   "auditor_verdict": "PASS WITH FINDINGS",
   "auditor_medium": "Product/EM/routing docs were missing from remote tip 4f3a0f4; remediated on this commit",
   "auditor_tip": "9bb11cb00f33cfbe4527f67122a8871eeb71451c",
-  "org_pr": "https://github.com/howlcipher/HowlFutureWorks/pull/6"
+  "org_pr": "https://github.com/howlcipher/HowlFutureWorks/pull/6",
+  "closed_at": "2026-09-29T14:02:12Z",
+  "howlboard_merge_commit": "eb86e95f40e7e794f338f33100814cb52967fe5c",
+  "completion_note": "HowlBoard PR #7 was already merged 2026-09-21; work-item status closed during 2026-09-29 ops cycle."
 }
