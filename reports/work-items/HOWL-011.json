@@ -1,0 +1,77 @@
+{
+  "id": "HOWL-011",
+  "title": "Remote HowlPlane Factory observability for persistent Grok roles",
+  "status": "open",
+  "phase": "product-definition",
+  "risk_tier": "R2",
+  "priority": "high",
+  "opened_on": "2026-09-29",
+  "updated_at": "2026-09-29T14:34:19Z",
+  "owner": "engineering-manager",
+  "owner_employee_id": "bot-engmgr-0001",
+  "org_repository": "https://github.com/howlcipher/HowlFutureWorks",
+  "org_main_sha_at_open": "2e9de4f2734f3ce0845c2f8dd9896a6d068538b6",
+  "target_repositories": [
+    "https://github.com/howlcipher/howlplane",
+    "https://github.com/howlcipher/HowlFutureWorks"
+  ],
+  "predecessor": "HOWL-010",
+  "problem": "Persistent Grok Bots (EM and peers) run in a cloud environment without the live HowlPlane Factory supervisor. Factory campaigns are host-local (XDG state + one supervisor lock; workspace paths on the Owner host under /run/media/system/tallgeese/dev/). howlplane is not on the Grok PATH. HowlBoard can project a ledger slice offline but does not live-observe or dispatch. Installing a second HowlPlane/Factory in the Grok cloud would compete with the active host campaign and is rejected. Without a durable remote coordination surface, EM cannot safely discover active campaigns, see blockers, submit bounded delegated work, or avoid duplicating Factory work.",
+  "desired_outcome": "EM can (1) discover the active Factory campaign and its status/blockers from authoritative durable state reachable without sharing the Factory host shell, (2) submit bounded implementation work into that Factory without starting a second campaign, (3) receive execution evidence/results into HowlBoard and/or Git, and (4) follow a documented interim protocol until the bridge exists. No second Factory. No raw-provider bypass of HowlFrame.",
+  "architecture": "Factory remains single-supervisor on the Owner host. Grok roles observe and enqueue via Git- and/or HowlBoard-backed artifacts. HowlPlane may publish a redacted status snapshot and accept owner_direction / queue / backlog admissions that Factory already understands. HowlBoard remains work-state; Plane remains execution-state; Git remains desired org state.",
+  "scope": [
+    "Document interim EM observe/dispatch protocol (HFW runbook)",
+    "Smallest durable remote status snapshot from Factory (HowlPlane) OR HowlBoard ingest of published status/ledger slices on a schedule",
+    "Document how Grok submits work (Git work item / Pending backlog / factory queue file / owner_direction) that the existing Factory will admit without a second campaign",
+    "Wire HFW routing/recovery docs to the remote path (no second runner)"
+  ],
+  "non_goals": [
+    "Install HowlPlane or start Factory inside the Grok Bot cloud",
+    "Share Factory host shell/session with Grok as the steady-state design",
+    "Replace HowlBoard or invent a second orchestration runner",
+    "Expand authority, weaken approvals/Assurance, or bypass HowlFrame",
+    "Compete with open howlplane PR #122 (ecosystem Factory execution) or the 2026-09-27 continuous-improvement campaign",
+    "Broad HowlBoard live streaming or multi-tenant Plane SaaS"
+  ],
+  "acceptance_criteria": [
+    "Runbook names where the active Factory runs (host/workspace evidence) and forbids starting a second Factory from Grok",
+    "EM can obtain campaign identity + status/blockers from a durable remote artifact (Git and/or HowlBoard) without SSH into the Factory host",
+    "Documented submit path uses an existing Factory admission surface (owner_direction, backlog Pending, factory queue, or equivalent) \u2014 verified against howlplane docs/code",
+    "Documented evidence return path uses Git PRs/commits and/or HowlBoard LEDGER projection",
+    "End-to-end verification: read remote status artifact once published; confirm no second campaign started",
+    "orgctl validate still passes; standing budgets unchanged",
+    "Implementation of HowlPlane changes is routed through the existing Factory host (--target self/ecosystem) or a still-working governed Plane entrypoint \u2014 not a Grok-local Plane install"
+  ],
+  "risk": "R2 coordination/observability. No authority, credential, or production-control change. Mis-publishing secrets in status snapshots is a security risk \u2014 snapshots must be redacted.",
+  "rollback": "Revert HFW docs/WI; stop publishing status snapshots; Factory host operation unchanged.",
+  "dependencies": [
+    "HOWL-010"
+  ],
+  "related": [
+    "https://github.com/howlcipher/howlplane/pull/122",
+    "howlcipher/howlplane factory/CONTINUOUS_IMPROVEMENT.md",
+    "howlcipher/howlplane factory/howl-workspace.yaml",
+    "campaign_id 2026-09-27-continuous-improvement"
+  ],
+  "classification": {
+    "task_class": "bounded",
+    "risk_tier": "R2",
+    "plane_failure_class": "missing_required_howlplane_capability",
+    "notes": "Capability gap is remote observability/submit for non-colocated persistent roles. Not an executor failure. Not fixed by installing Plane on Grok."
+  },
+  "routing": {
+    "task_class": "bounded",
+    "risk_tier": "R2",
+    "hfw_docs_and_wi": "SELF",
+    "howlplane_implementation": "HOWLPLANE on Factory host when justified; do not install Plane on Grok",
+    "orgctl_probe": "SELF_preferred_unless_expected_value for HFW docs; delegated Plane code via existing Factory"
+  },
+  "product_definition": "reports/work-items/HOWL-011/product-definition.md",
+  "interim_runbook": "runbooks/howlplane-remote-observation.md",
+  "evidence": [
+    "reports/daily/ops-2026-09-29.md",
+    "factory/howl-workspace.yaml paths on tallgeese",
+    "HowlBoard docs/limitations.md (Board does not dispatch)",
+    "Grok ListMachines: epyon connected=false; howlplane absent from PATH"
+  ]
+}
