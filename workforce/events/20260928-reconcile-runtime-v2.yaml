@@ -1,0 +1,23 @@
+schema_version: 1
+event_id: 20260928-reconcile-runtime-v2
+occurred_at: '2026-09-28T20:20:00-04:00'
+employee_id: bot-engmgr-0001
+event_type: activated
+position_id_before: engineering-manager
+position_id_after: engineering-manager
+reason_code: runtime_context_v2_reconcile
+summary: >-
+  Live Grok Bot workforce reconciled to HowlFutureWorks main
+  bec233dec06502d75e06b119ef5384328695cf63 after HOWL-009 (Runtime Context v2)
+  and HOWL-010 (HowlPlane-first). All six active seats verified deployed with
+  matching orgctl position fingerprints in live Bot descriptions. Skills/routines
+  remain empty/planned per Git (no new platform routines enabled). No secrets
+  written. No authority expansion.
+approved_by: bot-engmgr-0001
+evidence_refs:
+- reports/audits/reconcile-live-org-2026-09-28.md
+- workforce/roster.yaml
+- docs/RECONCILE_ORG.md
+- docs/BOOTSTRAP_LIVE_ORG.md
+- docs/GROK_PLATFORM_NOTES.md
+successor_employee_id: null
