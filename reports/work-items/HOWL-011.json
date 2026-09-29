@@ -2,11 +2,11 @@
   "id": "HOWL-011",
   "title": "Remote HowlPlane Factory observability for persistent Grok roles",
   "status": "open",
-  "phase": "product-definition",
+  "phase": "implementation",
   "risk_tier": "R2",
   "priority": "high",
   "opened_on": "2026-09-29",
-  "updated_at": "2026-09-29T14:34:19Z",
+  "updated_at": "2026-09-29T15:06:57Z",
   "owner": "engineering-manager",
   "owner_employee_id": "bot-engmgr-0001",
   "org_repository": "https://github.com/howlcipher/HowlFutureWorks",
@@ -51,7 +51,8 @@
     "https://github.com/howlcipher/howlplane/pull/122",
     "howlcipher/howlplane factory/CONTINUOUS_IMPROVEMENT.md",
     "howlcipher/howlplane factory/howl-workspace.yaml",
-    "campaign_id 2026-09-27-continuous-improvement"
+    "campaign_id 2026-09-27-continuous-improvement",
+    "https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2"
   ],
   "classification": {
     "task_class": "bounded",
@@ -64,14 +65,20 @@
     "risk_tier": "R2",
     "hfw_docs_and_wi": "SELF",
     "howlplane_implementation": "HOWLPLANE on Factory host when justified; do not install Plane on Grok",
-    "orgctl_probe": "SELF_preferred_unless_expected_value for HFW docs; delegated Plane code via existing Factory"
+    "orgctl_probe": "SELF_preferred_unless_expected_value for HFW docs; delegated Plane code via existing Factory",
+    "host_after_plane_pr": "After the HOWL-011 Plane PR merges, the merge and the first status publish (`factory status --publish` or the equivalent that PR documents) must run on the Factory host (tallgeese). Do not publish from the Grok cloud."
   },
   "product_definition": "reports/work-items/HOWL-011/product-definition.md",
   "interim_runbook": "runbooks/howlplane-remote-observation.md",
+  "implementation_note": "2026-09-29 Owner confirmed Factory is running on local host tallgeese and prioritized HOWL-011 remote status publish + admit path. Plane implementer cloud agent is launched (https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2, howlcipher/howlplane). Plane PR URL: placeholder \u2014 fill when known. Dev Lead (Motoko, bot-devlead-0001) is briefed to review that PR. Do not install HowlPlane in Grok. Do not compete with howlplane PR #122.",
   "evidence": [
     "reports/daily/ops-2026-09-29.md",
+    "reports/daily/ops-2026-09-29-howl-011.md",
     "factory/howl-workspace.yaml paths on tallgeese",
     "HowlBoard docs/limitations.md (Board does not dispatch)",
-    "Grok ListMachines: epyon connected=false; howlplane absent from PATH"
+    "Grok ListMachines: epyon connected=false; howlplane absent from PATH",
+    "2026-09-29 Owner priority: remote status publish + admit path; Factory running on tallgeese",
+    "Plane implementer cloud agent launched: https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2 (howlcipher/howlplane). Plane PR URL: placeholder \u2014 fill when known.",
+    "Dev Lead (Motoko, bot-devlead-0001) briefed to review the Plane PR"
   ]
 }

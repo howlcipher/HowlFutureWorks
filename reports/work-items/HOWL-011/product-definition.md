@@ -1,9 +1,16 @@
 # HOWL-011 — Product definition
 
-**Status:** EM draft (opened 2026-09-29)  
+**Status:** Implementation in flight (2026-09-29). Owner prioritized remote status publish + admit path. Factory is running on local host tallgeese. Plane implementer cloud agent is launched; Dev Lead (Motoko) is reviewing. Plane PR URL is a placeholder until known.  
 **Owner:** bot-engmgr-0001  
 **Risk:** R2  
 **Predecessor:** HOWL-010
+
+## Implementation in flight
+
+- Plane code is in flight on `howlcipher/howlplane` via cloud agent https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2. Plane PR URL: placeholder — fill when known.
+- Reviewer: Dev Lead (Motoko, `bot-devlead-0001`).
+- After that PR merges, the merge and the first status publish (`factory status --publish` or the equivalent the PR documents) run on the Factory host. See `runbooks/howlplane-remote-observation.md` and `reports/daily/ops-2026-09-29-howl-011.md`.
+- This repository does not install HowlPlane in Grok and does not compete with howlplane PR #122.
 
 ## Problem
 
