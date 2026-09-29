@@ -58,17 +58,17 @@ Missing durable remote publish of redacted `factory status --json` (and a docume
 
 ## Once HOWL-011 Plane PR merges
 
-Plane implementation cloud agent: https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2 (`howlcipher/howlplane`). Plane PR URL: placeholder — fill when known. Dev Lead (Motoko, `bot-devlead-0001`) reviews that PR before it is treated as the publish contract. Do not duplicate the agent’s branch, and do not compete with PR #122.
+Plane implementation cloud agent: https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2 (`howlcipher/howlplane`). Plane PR: https://github.com/howlcipher/howlplane/pull/123 (#123). It is open, awaiting Dev Lead (Motoko, `bot-devlead-0001`) review. Treat it as the publish contract only after that review and merge. Do not duplicate the agent’s branch, and do not compete with PR #122.
 
-After that PR merges, publish from the **Factory host** (tallgeese), not from Grok:
+After PR #123 merges, publish from the **Factory host** (tallgeese), not from Grok:
 
-1. Merge the HOWL-011 Plane PR on the host checkout (or the governed host path that PR documents).
-2. Publish a redacted status snapshot with the command that PR documents. The expected shape is `factory status --publish` or an equivalent; the exact flag is defined by the Plane PR, not by this runbook.
-3. Expected durable artifact: a documented file under howlplane `factory/status` or `.dogfood` carrying campaign identity, state, current dispatch or idle, and blockers. Read it from Git. The exact filename comes from the Plane PR.
-4. Admit path: use the existing Factory admission surface that PR confirms (owner direction, ranked backlog `Pending`, or `howlplane factory queue` on the host). Still do not start a second Factory from Grok.
-5. Record the filled-in PR URL and the published artifact path on HOWL-011 evidence (`reports/work-items/HOWL-011.json`).
+1. Merge howlplane PR #123 on the host checkout.
+2. Publish the redacted status snapshot with `howlplane factory status --publish`.
+3. Durable artifact: `factory/status/remote-snapshot.json` in the howlplane checkout. It carries campaign identity, state, current dispatch or idle, and blockers. Read it from Git after the host commits it.
+4. Admit path: an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`. Still do not start a second Factory from Grok.
+5. PR URL, publish command, artifact path, and admit path are recorded on HOWL-011 (`reports/work-items/HOWL-011.json`). After the host publish, add evidence that `factory/status/remote-snapshot.json` was read remotely and that no second campaign started.
 
 ## Related open host work — do not duplicate
 
 - `howlcipher/howlplane` PR #122 — ecosystem multi-repository Factory execution (Owner).
-- HOWL-011 Plane PR — placeholder URL; cloud agent above. Distinct from PR #122.
+- `howlcipher/howlplane` PR #123 — HOWL-011 remote status publish and Pending admit (https://github.com/howlcipher/howlplane/pull/123). Open; awaiting Dev Lead review, then host merge and `howlplane factory status --publish`. Distinct from PR #122.
