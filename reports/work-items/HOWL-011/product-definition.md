@@ -1,15 +1,15 @@
 # HOWL-011 — Product definition
 
-**Status:** Implementation in flight (2026-09-29). Owner prioritized remote status publish + admit path. Factory is running on local host tallgeese. Plane implementer cloud agent is launched; Dev Lead (Motoko) is reviewing. Plane PR URL is a placeholder until known.  
+**Status:** Implementation in flight (2026-09-29). Owner prioritized remote status publish + admit path. Factory is running on local host tallgeese. Plane PR https://github.com/howlcipher/howlplane/pull/123 is squash-merged to howlplane main (`c2abe920aa4ef1ee52f8f28a375df8041bac59d4`). Host publish on tallgeese is the remaining gate.  
 **Owner:** bot-engmgr-0001  
 **Risk:** R2  
 **Predecessor:** HOWL-010
 
-## Implementation in flight
+## Plane PR merged; host publish remains
 
-- Plane code is in flight on `howlcipher/howlplane` via cloud agent https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2. Plane PR URL: placeholder — fill when known.
-- Reviewer: Dev Lead (Motoko, `bot-devlead-0001`).
-- After that PR merges, the merge and the first status publish (`factory status --publish` or the equivalent the PR documents) run on the Factory host. See `runbooks/howlplane-remote-observation.md` and `reports/daily/ops-2026-09-29-howl-011.md`.
+- howlplane PR #123 is squash-merged to main: https://github.com/howlcipher/howlplane/pull/123 (`c2abe920aa4ef1ee52f8f28a375df8041bac59d4`; cloud agent https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2).
+- Remaining gate is the Owner/host on tallgeese: pull merged howlplane, run `howlplane factory status --publish`, and commit `factory/status/remote-snapshot.json` for campaign `2026-09-27-continuous-improvement`. Optional `--arm-periodic` only after the supervisor is restarted onto this code. Do not publish from Grok. Leave PR #122 alone. See `runbooks/howlplane-remote-observation.md`.
+- Admit path: an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`.
 - This repository does not install HowlPlane in Grok and does not compete with howlplane PR #122.
 
 ## Problem
@@ -26,8 +26,8 @@ Persistent Grok roles do not share a shell with the live HowlPlane Factory. The 
 ## Acceptance criteria
 
 1. HFW runbook names Factory host/workspace evidence and forbids a second Grok-local Factory.
-2. A redacted durable status artifact is readable remotely (Git path and/or HowlBoard mission/store) and includes at least: campaign_id, state, current_dispatch (or idle), blockers/`OWNER_REQUIRED`, last tick / last error.
-3. Submit path documents one existing Plane admission mechanism (owner_direction, ranked backlog `Pending`, or `howlplane factory queue`) that the host Factory will pick up.
+2. A redacted durable status artifact at howlplane `factory/status/remote-snapshot.json` (written by `howlplane factory status --publish` on the Factory host) is readable from Git and includes at least: campaign_id, state, current_dispatch (or idle), blockers/`OWNER_REQUIRED`, last tick / last error.
+3. Submit path is an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md` that the host Factory will pick up.
 4. Evidence return path documents Git + HowlBoard LEDGER import.
 5. Verification shows remote read of the status artifact and that no second campaign was started from Grok.
 6. HowlPlane code changes (if any) are implemented on the Factory host through a governed Plane entrypoint — not a Grok install.

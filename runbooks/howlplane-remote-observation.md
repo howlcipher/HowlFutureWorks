@@ -54,21 +54,22 @@ Do **not**: start `howlplane factory start` from Grok, spawn a second campaign, 
 
 ## Gap tracked as HOWL-011
 
-Missing durable remote publish of redacted `factory status --json` (and a documented admit path verified end-to-end from Grok). See `reports/work-items/HOWL-011.json`. Phase is `implementation`: Owner prioritized the publish + admit path on 2026-09-29, and a Plane implementer is in flight. The gap stays open until the host publish below has actually landed.
+Missing durable remote publish of redacted `factory status --json` (and a documented admit path verified end-to-end from Grok). See `reports/work-items/HOWL-011.json`. Phase is `implementation`: Owner prioritized the publish + admit path on 2026-09-29, and howlplane PR #123 is merged. The gap stays open until the host publish below has actually landed.
 
-## Once HOWL-011 Plane PR merges
+## HOWL-011 Plane PR #123 is merged
 
-Plane implementation cloud agent: https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2 (`howlcipher/howlplane`). Plane PR URL: placeholder — fill when known. Dev Lead (Motoko, `bot-devlead-0001`) reviews that PR before it is treated as the publish contract. Do not duplicate the agent’s branch, and do not compete with PR #122.
+Plane implementation cloud agent: https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2 (`howlcipher/howlplane`). Plane PR https://github.com/howlcipher/howlplane/pull/123 (#123) is squash-merged to howlplane main (`c2abe920aa4ef1ee52f8f28a375df8041bac59d4`). Host publish on tallgeese is the remaining gate. Do not duplicate that branch, and do not compete with PR #122.
 
-After that PR merges, publish from the **Factory host** (tallgeese), not from Grok:
+Remaining gate is the Owner/host on tallgeese, not Grok. Leave PR #122 alone.
 
-1. Merge the HOWL-011 Plane PR on the host checkout (or the governed host path that PR documents).
-2. Publish a redacted status snapshot with the command that PR documents. The expected shape is `factory status --publish` or an equivalent; the exact flag is defined by the Plane PR, not by this runbook.
-3. Expected durable artifact: a documented file under howlplane `factory/status` or `.dogfood` carrying campaign identity, state, current dispatch or idle, and blockers. Read it from Git. The exact filename comes from the Plane PR.
-4. Admit path: use the existing Factory admission surface that PR confirms (owner direction, ranked backlog `Pending`, or `howlplane factory queue` on the host). Still do not start a second Factory from Grok.
-5. Record the filled-in PR URL and the published artifact path on HOWL-011 evidence (`reports/work-items/HOWL-011.json`).
+1. Pull merged howlplane (main includes squash-merge `c2abe920aa4ef1ee52f8f28a375df8041bac59d4`).
+2. Publish the redacted status snapshot with `howlplane factory status --publish`.
+3. Commit `factory/status/remote-snapshot.json` for campaign `2026-09-27-continuous-improvement`. It carries campaign identity, state, current dispatch or idle, and blockers. Read it from Git after the host commits it.
+4. Optional `--arm-periodic` only after the supervisor is restarted onto this code.
+5. Admit path: an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`. Still do not start a second Factory from Grok.
+6. PR URL, publish command, artifact path, and admit path are recorded on HOWL-011 (`reports/work-items/HOWL-011.json`). After the host publish, add evidence that `factory/status/remote-snapshot.json` was read remotely and that no second campaign started.
 
-## Related open host work — do not duplicate
+## Related host work — do not duplicate
 
 - `howlcipher/howlplane` PR #122 — ecosystem multi-repository Factory execution (Owner).
-- HOWL-011 Plane PR — placeholder URL; cloud agent above. Distinct from PR #122.
+- `howlcipher/howlplane` PR #123 — HOWL-011 remote status publish and Pending admit (https://github.com/howlcipher/howlplane/pull/123). Squash-merged to main at `c2abe920aa4ef1ee52f8f28a375df8041bac59d4`. Remaining gate is host `howlplane factory status --publish`. Distinct from PR #122.
