@@ -6,7 +6,7 @@
   "risk_tier": "R2",
   "priority": "high",
   "opened_on": "2026-09-29",
-  "updated_at": "2026-09-29T15:52:00Z",
+  "updated_at": "2026-09-29T15:53:34Z",
   "owner": "engineering-manager",
   "owner_employee_id": "bot-engmgr-0001",
   "org_repository": "https://github.com/howlcipher/HowlFutureWorks",
@@ -67,7 +67,7 @@
     "hfw_docs_and_wi": "SELF",
     "howlplane_implementation": "HOWLPLANE on Factory host when justified; do not install Plane on Grok",
     "orgctl_probe": "SELF_preferred_unless_expected_value for HFW docs; delegated Plane code via existing Factory",
-    "host_after_plane_pr": "howlplane PR #123 (https://github.com/howlcipher/howlplane/pull/123) is squash-merged to main (c2abe920aa4ef1ee52f8f28a375df8041bac59d4). The remaining gate is the first status publish on the Factory host (tallgeese): `howlplane factory status --publish` writes `factory/status/remote-snapshot.json`. Do not publish from the Grok cloud. Admit path is an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`."
+    "host_after_plane_pr": "howlplane PR #123 (https://github.com/howlcipher/howlplane/pull/123) is squash-merged to main (c2abe920aa4ef1ee52f8f28a375df8041bac59d4). Remaining gate is the Owner/host on tallgeese: pull merged howlplane, run `howlplane factory status --publish`, and commit `factory/status/remote-snapshot.json` for campaign 2026-09-27-continuous-improvement. Optional `--arm-periodic` only after the supervisor is restarted onto this code. Do not publish from the Grok cloud. Leave PR #122 alone. Admit path is an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`."
   },
   "product_definition": "reports/work-items/HOWL-011/product-definition.md",
   "interim_runbook": "runbooks/howlplane-remote-observation.md",
@@ -80,7 +80,7 @@
     "Grok ListMachines: epyon connected=false; howlplane absent from PATH",
     "2026-09-29 Owner priority: remote status publish + admit path; Factory running on tallgeese",
     "Plane implementer cloud agent launched: https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2 (howlcipher/howlplane). Plane PR https://github.com/howlcipher/howlplane/pull/123 is squash-merged to howlplane main (c2abe920aa4ef1ee52f8f28a375df8041bac59d4). Remaining gate: host publish on tallgeese.",
-    "Publish command (Factory host; remaining gate): howlplane factory status --publish. Artifact: factory/status/remote-snapshot.json.",
+    "Publish command (Owner/host on tallgeese; remaining gate): pull merged howlplane, howlplane factory status --publish, commit factory/status/remote-snapshot.json for campaign 2026-09-27-continuous-improvement. Optional --arm-periodic only after supervisor restart onto this code. Do not publish from Grok. Leave PR #122 alone.",
     "Admit path: exact Pending row in issues.md, bugs.md, or improvements.md.",
     "reports/daily/ops-2026-09-29-howl-011-pr-123.md"
   ]

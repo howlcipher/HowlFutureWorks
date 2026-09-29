@@ -8,7 +8,7 @@
 ## Plane PR merged; host publish remains
 
 - howlplane PR #123 is squash-merged to main: https://github.com/howlcipher/howlplane/pull/123 (`c2abe920aa4ef1ee52f8f28a375df8041bac59d4`; cloud agent https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2).
-- Remaining gate: the first status publish on the Factory host (tallgeese): `howlplane factory status --publish` writes `factory/status/remote-snapshot.json`. See `runbooks/howlplane-remote-observation.md`.
+- Remaining gate is the Owner/host on tallgeese: pull merged howlplane, run `howlplane factory status --publish`, and commit `factory/status/remote-snapshot.json` for campaign `2026-09-27-continuous-improvement`. Optional `--arm-periodic` only after the supervisor is restarted onto this code. Do not publish from Grok. Leave PR #122 alone. See `runbooks/howlplane-remote-observation.md`.
 - Admit path: an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`.
 - This repository does not install HowlPlane in Grok and does not compete with howlplane PR #122.
 

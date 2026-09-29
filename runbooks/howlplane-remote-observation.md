@@ -60,12 +60,14 @@ Missing durable remote publish of redacted `factory status --json` (and a docume
 
 Plane implementation cloud agent: https://cursor.com/agents/bc-1dfb7d89-05ef-58f1-bfa1-cbdfd7e0c2e2 (`howlcipher/howlplane`). Plane PR https://github.com/howlcipher/howlplane/pull/123 (#123) is squash-merged to howlplane main (`c2abe920aa4ef1ee52f8f28a375df8041bac59d4`). Host publish on tallgeese is the remaining gate. Do not duplicate that branch, and do not compete with PR #122.
 
-Publish from the **Factory host** (tallgeese), not from Grok:
+Remaining gate is the Owner/host on tallgeese, not Grok. Leave PR #122 alone.
 
-1. Publish the redacted status snapshot with `howlplane factory status --publish`.
-2. Durable artifact: `factory/status/remote-snapshot.json` in the howlplane checkout. It carries campaign identity, state, current dispatch or idle, and blockers. Read it from Git after the host commits it.
-3. Admit path: an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`. Still do not start a second Factory from Grok.
-4. PR URL, publish command, artifact path, and admit path are recorded on HOWL-011 (`reports/work-items/HOWL-011.json`). After the host publish, add evidence that `factory/status/remote-snapshot.json` was read remotely and that no second campaign started.
+1. Pull merged howlplane (main includes squash-merge `c2abe920aa4ef1ee52f8f28a375df8041bac59d4`).
+2. Publish the redacted status snapshot with `howlplane factory status --publish`.
+3. Commit `factory/status/remote-snapshot.json` for campaign `2026-09-27-continuous-improvement`. It carries campaign identity, state, current dispatch or idle, and blockers. Read it from Git after the host commits it.
+4. Optional `--arm-periodic` only after the supervisor is restarted onto this code.
+5. Admit path: an exact `Pending` row in `issues.md`, `bugs.md`, or `improvements.md`. Still do not start a second Factory from Grok.
+6. PR URL, publish command, artifact path, and admit path are recorded on HOWL-011 (`reports/work-items/HOWL-011.json`). After the host publish, add evidence that `factory/status/remote-snapshot.json` was read remotely and that no second campaign started.
 
 ## Related host work — do not duplicate
 
