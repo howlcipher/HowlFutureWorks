@@ -89,6 +89,8 @@ Machine source: `routing/execution-substrate.yaml`. Procedure when Plane is unhe
 
 These commands are the HowlPlane 0.1.0 interfaces recorded in `verified_interfaces`. Re-check `--help` before treating a new flag as supported.
 
+Persistent Grok roles that are not on the Factory host must not install a second Plane. Use `runbooks/howlplane-remote-observation.md` (interim) and HOWL-011 (durable remote status/submit bridge).
+
 ## Governed recovery
 
 Executor failover (`routing/fallback-policy.yaml`) is not permission to skip HowlPlane governance, and a HowlPlane failure is not permission to skip HowlFrame, risk ceilings, approvals, credentials, task scope, evidence, independent verification, bounded retries, or production controls.

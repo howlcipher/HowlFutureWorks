@@ -4,6 +4,12 @@ Machine rules: `routing/execution-substrate.yaml`. Executor failover stays in `r
 
 HowlPlane failure does not bypass HowlFrame, risk ceilings, approvals, credential boundaries, task scope, evidence, independent verification, bounded retries, or production controls.
 
+## Non-colocated Grok roles
+
+Persistent Grok Bots are usually **not** on the Factory host. Missing `howlplane` on the Grok PATH is expected. Do **not** install a second Factory in the Grok cloud.
+
+Interim observe/dispatch: `runbooks/howlplane-remote-observation.md`. Capability gap: HOWL-011.
+
 ## Classify before calling it a Plane defect
 
 Record the class in HowlPlane state, a HowlBoard work item, or a Git report. A Grok conversation is not the record.
