@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""orgctl: validate and operate the HowlFutureWorks organization.
+
+Exit codes: 0 ok; 1 validation failed, or `check-plane` found a listed
+HowlPlane command or flag that HowlPlane does not offer; 2 `route` selected
+nothing, `check-plane` could not read a HowlPlane descriptor, or a usage error.
+"""
 from pathlib import Path
 from datetime import datetime
 import argparse, json, sys, hashlib, re
@@ -277,6 +283,68 @@ REQUIRED_PLANE_COMMANDS = (
     "howlplane work",
     "howlplane route",
 )
+
+
+def plane_command_strings(interfaces):
+    """Every `howlplane ...` command string execution-substrate.yaml lists."""
+    listed = list(interfaces.get("commands") or []) + list(interfaces.get("default_delegated_commands") or [])
+    return list(dict.fromkeys(c for c in listed if isinstance(c, str) and c.split()[:1] == ["howlplane"]))
+
+
+def check_plane_commands(interfaces, descriptor):
+    """Problems with listed HowlPlane commands, judged by a howl.interop/v1 descriptor.
+
+    A listed string is a command path plus any flags (`howlplane factory queue
+    --retry`); the path must exist and every flag must be one it accepts.
+    """
+    if not isinstance(descriptor, dict) or descriptor.get("schema") != "howl.interop/v1" \
+            or descriptor.get("component") != "howlplane":
+        return ["descriptor is not a howlplane howl.interop/v1 document"]
+    offered = {tuple(c.get("path") or []): {f.lstrip("-") for f in c.get("flags") or []}
+               for c in descriptor.get("commands") or []}
+    problems = []
+    for listed in plane_command_strings(interfaces):
+        words = listed.split()[1:]
+        path = tuple(w for w in words if not w.startswith("-"))
+        flags = [w.split("=", 1)[0] for w in words if w.startswith("-")]
+        if path not in offered:
+            problems.append(f"`{listed}`: howlplane {descriptor.get('version', '?')} has no command `{' '.join(path)}`")
+            continue
+        missing = [f for f in flags if f.lstrip("-") not in offered[path]]
+        if missing:
+            problems.append(f"`{listed}`: `howlplane {' '.join(path)}` does not accept {', '.join(missing)}")
+    return problems
+
+
+def check_plane(descriptor_file=None, howlplane="howlplane", as_json=False):
+    """Check execution-substrate.yaml's HowlPlane commands against HowlPlane's descriptor."""
+    import subprocess
+    interfaces = (load_yaml(ROOT / "routing/execution-substrate.yaml") or {}).get("verified_interfaces") or {}
+    try:
+        if descriptor_file:
+            descriptor = json.loads(Path(descriptor_file).read_text())
+        else:
+            done = subprocess.run([howlplane, "interop", "--json"], capture_output=True, text=True,
+                                  timeout=60, check=False)
+            if done.returncode != 0:
+                raise ValueError(f"`{howlplane} interop --json` exited {done.returncode}; "
+                                 f"this HowlPlane predates the interop descriptor")
+            descriptor = json.loads(done.stdout)
+    except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+        message = f"cannot read a HowlPlane descriptor: {error}"
+        print(json.dumps({"ok": False, "error": message}) if as_json else message, file=sys.stderr)
+        return 2
+    problems = check_plane_commands(interfaces, descriptor)
+    checked = plane_command_strings(interfaces)
+    if as_json:
+        print(json.dumps({"ok": not problems, "howlplane_version": descriptor.get("version"),
+                          "checked": checked, "problems": problems}, indent=2))
+    else:
+        for problem in problems:
+            print("-", problem)
+        print(f"{len(checked) - len(problems)}/{len(checked)} HowlPlane commands match "
+              f"howlplane {descriptor.get('version', '?')}" + ("" if not problems else "; CHECK FAILED"))
+    return 1 if problems else 0
 
 
 def validate_execution_substrate(errors, routing=None, selection=None, fallback=None):
@@ -1732,7 +1800,12 @@ def main():
         help="operator-declared persistent Grok capacity (never scraped; default unknown)",
     )
     rt.add_argument("--json",action="store_true",help="emit JSON instead of YAML")
+    cpl=sub.add_parser("check-plane",help="check listed howlplane commands against `howlplane interop --json`")
+    cpl.add_argument("--descriptor",help="read the howl.interop/v1 descriptor from this file instead of running howlplane")
+    cpl.add_argument("--howlplane",default="howlplane",help="howlplane executable to ask (default: on PATH)")
+    cpl.add_argument("--json",action="store_true")
     a=ap.parse_args()
+    if a.cmd=="check-plane": raise SystemExit(check_plane(a.descriptor,a.howlplane,a.json))
     if a.cmd=="validate": raise SystemExit(validate())
     if a.cmd=="about": about()
     if a.cmd=="list-bots": list_bots()
