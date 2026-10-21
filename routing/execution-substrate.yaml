@@ -46,7 +46,9 @@ paths:
     rule: normal_substrate_for_delegated_implementation
 
 # Interfaces observed from `howlplane --help` / subcommand help (howlplane 0.1.0, 2026-09-28).
-# Re-verify with --help before adding a command. Do not invent entrypoints.
+# Re-verify before adding a command. Do not invent entrypoints:
+# `python tools/orgctl.py check-plane` checks every command and flag below
+# against the installed HowlPlane's `howlplane interop --json` descriptor.
 verified_interfaces:
   cli: howlplane
   version_observed: "0.1.0"
@@ -63,7 +65,7 @@ verified_interfaces:
     - howlplane factory run-once
     - howlplane factory status
     - howlplane factory resume
-    - howlplane factory retry
+    - howlplane factory queue --retry
     - howlplane verify
     - howlplane record
     - howlplane authority show
