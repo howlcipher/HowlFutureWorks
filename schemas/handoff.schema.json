@@ -1,6 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "howlfutureworks.handoff/v1",
   "title": "Handoff",
+  "description": "An organizational handoff between positions (from/to are role or position ids). For a machine handoff between AI workers on one task, use HowlForge's howlforge.checkpoint/v1 bundle, which HowlRelay reads; see docs/INTEROP.md in howlcipher/howl.",
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -11,6 +13,10 @@
     "next_action"
   ],
   "properties": {
+    "schema_version": {
+      "const": "howlfutureworks.handoff/v1",
+      "description": "Optional; when present it must be this value. New handoffs should set it."
+    },
     "from": {
       "type": "string"
     },
