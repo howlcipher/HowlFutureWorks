@@ -1,4 +1,5 @@
 {
+  "schema_version": "howlfutureworks.handoff/v1",
   "from": "dev-lead",
   "to": "assurance",
   "work_item_id": "HOWL-001",
