@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Dependency pins.** Tests now require pinned forms, a full commit SHA for actions and `==` for dev dependencies, not one exact version, so routine Dependabot bumps no longer fail them. Bump `actions/setup-python` to v7.1.0 and `pytest` to 9.2.0.
+
 - **Versioned handoff.** `schemas/handoff.schema.json` is `howlfutureworks.handoff/v1`: the organizational handoff between positions. An optional `schema_version` (the example sets it) must match when present; unversioned handoffs still validate. A machine handoff between AI workers on one task is HowlForge's `howlforge.checkpoint/v1`, which HowlRelay reads (see `docs/INTEROP.md` in howlcipher/howl).
 
 - **HowlPlane interop.** `routing/execution-substrate.yaml` listed `howlplane factory retry`, which HowlPlane does not have; retry is `howlplane factory queue --retry`. The new `orgctl check-plane [--descriptor FILE] [--json]` checks every listed HowlPlane command and flag against HowlPlane's `howl.interop/v1` descriptor (`howlplane interop --json`, from the Howl interop contract), so a stale entry is caught before it is used. `orgctl` documents its exit codes: 0 ok, 1 validation or check failed, 2 nothing routed, no descriptor, or a usage error.

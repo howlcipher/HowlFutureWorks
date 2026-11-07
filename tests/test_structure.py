@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import json
 import tomllib
 import yaml
@@ -268,11 +269,29 @@ def test_platform_offboarding_safeguards_are_explicit():
     assert "hiding does not pause routines" in suspend
 
 
+def _action_refs(workflow):
+    return re.findall(r"uses:\s*([^@\s]+)@(\S+)",workflow)
+
+
+def _floating_action_refs(workflow):
+    return [f"{a}@{r}" for a,r in _action_refs(workflow) if not re.fullmatch(r"[0-9a-f]{40}",r)]
+
+
+def _unpinned_requirements(lines):
+    return [x for x in lines if not re.fullmatch(r"[A-Za-z0-9_.-]+==[^\s=]+",x)]
+
+
 def test_ci_actions_are_immutable_pins_and_dependabot_exists():
     workflow=(ROOT/".github/workflows/validate.yml").read_text()
-    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow
-    assert "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97" in workflow
+    assert {"actions/checkout","actions/setup-python"} <= {a for a,_ in _action_refs(workflow)}
+    assert _floating_action_refs(workflow) == []
     assert (ROOT/".github/dependabot.yml").exists()
+
+
+def test_floating_action_refs_are_detected():
+    workflow="- uses: actions/checkout@v7\n- uses: actions/setup-python@"+"a"*40+"\n"
+    assert _floating_action_refs(workflow) == ["actions/checkout@v7"]
+    assert _floating_action_refs(workflow+"- uses: actions/checkout@"+"b"*40+"\n") == ["actions/checkout@v7"]
 
 
 def test_current_docs_use_howlfutureworks_identity():
@@ -290,7 +309,12 @@ def test_publish_guide_handles_bundle_origin():
 
 def test_dev_dependencies_are_exactly_pinned():
     lines=[x.strip() for x in (ROOT/"requirements-dev.txt").read_text().splitlines() if x.strip()]
-    assert lines == ["PyYAML==6.0.3", "jsonschema==4.26.0", "pytest==9.1.1"]
+    assert _unpinned_requirements(lines) == []
+    assert {x.split("==")[0] for x in lines} == {"PyYAML","jsonschema","pytest"}
+
+
+def test_unpinned_requirements_are_detected():
+    assert _unpinned_requirements(["pytest>=9","PyYAML","jsonschema==4.26.0"]) == ["pytest>=9","PyYAML"]
 
 
 def test_ci_covers_minimum_and_current_python_and_distribution():
